@@ -1,0 +1,339 @@
+<h1>Web Animations CSS Integration</h1>
+<pre class='metadata'>
+    Status: ED
+    ED: none
+    Shortname: web-animations-css
+    Level: 1
+    Editor: Shane Stephens, Google, shans@google.com
+    Abstract: This specification defines mappings between [[CSS3-ANIMATIONS]], [[CSS3-TRANSITIONS]] and the [[WEB-ANIMATIONS]] model.
+    Group: fxtf
+</pre>
+
+<h2>Introduction</h2>
+
+[[CSS3-ANIMATIONS]] and [[CSS3-TRANSITIONS]] provide models for defining
+declarative animations via CSS. [[SVG12]] provides a model for defining
+declarative animations via SVG. However, the three specifications do not
+define or present a unified animation model.
+
+To solve this problem, the [[WEB-ANIMATIONS]] specification defines a 
+comprehensive animation model that is capable of supporting [[CSS3-ANIMATIONS]],
+[[CSS3-TRANSITIONS]] and [[SVG12]].
+
+This document describes how [[CSS3-ANIMATIONS]] and [[CSS3-TRANSITIONS]] are
+supported by the [[WEB-ANIMATIONS]] model.
+
+<h2>CSS Transitions</h2>
+
+<div spec='css-transitions'>
+
+For CSS Transitions, mappings into the Web Animations model are established 
+pairwise for a specific CSS property, the <dfn>transitioning property</dfn>, on
+a specific element, the <dfn>transitioning element</dfn>.
+
+When a CSS Transition is started for the <span class='xxx'>transitioning property</span> of a
+<span class='xxx'>transitioning element</span>, an <span class='xxx'>Animation</span> is constructed and
+associated with a <span class='xxx'>Player</span> on the <span class='xxx'>document timeline</span>, configured
+with a <span class='xxx'>custom player priority</span> which ensures that the <span class='xxx'>Player</span> sorts
+before <span class='xxx'>Player</span>s created through the Web Animations API and those generated
+for CSS Animations. The <span class='xxx'>Animation</span> is configured as follows:
+
+<ul>
+<li>The <span class='xxx'>target element</span> is set to the <span class='xxx'>transitioning element</span>.
+<li>The <span class='xxx'>start delay</span> is set to the current used value of the 'transition-delay'
+property.
+<li>The <span class='xxx'>iteration duration</span> is set to the current used value of the 
+'transition-duration' property.
+<li>The <span class='xxx'>timing function</span> is set to the current used value of the
+'transition-timing-function' property.
+<li>The <span class='xxx'>animation effect</span> is set to a <span class='xxx'>keyframe animation effect</span>
+with two <span class='xxx'>keyframes</span> defined as follows:
+    <ul>
+    <li>The first keyframe references the <span class='xxx'>transitioning property</span> with a
+    value set to the <span class='xxx'>start value</span> of the transition.
+    <li>The second and final keyframe references the
+    <span class='xxx'>transitioning property</span> with a value set to the <span class='xxx'>end value</span> of
+    the transition.
+    </ul>
+</ul>
+
+Note, changes to the values of the 'transition-delay', 'transition-duration', 
+and 'transition-timing-function' have no effect on a transition once it has
+started.
+
+When a transition affecting the <span class='xxx'>transitioning property</span> of a 
+<span class='xxx'>transitioning element</span> is removed or interrupted the <span class='xxx'>cancel</span>
+method of the corresponding <span class='xxx'>Player</span> is called.
+
+When a transition affecting the <span class='xxx'>transitioning property</span> of a 
+<span class='xxx'>transitioning element</span> is reversed the <span class='xxx'>cancel</span>
+method of the corresponding <span class='xxx'>Player</span> is called and a new <span class='xxx'>Player</span> is
+generated as if the transition had just begun.
+
+<h3>CSS Transitions events</h3>
+The <span class='xxx'>transitionend</span> event is triggered to fire each time the
+corresponding <span class='xxx'>Animation</span> enters the <span class='xxx'>after phase</span> during a
+<span class='xxx'>sample</span>.
+</div>
+
+<h2>CSS Animations</h2>
+
+<h3>The CSSKeyframesMap mapping</h3>
+
+Issue: This feature is at risk.
+
+<div spec='html5'>
+
+<pre class='idl' style='display:none'>
+//FIXME: figure out the appropriate thing to do here and remove this!
+
+interface String { };
+</pre>
+    
+<pre class='idl'>
+
+[MapClass(String, AnimationEffect)]
+interface CSSKeyframesMap {
+};
+
+partial interface Document {
+    readonly attribute CSSKeyframesMap keyframes;
+};
+</pre>
+
+</div>
+
+<div spec='css-animations'>
+
+<h4>The CSSKeyframesMap interface</h4>
+
+The <dfn interface>CSSKeyframesMap</dfn> interface defines a map type that can
+be used to store sequences of Keyframes indexed by Strings.
+
+<h4>Document.keyframes</h4>
+
+The <dfn attribute for='Document'>keyframes</dfn> attribute on the
+<a interface spec='html5'>Document</a> interface references a map of type
+<a interface>CSSKeyframesMap</a>.
+
+Note: The <a interface>CSSKeyframesMap</a> enables animations created using the
+Web Animations API to re-use the keyframe rules declared by CSS, and for
+animations declared by CSS to act on <a interface>AnimationEffect</a>s created
+through the API.
+
+Note: The processing defined in this section does not alter the way in which
+keyframes rules are selected when CSS animations are started, unless a name is
+explicitly overridden by setting its value in the map.
+
+When a new <span class='xxx'>@keyframes</span> rule name is encountered in a 
+style sheet, the action taken depends upon the current value stored against the
+name in the <a attribute>keyframes</a> map.
+
+<dl>
+<dt>If the current value has never been set, or has only been set due to 
+style changes:</dt>
+<dd>
+The keyframes defined by the <span class='xxx'>@keyframes</span> rule are
+converted into a <a interface>KeyframeEffect</a> (see 
+<a href='#conversion-of-css-keyframes' section></a>), then stored against the
+name in the <a attribute>keyframes</a> map.
+<dt>Otherwise:
+<dd>
+The rule is ignored.
+</dl>
+
+Issue: Should the KeyframeEffects generated by @keyframes rules be read-only?
+
+When the used <span class='xxx'>@keyframes</span> rule associated with a
+given name changes due to a change in a style sheet, the action taken depends
+upon the current value stored against the name in the 
+<a attribute>keyframes</a> map.
+
+<dl>
+<dt>If the current value has only been set due to style changes:
+<dd>
+The keyframes defined by the new rule are converted into a
+<a interface>KeyframeEffect</a>
+(see <a href='#conversion-of-css-keyframes' section></a>), then stored
+against the name in the <a attribute>keyframes</a> map.
+<dt>Otherwise:
+<dd>The change is ignored.
+</dl>
+
+When the last <span class='xxx'>@keyframes</span> rule for a given name is
+removed from a style sheet, the action taken depends upon the current value
+stored against the name in the <a attribute>keyframes</a>
+map.
+
+<dl>
+<dt>If the current value has only been set due to style changes:
+<dd>
+The value referenced by the <span class='xxx'>@keyframes</span> name is
+cleared from the <a attribute>keyframes</a> map.
+<dt>Otherwise:
+<dd>The removal is ignored.
+</dl>
+
+<h4 id='conversion-of-css-keyframes'>Converting a CSS Keyframes rule into a 
+KeyframeEffect</h4>
+
+A CSS <span class='xxx'>@keyframes</span> rule <em>keyframes</em> is
+converted into a <a interface>KeyframeEffect</a> using the following process:
+
+<ol>
+<li>Initialize an empty list <em>keyframeList</em>.
+<li>For each <em>keyframe</em> in keyframes:
+<ol>
+<li>Create a new dictionary <em>newKeyframe</em>.
+<li>Set <em>newKeyframe</em>'s <span class='xxx'>offset</span> to the offset defined by 
+<em>keyframe</em>.
+<li>If <em>keyframe</em> defines an 'animation-timing-function', set 
+<em>newKeyframe</em>'s <span class='xxx'>easing</span> to the defined 'animation-timing-function'.
+<li>For each <em>property</em> defined in <em>keyframe</em>:
+<ol>
+<li>Set <em>newKeyframe[property]</em> to the value associated with that 
+property in <em>keyframe</em>
+<li>Add <em>property</em> to referencedProperties.
+</ol>
+</ol>
+<li>Add <em>newKeyframe</em> to <em>keyframeList</em>.
+<li>Remove keyframes with duplicated offsets from <em>keyframeList</em>such that
+only the last keyframe to specify a given offset remains.
+<li>Construct a new <a interface>KeyframeEffect</a>, providing 
+<em>keyframeList</em> as the frames parameter.
+</ol>
+
+</div>
+
+<h3>Web Animations Instantiation</h3>
+
+<div spec='css-animations'>
+
+For CSS Animations, mappings into the Web Animations model are established
+pairwise between a specific <a interface>AnimationEffect</a>, the 
+<dfn>animating effect</dfn>, and a specific element, the 
+<dfn>animating element</dfn>.
+
+When a CSS Animation is to be started, the value of 'animation-name' is used
+as an index into the <span class='xxx'>keyframes</span> map, and the matching 
+<a interface>AnimationEffect</a> (if any) is used to instantiate the 
+<span class='xxx'>animating effect</span> by following the procedure defined below 
+(see <a section href='#instantiating-an-animating-effect'></a>).
+
+When a CSS Animation is started an <span class='xxx'>Animation</span> is constructed and 
+associated with a <span class='xxx'>Player</span> on the <span class='xxx'>Document Timeline</span>. The animation
+is configured as follows:
+
+<ul>
+<li>The <span class='xxx'>target element</span> is set to the <span class='xxx'>animating element</span>.
+<li>The <span class='xxx'>start delay</span> is set to the current used value of the
+'animation-delay' property for the <span class='xxx'>animating element</span>.
+<li>The <span class='xxx'>iteration duration</span> is set to the current used value of the 
+'animation-duration' property for the <span class='xxx'>animating element</span>.
+<li>The <span class='xxx'>iteration count</span> is set to the current used value of the 
+'animation-iteration-count' property for the <span class='xxx'>animating element</span>.
+<li>The <span class='xxx'>direction</span> is set to the current used value of the 
+'animation-direction' property for the <span class='xxx'>animating element</span>.
+<li>The <span class='xxx'>fill mode</span> is set to the current used value of the 
+'animation-fill-mode' property for the <span class='xxx'>animating element</span>.
+<li>The <span class='xxx'>animation effect</span> is set to the <span class='xxx'>animating effect</span>
+</ul>
+
+Issue: Deal with animation-play-state
+
+Issue: Explain where we need to cancel the Player for a css animation.
+
+<h3>CSS Animations Events</h3>
+
+The <a event>animationstart</a> event is triggered to fire each time the
+corresponding <span class='xxx'>Animation</span> enters the <span class='xxx'>active phase</span> or
+<span class='xxx'>after phase</span> during a <span class='xxx'>sample</span>.
+
+The <a event>animationiteration</a> event is triggered to fire, on each <span class='xxx'>sample</span>
+where all of the following conditions are met:
+<ol>
+<li>the corresponding <span class='xxx'>Animation</span> is in the <span class='xxx'>active phase</span>
+<li>the corresponding <span class='xxx'>Animation</span> was in the <span class='xxx'>active phase</span> on the
+last <span class='xxx'>sample</span>
+<li>the corresponding <span class='xxx'>Animation</span> has a <span class='xxx'>current iteration</span> which is
+different to the
+<span class='xxx'>current iteration</span> of the last <span class='xxx'>sample</span>.
+</ol>
+
+The <a event>animationend</a> event is triggered to fire each time the
+corresponding <span class='xxx'>Animation</span> enters the <span class='xxx'>after phase</span> during a
+<span class='xxx'>sample</span>.
+
+<h3 id='instantiating-an-animating-effect'>Instantiating the animating effect
+</h3>
+
+The <span class='xxx'>animating effect</span> is instantiated from an 
+<a interface>AnimationEffect</a> (the <em>reference effect</em>) stored in the 
+<a attribute>keyframes</a> attribute using the following process:
+
+Issue: turn this into boring old specificese
+
+<dl>
+<dt>If the <em>reference effect</em> is a KeyframeEffect which was converted 
+from a CSS <a spec='css-animations'>@keyframes</a> rule using the process 
+defined in <a section href='#conversion-of-css-keyframes'></a>:
+<dd>
+<ol>
+<li>The <em>result effect</em> is created as a clone of the 
+<em>reference effect</em>.
+<li>Convert "add" keyframes at an offset of 0 and 1 by snapshotting
+their referenced properties from the computed style of the 
+<span class='xxx'>animating element</span>, then changing the keyframe to a "replace" keyframe.
+<li>Set the <span class='xxx'>easing</span> of all keyframes which do not have an <span class='xxx'>easing</span>
+to the value of 'animation-timing-function'.
+</ol>
+<dt>Otherwise
+<dd> The <span class='xxx'>animating effect</span> is the <em>reference effect</em>.
+
+<h2>Exposure in the Web Animations API</h2>
+
+<span class='xxx'>Player</span>s generated by CSS Animations and CSS Transitions are accessible
+via <span class='xxx'>getAnimationPlayers</span> with the restriction that <span class='xxx'>source</span> will
+point to a read-only <span class='xxx'>TimedItem</span> which disallows changes to its
+<span class='xxx'>specified timing</span> and <span class='xxx'>effect</span>.
+
+Note: The <span class='xxx'>Player</span> remains fully functional. The <span class='xxx'>source</span>,
+<span class='xxx'>playbackRate</span>, <span class='xxx'>currentTime</span>, startTime and play control methods will
+be live and function as normal.
+
+</div>
+
+<div style='display:none'>
+REMOVE ME: Definitions that should be resolved by Web Animations
+
+<dfn>animation</dfn>
+<dfn>player</dfn>
+<dfn>document timeline</dfn>
+<dfn>target element</dfn>
+<dfn>start delay</dfn>
+<dfn>iteration duration</dfn>
+<dfn>timing function</dfn>
+<dfn>animation effect</dfn>
+<dfn>keyframe animation effect</dfn>
+<dfn>keyframes</dfn>
+<dfn>after phase</dfn>
+<dfn>custom player priority</dfn>
+<dfn>cancel</dfn>
+<dfn>getanimationplayers</dfn>
+<dfn>TimedItem</dfn>
+<dfn>source</dfn>
+<dfn>specified timing</dfn>
+<dfn>effect</dfn>
+<dfn>playbackRate</dfn>
+<dfn>currentTime</dfn>
+<dfn interface>keyframeEffect</dfn>
+<dfn>offset</dfn>
+<dfn interface>animationEffect</dfn>
+<dfn>sample</dfn>
+<dfn>easing</dfn>
+<dfn>iteration count</dfn>
+<dfn>direction</dfn>
+<dfn>fill mode</dfn>
+<dfn>current iteration</dfn>
+<dfn>active phase</dfn>
+</div>

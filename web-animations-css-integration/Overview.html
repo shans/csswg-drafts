@@ -1,0 +1,13 @@
+Error running preprocessor, returned code: 1.
+Traceback (most recent call last):
+  File "/sites/api.csswg.org/bikeshed/bikeshed.py", line 5, in <module>
+    bikeshed.main()
+  File "/sites/api.csswg.org/bikeshed/bikeshed/__init__.py", line 157, in main
+    doc.preprocess()
+  File "/sites/api.csswg.org/bikeshed/bikeshed/__init__.py", line 1194, in preprocess
+    self.lines = metadata.parse(md = self.md, lines=self.lines)
+  File "/sites/api.csswg.org/bikeshed/bikeshed/MetadataManager.py", line 452, in parse
+    md.addData(lastKey, line.lstrip())
+  File "/sites/api.csswg.org/bikeshed/bikeshed/MetadataManager.py", line 140, in addData
+    key = key.strip()
+AttributeError: 'NoneType' object has no attribute 'strip'
