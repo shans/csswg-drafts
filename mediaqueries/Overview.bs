@@ -7,7 +7,7 @@ Level: 4
 Status: ED
 ED: http://dev.w3.org/csswg/mediaqueries4/
 TR: http://www.w3.org/TR/mediaqueries-4/
-Editor: Florian Rivoal, Invited Expert, florian@rivoal.net
+Editor: Florian Rivoal, Invited Expert, florian@rivoal.net, http://florian.rivoal.net
 Editor: Tab Atkins Jr., Google, http://xanthir.com/contact/
 Former Editor: Håkon Wium Lie, Opera, howcome@opera.com
 Former Editor: Tantek Çelik, Mozilla, tantek@cs.standard.edu
@@ -170,11 +170,9 @@ Media Queries</h2>
 		matches the media type of the device where the user agent is running, and
 	* the <a>media condition</a> is true.
 
-	Statements regarding media queries in this section assume the
-	<a href="#mq-syntax">syntax section</a> is followed. Media queries that do not
-	conform to the syntax are discussed in the
-	<a href="#error-handling">error handling section</a>. I.e. the syntax takes
-	precedence over requirements in this section.
+	Statements regarding media queries in this section assume the <a href="#mq-syntax">syntax section</a> is followed.
+	Media queries that do not conform to the syntax are discussed in [[#error-handling]].
+	I.e. the syntax takes precedence over requirements in this section.
 
 	<div class="example">
 		Here is a simple example written in HTML:
@@ -190,7 +188,7 @@ Media Queries</h2>
 		<pre>@import url(example.css) screen and (color);</pre>
 	</div>
 
-	User agents should re-evaluate <a>media queries</a> in response to changes in the user environment,
+	User agents must re-evaluate <a>media queries</a> in response to changes in the user environment that they're aware of,
 	for example if the device is tiled from landscape to portrait orientation,
 	and change the behavior of any constructs dependent on those <a>media queries</a> accordingly.
 
@@ -694,10 +692,11 @@ Syntax</h2>
 
 	<pre>
 	<dfn>&lt;media-query></dfn> = <<media-condition>>
-	             | [ not | only ]? <<media-type>> [ and <<media-condition>> ]?
+	             | [ not | only ]? <<media-type>> [ and <<media-condition-without-or>> ]?
 	<dfn>&lt;media-type></dfn> = <<ident>>
 
 	<dfn>&lt;media-condition></dfn> = <<media-not>> | <<media-and>> | <<media-or>> | <<media-in-parens>>
+	<dfn>&lt;media-condition-without-or></dfn> = <<media-not>> | <<media-and>> | <<media-in-parens>>
 	<dfn>&lt;media-not></dfn> = not <<media-in-parens>>
 	<dfn>&lt;media-and></dfn> = <<media-in-parens>> [ and <<media-in-parens>> ]+
 	<dfn>&lt;media-or></dfn> = <<media-in-parens>> [ or <<media-in-parens>> ]+
@@ -713,7 +712,7 @@ Syntax</h2>
 	<dfn>&lt;mf-name></dfn> = <<ident>>
 	<dfn>&lt;mf-value></dfn> = <<number>> | <<dimension>> | <<ident>> | <<ratio>>
 
-	<dfn>&lt;general-enclosed></dfn> = [ <<function-token>> | ( ] <<any-value>>* )
+	<dfn>&lt;general-enclosed></dfn> = [ <<function-token>> <<any-value>> ) ] | ( <<ident>> <<any-value>> )
 	</pre>
 
 	The <<media-type>> production does not include the keywords ''only'', ''not'', ''and'', and ''or''.
@@ -743,33 +742,35 @@ Syntax</h2>
 		</pre>
 	</div>
 
-	Each of the major terms of <<media-condition>> is associated with a boolean result, as follows:
+	Each of the major terms of <<media-condition>> or <<media-condition-without-or>> is associated with a boolean result, as follows:
 
 	<dl>
 		<dt><<media-condition>>
+		<dt><<media-condition-without-or>>
+		<dt><<media-in-parens>>
 		<dd>
 			The result is the result of the child term.
 
 		<dt><<media-not>>
 		<dd>
 			The result is the negation of the <<media-in-parens>> term.
+			The negation of unknown is unknown.
 
 		<dt><<media-and>>
 		<dd>
 			The result is true if all of the <<media-in-parens>> child terms are true,
-			and false otherwise.
+			false if at least one of the <<media-in-parens>> child terms are false,
+			and unknown otherwise.
 
 		<dt><<media-or>>
 		<dd>
-			The result is true if any of the <<media-in-parens>> child terms are true,
-			and false otherwise.
+			The result is false if all of the <<media-in-parens>> child terms are false,
+			true if at least one of the <<media-in-parens>> child terms are true,
+			and unknown otherwise.
 
-		<dt><<media-in-parens>>
+		<dt><<general-enclosed>>
 		<dd>
-			If it contains a <<media-in-parens>> or <<media-feature>> child term,
-			the result is the result of that child term.
-			If it contains a <<general-enclosed>> child term,
-			the result is false.
+			The result is unknown.
 
 			Authors must not use <<general-enclosed>> in their stylesheets.
 			<span class='note'>It exists only for future-compatibility,
@@ -779,6 +780,30 @@ Syntax</h2>
 		<dd>
 			The result is the result of evaluating the specified media feature.
 	</dl>
+
+	If the result of a <a>media query</a> is unknown,
+	it must be treated as false for the purpose of matching.
+
+	<div class="note">
+		Media Queries use a three-value logic where terms can be "true", "false", or "unknown".
+		Specifically, it uses the <a href="http://en.wikipedia.org/wiki/Three-valued_logic#Kleene_and_Priest_logics">Kleene 3-valued logic</a>.
+		In this logic, "unknown" means "either true or false, but we're not sure which yet".
+
+		In general, an unknown value showing up in a formula will cause the formula to be unknown as well,
+		as substituting "true" for the unknown will give the formula a different result than substituting "false".
+		The only way to eliminate an unknown value is to use it in a formula that will give the same result
+		whether the unknown is replaced with a true or false value.
+		This occurs when you have "false AND unknown" (evaluates to false regardless)
+		and "true OR unknown" (evaluates to true regardless).
+
+		This logic was adopted because <<general-enclosed>> needs to be assigned a truth value.
+		In standard boolean logic, the only reasonable value is "false",
+		but this means that ''not unknown(function)'' is true,
+		which can be confusing an unwanted.
+		Kleen's 3-valued logic ensures that unknown things will prevent a <a>media query</a> from matching,
+		unless their value is irrelevant to the final result.
+	</div>
+
 
 <h3 id="error-handling">
 Error Handling</h3>
@@ -971,10 +996,14 @@ orientation</h3>
 	Type: discrete
 	</pre>
 
-	The 'orientation' media feature is ''portrait''
-	when the value of the 'height' media feature is greater than or equal to
-	the value of the 'width' media feature.
-	Otherwise 'orientation' is ''landscape''.
+	<dl dfn-type=value dfn-for="@media/orientation">
+		<dt><dfn>portrait</dfn>
+		<dd>The 'orientation' media feature is ''portrait''
+		when the value of the 'height' media feature is greater than or equal to
+		the value of the 'width' media feature.
+		<dt><dfn>landscape</dfn>
+		<dd>Otherwise 'orientation' is ''landscape''.
+	</dl>
 
 	<div class="example">
 		The following media query tests for “portrait” orientation,
@@ -1501,7 +1530,7 @@ pointer</h3>
 	For accessibility reasons,
 	even on devices whose pointing device can be described as ''fine'',
 	the UA may give a value of ''coarse'' or ''pointer/none'' to this media query,
-	to indicate that the user has difficulties manipulating the input device accurately or at all.
+	to indicate that the user has difficulties manipulating the pointing device accurately or at all.
 
 	<div class="example">
 		<pre>
@@ -1595,9 +1624,52 @@ any-pointer and any-hover</h3>
 	</pre>
 
 	The 'any-pointer' and 'any-hover' media features are identical to the 'pointer' and 'hover' media features,
-	but they correspond to the union of capabilities of all the input devices available to the user.
+	but they correspond to the union of capabilities of all the pointing devices available to the user.
 	More than one of their values can match,
-	if different input devices have different characteristics.
+	if different pointing devices have different characteristics.
+
+	<div class="note">
+	These two media features are best suited to provide refinements over 'hover' and 'pointer',
+	and it is rarely appropriate to use them
+	without having first designed the main style and interaction mode of the page
+	to suit the primary input mechanism.
+	Once that has been taken into account, 'any-hover' and 'any-pointer' can be used
+	to see if some extra conveniences or non essential controls
+	can be offered to users who have additional ways to interact.
+
+	Designing a page that relies on hovering or accurate pointing
+	only because 'any-hover' or 'any-pointer' indicate that an input mechanism with these capabilities is available,
+	is likely to result in a poor experience.
+	</div>
+
+	<div class="example">
+	A number of smart TVs come with a way to control an on-screen cursor,
+	but it is often fairly basic controller which is difficult to operate accurately.
+
+	A browser in such a smart TV would have ''coarse'' as the value of both 'pointer' and 'any-pointer',
+	allowing authors to provide a layout with large and easy to reach click targets.
+
+	The user may also have paired a Bluetooth mouse with the TV,
+	and occasionally use it for extra convenience,
+	but such the mouse is not the main way the TV is operated.
+	'pointer' still matches ''coarse'', while 'any-pointer' now both matches ''coarse'' and ''fine''.
+
+	Switching to small click targets based on the fact that ''(any-pointer: fine)'' is now true
+	would not be appropriate.
+	It would not only surprise the user
+	by providing an experience out of line with what they expect on a TV,
+	but may also be quite inconvenient:
+	the mouse, not being the primary way to control the TV, may be out of reach,
+	hidden under one of the cushions on the sofa...
+
+	By contrast, consider scrolling on the same TV.
+	Scrollbars are difficult to manipulate without an accurate pointing device.
+	Having prepared an alternative way to indicate that there is more content to be seen
+	based on ''(pointer: coarse)'' being true,
+	an author may want to still show the scrollbars in addition if ''(any-pointer: fine)'' is true,
+	or to hide them altogether to reduce visual clutter if ''(any-pointer: fine)'' is false.
+	</div>
+
 
 <!--
 ████████ ██    ██ ██     ██
@@ -1849,6 +1921,18 @@ Custom Media Queries</h2>
 	and false otherwise.
 	If <dfn value for="@custom-media">true</dfn> or <dfn value for="@custom-media">false</dfn> is given,
 	the <a>custom media query</a> evaluates to true or false, respectively.
+
+	A ''@custom-media'' rule can refer to other <a>custom media queries</a>.
+	However, loops are forbidden,
+	and a <a>custom media query</a> must not be defined in terms of itself or
+	of another <a>custom media query</a> that directly or indirectly refers to it.
+	Any such attempt of defining a <a>custom media query</a> with a circular dependency
+	must cause all the <a>custom media queries</a> in the loop to fail to be defined.
+
+	Note: For error handling purposes,
+	an undefined <a>media feature</a> is different from
+	a <a>media feature</a> that evaluates to false.
+	See <a href="#error-handling">Error Handling</a> for details.
 
 	<div class='example'>
 		For example, if a responsive site uses a particular breakpoint in several places,

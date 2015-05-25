@@ -9,17 +9,23 @@ ED: http://dev.w3.org/csswg/css-writing-modes-3/
 TR: http://www.w3.org/TR/css-writing-modes-3/
 Previous Version: http://www.w3.org/TR/2014/CR-css-writing-modes-3-20140320/
 !Issue Tracking: <a href="http://www.w3.org/Style/CSS/Tracker/products/30">http://www.w3.org/Style/CSS/Tracker/products/30</a>
-Editor: fantasai, Invited Expert, http://fantasai.inkedblade.net/contact
-Editor: Koji Ishii, Google
-Former Editor: Shinyu Murakami, <a href="http://www.antenna.co.jp/">Antenna House</a>, murakami@antenna.co.jp
-Former Editor: Paul Nelson, <a href="http://www.microsoft.com/">Microsoft</a>, paulnel@microsoft.com
-Former Editor: Michel Suignard, <a href="http://www.microsoft.com/">Microsoft</a>, michelsu@microsoft.com
+Editor: Elika J. Etemad / fantasai, Invited Expert, http://fantasai.inkedblade.net/contact
+Editor: Koji Ishii, Google, kojiishi@gmail.com
+Former Editor: Shinyu Murakami, Antenna House, murakami@antenna.co.jp
+Former Editor: Paul Nelson, Microsoft, paulnel@microsoft.com
+Former Editor: Michel Suignard, Microsoft, michelsu@microsoft.com
 Abstract: CSS Writing Modes Level 3 defines CSS support for various international writing modes, such as left-to-right (e.g. Latin or Indic), right-to-left (e.g. Hebrew or Arabic), bidirectional (e.g. mixed Latin and Arabic) and vertical (e.g. Asian scripts).
+At Risk: The ''sideways-left'' of 'text-orientation'
 At Risk: The ''use-glyph-orientation'' of 'text-orientation'
 At Risk: The ''digits'' value of 'text-combine-upright'.
 At Risk: The look-ahead/look-behind sequencing rules for 'text-combine-upright'.
 Ignored Terms: glyph orientation, *-left, *-right, *-top, *-bottom, block containers, text-combine-mode
-Link Defaults: css21 (property) display/min-height/max-height/min-width/max-width/clip, css-text-3 (property) letter-spacing, css-text-decor-3 (property) text-decoration, svg2 (property) glyph-orientation-vertical/glyph-orientation-horizontal
+Link Defaults: css21 (property) display/min-height/max-height/min-width/max-width/clip/left/right/bottom/top, css-text-3 (property) letter-spacing, css-text-decor-3 (property) text-decoration, svg2 (property) glyph-orientation-vertical/glyph-orientation-horizontal
+Use <i> Autolinks: yes
+</pre>
+<pre class=link-defaults>
+spec:css21; type:property; text:float
+spec:css21; type:property; text:clear
 </pre>
 
 <style>
@@ -151,7 +157,7 @@ Values</h3>
   explicitly.
 
 
-<a id="bidi" title=''></a>
+<span id="bidi"></span>
 <h2 id="text-direction">
 Inline Direction and Bidirectionality</h2>
 
@@ -177,43 +183,21 @@ Inline Direction and Bidirectionality</h2>
     as well as explicit controls for embeddings and overrides. CSS relies
     on this algorithm to achieve proper bidirectional rendering.
 
-  <p>User agents that support bidirectional text must apply the Unicode
-    bidirectional algorithm to every sequence of inline-level boxes uninterrupted
-    by any block boundary or
-    &ldquo;<a href="http://www.unicode.org/reports/tr9/#Bidirectional_Character_Types">bidi type B</a>&rdquo;
-    <dfn export>forced paragraph break</dfn>.
-    This sequence forms the <dfn export title="bidi paragraph">paragraph</dfn> unit
-    in the bidirectional algorithm.
-
   <p>Two CSS properties, 'direction' and 'unicode-bidi',
     provide explicit embedding, isolation, and override controls in the CSS layer.
     Because the base directionality of a text depends on the structure and
     semantics of the document, the 'direction' and 'unicode-bidi' properties
     should in most cases be used only to map bidi information in the markup
     to its corresponding CSS styles.
-    <strong>If a document language provides markup features to control
-    bidi, authors and users should use those features instead</strong> and not
-    specify CSS rules to override them.</p>
 
-  <p>In CSS,
-    the paragraph embedding level must be set
-    (following <a href="http://www.unicode.org/reports/tr9/#HL1">UAX9 clause HL1</a>)
-    according to the 'direction' property of the paragraph's containing block
-    rather than by the heuristic given in steps
-    <a href="http://www.unicode.org/reports/tr9/#P2">P2</a> and
-    <a href="http://www.unicode.org/reports/tr9/#P2">P3</a>
-    of the Unicode algorithm.
-    There is, however, one exception:
-    when the computed 'unicode-bidi' of the paragraph's containing block is ''plaintext'',
-    the Unicode heuristics in P2 and P3 are used as described in [[!UAX9]],
-    without the HL1 override.
-
-  <p>The HTML specifications ([[HTML401]], section 8.2, and [[HTML5]], section 10.3.5) define
+  <p class="note">
+    The HTML specifications ([[HTML401]], section 8.2, and [[HTML5]], section 10.3.5) define
     bidirectionality behavior for HTML elements.</p>
 
-  <p class="note">Because HTML UAs can turn off CSS styling, we advise HTML
-    authors to use the HTML <code>dir</code> attribute and &lt;bdo&gt; element to
-    ensure correct bidirectional layout in the absence of a style sheet.</p>
+  <p class="advisement">
+    <strong>If a document language provides markup features to control
+    bidi, authors and users should use those features instead</strong>
+    and not specify CSS rules to override them.
 
 <h3 id="direction">
 Specifying Directionality: the 'direction' property</h3>
@@ -230,6 +214,11 @@ Specifying Directionality: the 'direction' property</h3>
   Animatable: no
   Canonical order: n/a
   </pre>
+
+  <p class="advisement">Because HTML UAs can turn off CSS styling,
+    <strong>we recommend HTML authors to use the HTML <code>dir</code> attribute and &lt;bdo&gt; element</strong>
+    to ensure correct bidirectional layout in the absence of a style sheet.
+    <strong>Authors <em>should not</em> use 'direction' in HTML documents.</strong>
 
   <p>This property specifies the inline base direction or directionality
     of any bidi paragraph, embedding, isolate, or override established by the box.
@@ -283,6 +272,12 @@ Embeddings and Overrides: the 'unicode-bidi' property</h3>
   Computed value: specified value
   </pre>
 
+  <p class="advisement">Because HTML UAs can turn off CSS styling,
+    <strong>we recommend HTML authors to use the HTML <code>dir</code> attribute, &lt;bdo&gt; element,
+    and appropriate distinction of text-level vs. grouping-level HTML element types</strong>
+    to ensure correct bidirectional layout in the absence of a style sheet.
+    <strong>Authors <em>should not</em> use 'unicode-bidi' in HTML documents.</strong>
+
   <p>Normally (i.e. when 'unicode-bidi' is ''normal'')
     an inline box is transparent to the unicode bidi algorithm;
     content is ordered as if the box's boundaries were not there.
@@ -331,17 +326,10 @@ Embeddings and Overrides: the 'unicode-bidi' property</h3>
       The direction of this embedding level is given by the 'direction'
       property. Inside the box, reordering is done implicitly.
 
-      <p>Following clause <a href="http://www.unicode.org/reports/tr9/#HL3">HL3</a> [[!UAX9]],
-      this corresponds to inserting
-      a LRE (U+202A), for ''direction: ltr'',
-      or RLE (U+202B), for ''direction: rtl'',
-      at the start of the inline box
-      and a PDF (U+202C) at the end of the box.
-
       <p class="note">This value has no effect on boxes that are not inline.
 
     <dt><dfn value for=unicode-bidi>isolate</dfn></dt>
-    <dd>On an inline box, this <dfn export id=bidi-isolate title="bidi-isolate|bidi-isolated|bidi isolation|isolation">bidi-isolates</dfn> its contents.
+    <dd>On an inline box, this <dfn export id=bidi-isolate lt="bidi-isolate|bidi-isolated|bidi isolation|isolation">bidi-isolates</dfn> its contents.
       This is similar to a directional embedding (and increases the embedding level accordingly)
       except that each sequence of inline-level boxes
       uninterrupted by any block boundary or <i>forced paragraph break</i>
@@ -360,13 +348,6 @@ Embeddings and Overrides: the 'unicode-bidi' property</h3>
       However, <i>forced paragraph breaks</i> within the box still create
       a corresponding break in the containing paragraph.
 
-      <p>Following clause <a href="http://www.unicode.org/reports/tr9/#HL3">HL3</a> [[!UAX9]],
-      this corresponds to inserting
-      an LRI (U+2066), for ''direction: ltr'',
-      or RLI (U+2067), for ''direction: rtl'',
-      at the start of the inline box,
-      and a PDI (U+2069) at the end of the box. [[!UAX9]]
-
       <p class="note">This value has no effect on boxes that are not inline.
 
     <dt><dfn value for=unicode-bidi>bidi-override</dfn></dt>
@@ -379,26 +360,12 @@ Embeddings and Overrides: the 'unicode-bidi' property</h3>
       For a block container, the override is applied
       to an anonymous inline box that surrounds all of its content.
 
-      <p>Following clause <a href="http://www.unicode.org/reports/tr9/#HL3">HL3</a> [[!UAX9]],
-      this corresponds to inserting
-      an LRO (U+202D), for ''direction: ltr'',
-      or RLO (U+202E), for ''direction: rtl'',
-      at the start of the inline box
-      and a PDF (U+202C) at the end of the box. [[!UAX9]]
-
     <dt><dfn value for=unicode-bidi>isolate-override</dfn></dt>
     <dd>This combines the <i>isolation</i> behavior of ''isolate''
       with the <i>directional override</i> behavior of ''bidi-override'':
       to surrounding content, it is equivalent to ''isolate'',
       but within the box content is ordered as if ''bidi-override'' were specified.
-
-      <p>Following clause <a href="http://www.unicode.org/reports/tr9/#HL3">HL3</a> [[!UAX9]],
-      for inline boxes this corresponds to inserting
-      an FSI (U+2068) followed by
-      an LRO (U+202D), for ''direction: ltr'',
-      or RLO (U+202E), for ''direction: rtl'' at the start of the box,
-      and a PDF (U+202C) followed by PDI (U+2069) at the end of the box. [[!UAX9]]
-      For other boxes, this value is exactly equivalent to ''bidi-override''.
+      It effectively nests a <a>directional override</a> inside an <a>isolated sequence</a>.
 
     <dt><dfn value for=unicode-bidi>plaintext</dfn></dt>
     <dd><p>This value behaves as ''isolate'' except that for the purposes of
@@ -408,12 +375,76 @@ Embeddings and Overrides: the 'unicode-bidi' property</h3>
       is determined by following the heuristic in rules P2 and P3
       of the Unicode bidirectional algorithm
       (rather than by using the 'direction' property of the box).
-
-      <p>Following cause <a href="http://www.unicode.org/reports/tr9/#HL3">HL3</a> [[!UAX9]],
-      for inline boxes this corresponds to inserting
-      an FSI (U+2068) at the start of the box,
-      and a PDI (U+2069) at the end of the box. [[!UAX9]]
   </dl>
+
+  <p>Following Unicode Bidirectional Algorithm clause HL3 [[!UAX9]],
+  values other than ''normal''
+  effectively insert the corresponding Unicode bidi control codes
+  into the text stream at the start and end of the inline element
+  before passing the paragraph to the Unicode bidirectional algorithm for reordering.
+  (See [[#bidi-control-codes]].)
+
+  <table class="data">
+    <caption>Bidi control codes injected by 'unicode-bidi'
+    at the start/end of ''display: inline'' boxes</caption>
+    <colgroup span=1></colgroup>
+    <colgroup span=2></colgroup>
+    <colgroup span=2></colgroup>
+    <thead>
+      <tr><th rowspan=3 scope=col>'unicode-bidi' value
+          <th colspan=4>'direction' value
+      <tr>
+          <th colspan=2>''ltr''
+          <th colspan=2>''rtl''
+      <tr>
+          <th>start
+          <th>end
+          <th>start
+          <th>end
+    <tbody>
+      <tr>
+          <th scope=row>''normal''
+          <td>&mdash;
+          <td>&mdash;
+          <td>&mdash;
+          <td>&mdash;
+      <tr>
+          <th scope=row>''embed''
+          <td>LRE (U+202A)
+          <td>PDF (U+202C)
+          <td>RLE (U+202B)
+          <td>PDF (U+202C)
+      <tr>
+          <th scope=row>''isolate''
+          <td>LRI (U+2066)
+          <td>PDI (U+2069)
+          <td>RLI (U+2067)
+          <td>PDI (U+2069)
+      <tr>
+          <th scope=row>''bidi-override''*
+          <td>LRO (U+202D)
+          <td>PDF (U+202C)
+          <td>RLO (U+202E)
+          <td>PDF (U+202C)
+      <tr>
+          <th scope=row>''isolate-override''*
+          <td>FSI,LRO (U+2068,U+202D)
+          <td>PDF,PDI (U+202C,U+2069)
+          <td>FSI,RLO (U+2068,U+202E)
+          <td>PDF,PDI (U+202C,U+2069)
+      <tr>
+          <th scope=row>''plaintext''
+          <td>FSI (U+2068)
+          <td>PDI (U+2069)
+          <td>FSI (U+2068)
+          <td>PDI (U+2069)
+    <tfoot>
+      <tr>
+          <td colspan=5>
+          <small>* The LRO/RLO+PDF pairs are also applied
+          to the root inline box if these values of 'unicode-bidi'
+          were specified on a <a>block container</a>.
+  </table>
 
   <p class=note>Because the 'unicode-bidi' property does not inherit,
   setting ''bidi-override'' or ''plaintext'' on a block box will
@@ -425,48 +456,16 @@ Embeddings and Overrides: the 'unicode-bidi' property</h3>
     property even in the case of ''plaintext'', and thus does not affect
     'direction'-dependent layout calculations.
 
-  <p>The final order of characters within each <i>bidi paragraph</i> is the
-    same as if the bidi control codes had been added as described above,
-    markup had been stripped, and the resulting character sequence had
-    been passed to an implementation of the Unicode bidirectional
-    algorithm for plain text that produced the same line-breaks as the
-    styled text.
-
-  <p>In this process, replaced elements with ''display: inline''
-    are treated as neutral characters,
-    unless their 'unicode-bidi' property is either ''embed'' or ''bidi-override'',
-    in which case they are treated as strong characters
-    in the 'direction' specified for the element.
-    All other atomic inline-level boxes are treated as neutral characters
-    always.</p>
-
-  <p>If an inline box is broken around a <i>bidi paragraph</i> boundary
-    (e.g. if split by a block or <i>forced paragraph break</i>),
-    then the <a href="http://www.unicode.org/reports/tr9/#HL3">HL3</a> bidi control codes assigned to the end of the box
-    are also added before the interruption
-    and the codes assigned to the start of the box are also added after it.
-    (In other words, any embedding levels, isolates, or overrides started by the box
-    are closed at the paragraph break and reopened on the other side of it.)
-
-  <div class="example">
-    <p>For example, where &lt;BR/&gt; is a <i>forced paragraph break</i>
-    the bidi ordering is identical between
-    <pre>&lt;para>...&lt;i1>&lt;i2>...&lt;BR/>...&lt;/i2>&lt;/i1>...&lt;/para></pre>
-    <p>and
-    <pre>&lt;para>...&lt;i1>&lt;i2>...&lt;/i2>&lt;/i1>&lt;BR/>&lt;i1>&lt;i2>...&lt;/i2>&lt;/i1>...&lt;/para></pre>
-    <p>for all values of 'unicode-bidi' on inline elements &lt;i1&gt; and &lt;i2&gt;.
-  </div>
-
-  <p class="note">
+  <p class=note>
     Because the Unicode algorithm has a limit of 125 levels of embedding,
-    care should be taken not to use 'unicode-bidi'
-    with a value other than ''normal'' unless appropriate.
+    care should be taken not to overuse 'unicode-bidi' values other than ''normal''.
     In particular, a value of ''inherit''
-    should be used with extreme caution. However, for elements that are,
+    should be used with extreme caution in deeply nested inline markup.
+    However, for elements that are,
     in general, intended to be displayed as blocks, a setting of
     ''unicode-bidi: isolate'' is preferred to keep the element together
-    in case the 'display' is changed to ''inline''
-    (see example below).</p>
+    in case the 'display' is changed to ''display/inline''
+    (see example below).
 
 <h3 id="bidi-example">
 Example of Bidirectional Text</h3>
@@ -522,7 +521,7 @@ english9 english10 english11 13WERBEH 12WERBEH
 
 english14 english15 english16
 
-english17 <i title=''>20WERBEH english19 18WERBEH</i>
+english17 <i lt=''>20WERBEH english19 18WERBEH</i>
     </pre>
 
     <p>The first <code>&lt;section></code> element is a block with a right-to-left base direction,
@@ -556,7 +555,7 @@ english17 <i title=''>20WERBEH english19 18WERBEH</i>
 <!-- -->english14 english15
 <!-- -->english16
 
-<!-- -->english17 <i title=''>18WERBEH
+<!-- -->english17 <i lt=''>18WERBEH
 <!-- -->20WERBEH english19</i>
     </pre>
 
@@ -570,8 +569,92 @@ english17 <i title=''>20WERBEH english19 18WERBEH</i>
       is usually suppressed to avoid having to display a hyphen in the middle of a line.
   </div><!-- example -->
 
-<h3 id="bidi-box-model">
-Box model for inline boxes in bidirectional context</h3>
+<h3 id="bidi-algo">
+Applying the Bidirectional Reordering Algorithm</h3>
+
+  <p>User agents that support bidirectional text must apply the Unicode
+    bidirectional algorithm to every sequence of inline-level boxes uninterrupted
+    by any block boundary or
+    &ldquo;<a href="http://www.unicode.org/reports/tr9/#Bidirectional_Character_Types">bidi type B</a>&rdquo;
+    <dfn export>forced paragraph break</dfn>.
+    This sequence forms the <dfn export lt="bidi paragraph">paragraph</dfn> unit
+    in the bidirectional algorithm.
+
+<h4 id="bidi-para-direction">
+Bidi Paragraph Embedding Levels</h4>
+
+  <p>In CSS,
+    the paragraph embedding level must be set
+    (following <a href="http://www.unicode.org/reports/tr9/#HL1">UAX9 clause HL1</a>)
+    according to the 'direction' property of the paragraph's containing block
+    rather than by the heuristic given in steps
+    <a href="http://www.unicode.org/reports/tr9/#P2">P2</a> and
+    <a href="http://www.unicode.org/reports/tr9/#P2">P3</a>
+    of the Unicode algorithm.
+
+  <p>There is, however, one exception:
+    when the computed 'unicode-bidi' of the paragraph's containing block is ''plaintext'',
+    the Unicode heuristics in P2 and P3 are used as described in [[!UAX9]],
+    without the HL1 override.
+
+<h4 id="bidi-control-codes">
+CSS&ndash;Unicode Bidi Control Translation, Text Reordering</h4>
+
+  <p>The final order of characters within each <i>bidi paragraph</i> is the
+    same as if the bidi control codes had been added as described for 'unicode-bidi' (above),
+    markup had been stripped, and the resulting character sequence had
+    been passed to an implementation of the Unicode bidirectional
+    algorithm for plain text that produced the same line-breaks as the
+    styled text.
+
+  <p class="note">
+    Note that bidi control codes in the source text are still honored,
+    and might not correspond to the document tree structure.
+    This can split inlines or interfere with bidi start/end control pairing
+    in interesting ways.
+
+<h4 id="bidi-atomic-inlines">
+Bidi Treatment of Atomic Inlines</h4>
+
+  <p>In this process, replaced elements with ''display: inline''
+    are treated as neutral characters,
+    unless their 'unicode-bidi' property is either ''embed'' or ''bidi-override'',
+    in which case they are treated as strong characters
+    in the 'direction' specified for the element.
+    (This is so that, in case the replaced element falls back to rendering inlined text content,
+    its bidi effect on the surrounding text is consistent with its replaced rendering.)
+
+  <p>All other atomic inline-level boxes are treated as neutral characters
+    always.</p>
+
+<h4 id="bidi-embedding-breaks">
+Paragraph Breaks Within Embeddings and Isolates</h4>
+
+  <p>If an inline box is broken around a <i>bidi paragraph</i> boundary
+    (e.g. if split by a block or <i>forced paragraph break</i>),
+    then the <a href="http://www.unicode.org/reports/tr9/#HL3">HL3</a> bidi control codes assigned to the end of the box
+    are also added before the interruption
+    and the codes assigned to the start of the box are also added after it.
+    (In other words, any embedding levels, isolates, or overrides started by the box
+    are closed at the paragraph break and reopened on the other side of it.)
+
+  <div class="example">
+    <p>For example, where &lt;BR/&gt; is a <i>forced paragraph break</i>
+    the bidi ordering is identical between
+    <pre>&lt;para>...&lt;i1>&lt;i2>...&lt;BR/>...&lt;/i2>&lt;/i1>...&lt;/para></pre>
+    <p>and
+    <pre>&lt;para>...&lt;i1>&lt;i2>...&lt;/i2>&lt;/i1>&lt;BR/>&lt;i1>&lt;i2>...&lt;/i2>&lt;/i1>...&lt;/para></pre>
+    <p>for all values of 'unicode-bidi' on inline elements &lt;i1&gt; and &lt;i2&gt;.
+  </div>
+
+  <p class="note">
+    Note that this behavior is applied by CSS for CSS-declared bidi controls
+    applied to the box tree;
+    it does not apply to Unicode's bidi formatting controls,
+    which are defined to terminate their effect at the end of the bidi paragraph.
+
+<h4 id="bidi-box-model">
+Reordering-induced Box Fragmentation</h4>
 
   <p>Since bidi reordering can split apart and reorder text that is
     logically contiguous, bidirectional text can cause an inline box
@@ -701,6 +784,7 @@ Block Flow Direction: the 'writing-mode' property</h3>
   Animatable: no
   Canonical order: n/a
   </pre>
+  <p class="issue"><a href="https://lists.w3.org/Archives/Public/www-style/2015Apr/0387.html">Proposal to defer orthogonal table cells</a> not resolved yet
 
   <p>This property specifies whether lines of text are laid out horizontally
     or vertically and the direction in which blocks progress. Possible
@@ -726,29 +810,6 @@ Block Flow Direction: the 'writing-mode' property</h3>
     the 'writing-mode' property also determines whether the line boxes' orientation (and thus the <i>writing mode</i>)
     is horizontal or vertical.
     The 'text-orientation' property then determines how text is laid out within the line box.
-
-  <p>The <dfn export id="principal-writing-mode">principal writing mode</dfn> of the
-    document is determined by the 'writing-mode' and 'direction' values
-    specified on the root element. This writing mode is used, for example,
-    to determine the default page progression direction. (See [[CSS3PAGE]].)
-    Like 'direction', the 'writing-mode' value of the root element is also
-    propagated to the initial containing block and sets the block flow
-    direction of the initial block formatting context.
-
-  <p class="note">Note that the 'writing-mode' property of the HTML BODY
-    element is <em>not</em> propagated to the viewport. That special
-    behavior only applies to the background and overflow properties.
-
-  <p>If a box has a different block flow direction than its containing
-    block:
-  <ul>
-   <li>If the box has a specified 'display' of ''inline'', its 'display'
-     computes to ''inline-block''. [[!CSS21]]
-   <li>If the box has a specified 'display' of ''run-in'', its 'display'
-     computes to ''block''. [[!CSS21]]
-   <li>If the box is a block container, then it establishes a new block
-     formatting context.
-  </ul>
 
   <p>The content of replaced elements do not rotate due to the writing mode:
     images, for example, remain upright. However replaced content
@@ -808,24 +869,35 @@ Block Flow Direction: the 'writing-mode' property</h3>
             src="vertical-form.png"></p>
   </div>
 
-  <div class="example">
-    <p>In this example, 'writing-mode' sets the list markers upright
-      using the ''::marker'' pseudo-element. Vertical alignment ensures
-      that longer numbers will still align with the right of the first
-      line of text. [[CSS3LIST]]
-    <pre>::marker { writing-mode: horizontal-tb;
-<!-- -->            vertical-align: text-top;
-<!-- -->            color: blue; }</pre>
-    <div class="figure">
-      <p><img alt="Diagram showing list markers of '1.', '2.', '3.' sitting
-                   upright atop sideways vertical Latin list item text."
-              class="example" src="vertical-horizontal-list-markers.png">
-      <p class="caption">Example of horizontal list markers in a vertical list</p>
-    </div>
-  </div>
+  <p>If a box has a different block flow direction than its containing
+    block:
+  <ul>
+   <li>If the box has a specified 'display' of ''display/inline'', its 'display'
+     computes to ''inline-block''. [[!CSS21]]
+   <li>If the box has a specified 'display' of ''run-in'', its 'display'
+     computes to ''display/block''. [[!CSS21]]
+   <li>If the box is a block container, then it establishes a new block
+     formatting context.
+  </ul>
+
+  <p>The <dfn export id="principal-writing-mode">principal writing mode</dfn> of the
+    document is determined by the 'writing-mode' and 'direction' values
+    specified on the root element. This writing mode is used, for example,
+    to determine the default page progression direction. (See [[CSS3PAGE]].)
+    Like 'direction', the 'writing-mode' value of the root element is also
+    propagated to the initial containing block and sets the block flow
+    direction of the initial block formatting context.
+
+  <p class="note">Note that the 'writing-mode' property of the HTML BODY
+    element is <em>not</em> propagated to the viewport. That special
+    behavior only applies to the background and overflow properties.
+
+  <p class="issue">propagation of 'direction' from &lt;body&gt; <a href="https://readable-email.org/list/www-style/topic/re-css-writing-modes-css21-propagation-of-direction-from-body">www-style</a>
 
 <h4 id="svg-writing-mode">
 SVG1.1 'writing-mode' Values</h4>
+
+  <p class="issue">SVG should inherit writing-mode or not? <a href="https://lists.w3.org/Archives/Public/www-style/2015May/0150.html">www-style</a>
 
   <p>SVG1.1 [[!SVG11]] defines some additional values: ''lr'',
     ''lr-tb'', ''rl'', ''rl-tb'', ''tb'', and ''tb-rl''.
@@ -982,19 +1054,19 @@ Baseline Alignment</h3>
       The glyphs are aligned by matching up the positions of the dominant
       baseline in their corresponding fonts.
     <li><strong>Aligning a child inline-level box within its parent.</strong>
-      For the 'vertical-align' value of ''baseline'', child is aligned to
+      For the 'vertical-align' value of ''vertical-align/baseline'', child is aligned to
       the parent by matching the parent's dominant baseline to the same
       baseline in the child. (E.g. if the parent's dominant baseline is
       alphabetic, then the child's alphabetic baseline is matched to the
       parent's alphabetic baseline, even if the child's dominant baseline
       is something else.)
       For values of ''sub'', ''super'', ''&lt;length&gt;'', and
-      ''&lt;percentage&gt;'', the baselines are aligned as for ''baseline'',
+      ''&lt;percentage&gt;'', the baselines are aligned as for ''vertical-align/baseline'',
       but the child is shifted according to the offset given by its
       'vertical-align' value.
       <div class="example">
         <p>Given following sample markup:
-        <pre>&lt;p&gt;&lt;span class="outer"&gt;Ap &lt;span class="inner"&gt;<i title=''>ji</i>&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</pre>
+        <pre>&lt;p&gt;&lt;span class="outer"&gt;Ap &lt;span class="inner"&gt;<i lt=''>ji</i>&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</pre>
         <p>And the following style rule:
         <pre>span.inner { font-size: .75em; }</pre>
         <p>The baseline tables of the parent (<code>.outer</code>) and the child
@@ -1140,6 +1212,7 @@ Orienting Text: the 'text-orientation' property</h3>
       <p>For the purposes of bidi reordering, this value causes all
       characters to be treated as strong LTR.
       This value causes the used value of 'direction' to be ''ltr''.
+      <p class="issue"><a href="https://lists.w3.org/Archives/Public/www-style/2015May/0004.html">Proposal to weaken to should</a>
     <dt><dfn>sideways-right</dfn></dt>
     <dd><p>In vertical writing modes, this causes text to be set as if
       in a horizontal layout, but rotated 90&deg; clockwise.
@@ -1161,6 +1234,12 @@ Orienting Text: the 'text-orientation' property</h3>
       <p>Similarly, if an inline child of the box has a 'text-orientation'
       value other than ''sideways-left'', an analogous transformation (and
       bidi isolation) is applied.
+      <p class="note">This value is at-risk and may be dropped during CR.
+      <p class="issue"><a href="https://lists.w3.org/Archives/Public/www-style/2015Apr/0026.html">float interaction when line-left and line-right swap</a>
+      <p class="note">If this value is not supported, implementation should drop support for
+        either ''vertical-lr'' or ''sideways'' as well,
+        since the combination of the two requires ''sideways-left'' layout.
+      <p class="issue">Need to mark ''vertical-lr'' at risk
     <dt><dfn>sideways</dfn></dt>
     <dd><p>This value is equivalent to ''sideways-right'' in ''vertical-rl''
       writing mode and equivalent to ''sideways-left'' in ''vertical-lr''
@@ -1250,6 +1329,8 @@ Vertical Typesetting and Font Features</h4>
       (E.g. the OpenType ''vert'' feature must be enabled.)
       Furthermore, characters from horizontal cursive scripts (such as Arabic)
       are shaped in their isolated forms when typeset upright.
+      <p class="issue"><a href="https://lists.w3.org/Archives/Public/www-style/2015May/0004.html">Proposal to weaken to should</a>,
+        see also ''upright''.
 
       <p class="note">Note that even when typeset "upright",
         some glyphs should appear rotated.
@@ -1357,7 +1438,7 @@ Abstract Box Terminology</h2>
   <dl export>
   <dt><dfn>physical</dfn>
     <dd>Interpreted relative to the page, independent of writing mode.
-    The <dfn title="physical direction">physical directions</dfn> are <dfn>left</dfn>, <dfn>right</dfn>, <dfn>top</dfn>, and
+    The <dfn lt="physical direction">physical directions</dfn> are <dfn>left</dfn>, <dfn>right</dfn>, <dfn>top</dfn>, and
     <dfn>bottom</dfn>.
   <dt><dfn><a href="#logical-directions">flow-relative</a></dfn>
     <dd>Interpreted relative to the flow of content.
@@ -1371,8 +1452,8 @@ Abstract Box Terminology</h2>
   </dl>
 
   <p export>The <dfn>physical dimensions</dfn> are <dfn>width</dfn> and <dfn>height</dfn>,
-    which correspond to measurements along the <dfn title="x-axis|horizontal axis">x-axis</dfn>
-    (<dfn>horizontal dimension</dfn>) and <dfn title="y-axis|vertical axis">y-axis</dfn> (<dfn>vertical dimension</dfn>),
+    which correspond to measurements along the <dfn lt="x-axis|horizontal axis">x-axis</dfn>
+    (<dfn>horizontal dimension</dfn>) and <dfn lt="y-axis|vertical axis">y-axis</dfn> (<dfn>vertical dimension</dfn>),
     respectively. <a href="#abstract-axes">Abstract dimensions</a>
     are identical in both flow-relative and line-relative terms, so there
     is only one set of these terms.
@@ -1395,19 +1476,21 @@ Abstract Dimensions</h3>
       <dd>The dimension parallel to the flow of text within a line, i.e.
         the <i>horizontal dimension</i> in horizontal writing modes, and
         the <i>vertical dimension</i> in vertical writing modes.</dd>
-    <dt><dfn title="block axis | block-axis">block axis</dfn></dt>
+    <dt><dfn lt="block axis | block-axis">block axis</dfn></dt>
       <dd>The axis in the block dimension,
       i.e. the <i>vertical axis</i> in horizontal writing modes
       and the <i>horizontal axis</i> in vertical writing modes.</dd>
-    <dt><dfn title="inline axis | inline-axis">inline axis</dfn></dt>
+    <dt><dfn lt="inline axis | inline-axis">inline axis</dfn></dt>
       <dd>The axis in the inline dimension, i.e. the <i>horizontal
         axis</i> in horizontal writing modes and the <i>vertical axis</i>
         in vertical writing modes.</dd>
-    <dt><dfn title="block size | block-size">block-size</dfn>
+    <dt><dfn lt="block size | block-size">block size</dfn>
+    <dt id=extent><dfn>logical height</dfn>
       <dd>A measurement in the block dimension:
         refers to the physical height (vertical dimension) in horizontal writing modes,
         and to the physical width (horizontal dimension) in vertical writing modes.
-    <dt><dfn title="inline size | inline-size">inline-size</dfn>
+    <dt><dfn lt="inline size | inline-size">inline size</dfn>
+    <dt id=measure><dfn>logical width</dfn>
       <dd>A measurement in the inline dimension:
         refers to the physical width (horizontal dimension) in horizontal writing modes,
         and to the physical height (vertical dimension) in vertical writing modes.
@@ -1416,7 +1499,7 @@ Abstract Dimensions</h3>
 <h3 id="logical-directions">
 Flow-relative Directions</h3>
 
-  <p>The <dfn export title="flow-relative direction">flow-relative directions</dfn>,
+  <p>The <dfn export lt="flow-relative direction">flow-relative directions</dfn>,
     <i>block-start</i>, <i>block-end</i>, <i>inline-start</i>, and <i>inline-end</i>,
     are defined relative to the flow of content on the page.
     In an <abbr title="left-to-right">LTR</abbr>
@@ -1516,7 +1599,7 @@ Line-relative Directions</h3>
   <p>In addition to a line-relative “top” and “bottom” to map things like
     'vertical-align: top', CSS also needs to refer to a line-relative
     “left” and “right” in order to map things like ''text-align: left''.
-    Thus there are four <dfn export title="line-relative direction">line-relative directions</dfn>, which are
+    Thus there are four <dfn export lt="line-relative direction">line-relative directions</dfn>, which are
     defined relative to the <i>line orientation</i> as follows:
 
   <dl export>
@@ -1558,6 +1641,23 @@ Line-relative Directions</h3>
         alt="Line orientation with ‘text-orientation: sideways-left’"></a>
       <p class="caption">Line orientation with ''text-orientation: sideways-left''</p>
     </div>
+  </div>
+
+  <div class="note">
+    <div class="sidefigure">
+      <p><img src="vertical-upright-baseline.svg"
+        alt="Baseline of an upright glyph is drawn vertically from the top center"
+        width=80>
+      <p class="caption">Vertical baseline of an upright glyph
+    </div>
+    When ''text-orientation: upright'',
+    the baseline is still vertical,
+    and the vertical baseline in the font is used,
+    or the vertical baseline is synthesized if the font does not provide.
+  <p>
+    Since the baseline is vertical,
+    the definitions for ''mixed'' or ''sideways-right'' above still applies; i.e.,
+    <a>line-over</a> is on right, and <a>line-under</a> is on left.
   </div>
 
 <h3 id="logical-to-physical">
@@ -1728,14 +1828,14 @@ Principles of Layout in Vertical Writing Modes</h3>
       and the first row on the right (the <i>block-start</i> side).
       The table's 'margin-right' and 'margin-left' would collapse
       with margins before (on the right) and after (on the left) the table, respectively,
-      and if the table had ''auto'' values for 'margin-top' and 'margin-bottom'
+      and if the table had ''margin/auto'' values for 'margin-top' and 'margin-bottom'
       it would be centered vertically within its block flow.
     <div class="figure">
       <p><a href="diagrams/vertical-table.svg">
         <img alt="Diagram of a vertical-rl mixed rtl table in a
         vertical block formatting context, showing the ordering of rows,
         cells, and columns as described above."
-              class="example" src="diagrams/vertical-table.png"></a>
+              src="diagrams/vertical-table.png"></a>
       <p class="caption">Table in ''vertical-rl'' RTL writing mode</p>
     </div>
 
@@ -1796,16 +1896,17 @@ Dimensional Mapping</h3>
   <p>For example, the calculation rules in
     <a href="http://www.w3.org/TR/CSS21/visudet.html#Computing_widths_and_margins">CSS2.1 Section 10.3</a>
     are used for the inline dimension measurements:
-    they apply to the <i>inline-size</i> (which could be either the physical width or physical height)
+    they apply to the <i>inline size</i> (which could be either the physical width or physical height)
     and to the <i>inline-start</i> and <i>inline-end</i> margins, padding, and border.
     Likewise the calculation rules in
         <a href="http://www.w3.org/TR/CSS21/visudet.html#Computing_heights_and_margins">CSS2.1 Section 10.6</a>
-    are used in the block dimension: they apply to the <i>block-size</i> and to
-    the <i>block-start</i> and <i>block-end</i> margins, padding, and border. [[!CSS21]]
+    are used in the block dimension:
+    they apply to the <i>block size</i>
+    and to the <i>block-start</i> and <i>block-end</i> margins, padding, and border. [[!CSS21]]
 
   <p>As a corollary, percentages on the margin and padding properties,
     which are always calculated with respect to the containing block
-    width in CSS2.1, are calculated with respect to the <em><i>inline-size</i></em>
+    width in CSS2.1, are calculated with respect to the <em><i>inline size</i></em>
     of the containing block in CSS3.
 
 <h3 id="orthogonal-flows">
@@ -1830,7 +1931,7 @@ Orthogonal Flows</h3>
 
   <p>
     When a box has a writing mode that is perpendicular to its containing block
-    it is said to be in, or establish, an <dfn export title="establish an orthogonal flow | orthogonal flow | orthogonal">orthogonal flow</dfn>.
+    it is said to be in, or establish, an <dfn export lt="establish an orthogonal flow | orthogonal flow | orthogonal">orthogonal flow</dfn>.
 
   <p>
     To handle this case, CSS layout calculations are divided into
@@ -1840,18 +1941,18 @@ Orthogonal Flows</h3>
     <li>
       In the sizing phase—calculating the width and height of the
       box—the dimensions of the box and the containing block
-      are mapped to the <i>inline-size</i> and <i>block-size</i> and calculations are performed
+      are mapped to the <i>inline size</i> and <i>block size</i> and calculations are performed
       accordingly using the writing mode of
       the box establishing the <i>orthogonal flow</i>.
     <li>
       In the positioning phase—calculating the positioning offsets,
       margins, borders, and padding—the dimensions of the box and
-      its containing block are mapped to the <i>inline-size</i> and <i>block-size</i>
+      its containing block are mapped to the <i>inline size</i> and <i>block size</i>
       and calculations are performed according to the writing mode of the
       <em>containing block</em> of the box establishing the <i>orthogonal flow</i>.
   </ul>
 
-  <p>Since ''auto'' margins are resolved consistent with the containing
+  <p>Since ''margin/auto'' margins are resolved consistent with the containing
     block's writing mode, a box establishing an <i>orthogonal flow</i> can,
     once sized, be aligned or centered within its containing block just
     like other block-level boxes by using auto margins.
@@ -1865,12 +1966,12 @@ Orthogonal Flows</h3>
     </div>
 
     <p>
-      For example, if a vertical block is placed inside a horizontal
-      block, then when calculating the physical height (which is the
-      <i>inline-size</i>) of the child block the physical height of the parent
-      block is used as the child's containing block <i>inline-size</i>, even
-      though the physical height is the <i>block-size</i>, not the <i>inline-size</i>, of
-      the parent block.
+      For example, if a vertical block is placed inside a horizontal block,
+      then when calculating the physical height (which is the <i>inline size</i>)
+      of the child block the physical height of the parent block is used
+      as the child's containing block <i>inline size</i>,
+      even though the physical height is the <i>block size</i>, not the <i>inline size</i>,
+      of the parent block.
 
     <p>
       On the other hand,
@@ -1882,27 +1983,31 @@ Orthogonal Flows</h3>
   </div>
 
 <h4 id="orthogonal-auto">
-Auto-sizing in Orthogonal Flows</h4>
+Available Sizes in Orthogonal Flows</h4>
 
-  <p>It is common in CSS for a containing block to have a definite
-    <i>inline-size</i>, but not a definite <i>block-size</i>. This typically happens in
-    CSS2.1 when a containing block has an ''height/auto'' height, for
-    example: its width is given by the calculations in
+  <p>It is common in CSS for a containing block to have a definite <i>inline size</i>,
+    but not a definite <i>block size</i>.
+    This typically happens in CSS2.1
+    when a containing block has an ''height/auto'' height,
+    for example: its width is given by the calculations in
     <a href="http://www.w3.org/TR/CSS21/visudet.html#blockwidth">10.3.3</a>,
-    but its <i>block-size</i> depends on its contents. In such cases the
-    <i>available inline-size</i> is defined as the <i>inline-size</i> of the
-    containing block; but the <i>available block-size</i>, which
-    would otherwise be the <i>block-size</i> of the containing block, is
-    infinite.
+    but its <i>block size</i> depends on its contents.
+    In such cases the <i>available inline size</i> is defined
+    as the <i>inline size</i> of the containing block;
+    but the <i>available block size</i>,
+    which would otherwise be the <i>block size</i> of the containing block,
+    is infinite.
 
   <p>Putting a box in an <i>orthogonal flow</i> allows the opposite to happen:
-    for the <i>available block-size</i> to be defined, but the <i>available
-    inline-size</i> to be indefinite. In such cases a percentage of the
-    containing block’s <i>inline-size</i> cannot be defined, and <i>inline-axis</i>
-    computations cannot be resolved. In these cases, the initial
-    containing block's size is used as a <i>fallback</i> variable
-    in place of the <i>available inline-size</i> for calculations that
-    require a definite <i>available inline-size</i>.
+    for the <i>available block size</i> to be definite,
+    but the <i>available inline size</i> to be indefinite.
+    In such cases a percentage of the containing block’s <i>inline size</i> cannot be defined,
+    and <i>inline axis</i> computations cannot be resolved.
+    In these cases, the initial containing block's size is used
+    as a <i>fallback</i> variable in place of the <i>available inline size</i>
+    for calculations that require a definite <i>available inline size</i>.
+
+  <p class="issue">What is this section trying to say? I can't remember. :(
 
   <p>See [[!CSS3-SIZING]] for further details on CSS sizing terminology and concepts.
 
@@ -1910,8 +2015,9 @@ Auto-sizing in Orthogonal Flows</h4>
 Auto-sizing Block Containers in Orthogonal Flows</h4>
 
   <p>
-    If a box establishing an <i>orthogonal flow</i> is a block container or multi-column element,
-    for the case where the box's <i>inline-size</i> is ''width/auto'':
+    If a box establishing an <i>orthogonal flow</i> is
+    either a block container or a multi-column element,
+    for the case where the box's <i>inline size</i> is ''width/auto'':
 
   <ol>
     <li><strong>Calculate the used 'column-width':</strong>
@@ -1931,8 +2037,8 @@ Auto-sizing Block Containers in Orthogonal Flows</h4>
         <dd>the box’s <i>inline-axis</i> <a href="http://www.w3.org/TR/css3-sizing/#terms">fill-available fit</a>
         into the smaller of
         <ul>
-          <li>the box’s <i>available inline-size</i>
-          <li>the initial containing block’s <i>inline-size</i>
+          <li>the box’s <i>available inline size</i>
+          <li>the initial containing block’s <i>inline size</i>
       </dl>
 
       <div class="note">
@@ -1940,13 +2046,13 @@ Auto-sizing Block Containers in Orthogonal Flows</h4>
           <img src="auto-multicol.svg" width=200
             alt="Diagram of automatically triggered multi-column preventing T-shaped documents">
         </div>
-        Note that this automatically triggers multi-column flow on all block containers.
+        <strong>Note that this requirement automatically triggers multi-column flow on all block containers.</strong>
         This is so that overflowing content, instead of continuing off the side of the containing block,
         is wrapped into columns in the flow direction of the containing block,
         thus avoiding T-shaped documents.
-        Authors can control the measure of these columns by setting 'column-width',
-        or disable this behavior by setting the <i>inline-size</i> property
-        to a non-''width/auto'' value such as ''max-content''.
+        Authors can control the <i>inline size</i> of these columns by setting 'column-width',
+        or disable this behavior by setting the <i>inline size</i> property
+        to a non-''width/auto'' value such as ''width/max-content''.
         <br style="clear:both;">
       </div>
 
@@ -1962,14 +2068,14 @@ Auto-sizing Block Containers in Orthogonal Flows</h4>
     </ul>
 
     <li><strong>Calculate the used column length:</strong>
-      If the computed <i>block-size</i> is ''auto''
+      If the computed <i>block size</i> is ''height/auto''
       and the specified value of at least one of 'column-count' and 'column-width' was ''column-width/auto'',
-      use the box’s <i>block-size</i> (if that is <i>definite</i>),
-      else the <i>fill-available block-size</i> of the box (if that is <i>definite</i>),
-      else the box’s <i>max-content block-size</i>.
+      use the box’s <i>block size</i> (if that is <i>definite</i>),
+      else the <i>fill-available block size</i> of the box (if that is <i>definite</i>),
+      else the box’s <i>max-content block size</i>.
       Otherwise follow the normal rules for sizing a multi-column element.
       <p class="issue">
-        Should we factor in the box’s min-content block-size in this formula,
+        Should we factor in the box’s <i>min-content block size</i> in this formula,
         so that e.g. a large image will not overflow the box,
         but cause the box to overflow the containing block?
 
@@ -1980,34 +2086,52 @@ Auto-sizing Block Containers in Orthogonal Flows</h4>
   </ol>
 
   <p>
-    The used <i>inline-size</i> of the resulting multi-column element is then calculated:
+    The used <i>inline size</i> of the resulting multi-column element is then calculated:
     if the content neither line-wraps nor fragments within the multi-column element,
-    then the used <i>inline-size</i> is the <i>max-content inline-size</i> of the box's contents;
+    then the used <i>inline size</i> is the <i>max-content inline size</i> of the box's contents;
     else it is calculated from the used 'column-width', 'column-count', and 'column-gap'.
 
   <p>
-    The used <i>block-size</i> of the box is either the used column <i>block-size</i>
+    The used <i>block size</i> of the box is either the used column length
     (if multiple columns were used)
-    or the <i>max-content block-size</i> of the content.
-
-  <p>
+    or the <i>max-content block size</i> of the content
+    (if only one column was used).
     If the UA does not support CSS Multi-column Layout [[!CSS3COL]],
-    the UA may instead calculate the box's <i>inline-size</i> assuming an infinite <i>block-size</i>,
+    the UA may instead calculate the box's <i>block size</i> assuming an infinite <i>available block size</i>,
     thus laying out its contents into a single column.
-    Note that this can, however, result in content that is clipped
-    or otherwise inaccessible.
+    (Note that this can, however, result in content that is clipped
+    or otherwise inaccessible if it overflows its containing block.)
+
+  <p class="issue"><a href="https://lists.w3.org/Archives/Public/www-style/2015Apr/0212.html">Defer proposal in ML</a> not resolved yet</p>
+
+  <div class="note" id="orthogonal-shrink-to-fit">
+  <p>
+    Note that this section requires that
+    when an auto-sized child box establishes an orthogonal flow,
+    the used size of the child
+    is calculated to fit its content;
+    and this resulting content-based size
+    is used as input to the <i>inline-axis</i> <var>min-content</var> and <var>max-content</var> of the parent.
+  <p>
+    This means that when applying shrink-to-fit formula to a box
+    such as an inline-block, float, or table-cell,
+    if its child establishes an orthogonal flow,
+    the calculation dependency must be changed so that
+    the sizing phase of the child runs first and
+    its used <i>block size</i> becomes an input to the <i>inline-size</i> shrink-to-fit formula of the parent.
+  </div>
 
 <h4 id="orthogonal-layout">
 Auto-sizing Other Orthogonal Flow Roots</h4>
 
   <p>In order to limit the length of lines,
   block containers have special auto-sizing behavior (defined <a href="#auto-multicol">above</a>)
-  when their <i>available inline-size</i> is infinite
+  when their <i>available inline size</i> is infinite
   (which typically occurs when they establish an <i>orthogonal flow</i>).
 
-  <p>Other layout models simply lay out into the infinite <i>available inline-size</i>
+  <p>Other layout models simply lay out into the infinite <i>available inline size</i>
   at their <i>max-content size</i>.
-  However, they pass through the infinite <i>available inline-size</i>
+  However, they pass through the infinite <i>available inline size</i>
   to block containers they contain,
   possibly triggering that special auto-sizing behavior on those block containers
   even though they do not themselves establish an <i>orthogonal flow</i>.
@@ -2016,10 +2140,10 @@ Auto-sizing Other Orthogonal Flow Roots</h4>
     <p>For example,
       a table or <i>flex container</i> establishing an <i>orthogonal flow</i>
       is laid out into its given <i>available space</i>.
-      If its <i>available inline-size</i> is infinite,
+      If its <i>available inline size</i> is infinite,
       this effectively lays the box out at its <i>max-content size</i>.
       However, any of its table cells or <i>flex items</i> that are <i>block containers</i>
-      are laid out assuming infinite <i>available inline-size</i>
+      are laid out assuming infinite <i>available inline size</i>
       and so behave accordingly.
   </div>
 
@@ -2104,7 +2228,7 @@ Line-Relative Mappings</h3>
 
   <p>The <i>line-right</i> and <i>line-left</i> directions are calculated
     with respect to the writing mode of the box and used
-    to interpret the ''left'' and ''right'' values of the
+    to interpret the <css>left</css> and <css>right</css> values of the
     following properties:
   <ul>
     <li>the 'text-align' property [[!CSS21]]
@@ -2112,8 +2236,8 @@ Line-Relative Mappings</h3>
 
   <p>The <i>line-right</i> and <i>line-left</i> directions are calculated
     with respect to the writing mode of the <em>containing
-    block</em> of the box and used to interpret the ''left''
-    and ''right'' values of the following properties:
+    block</em> of the box and used to interpret the <css>left</css>
+    and <css>right</css> values of the following properties:
   <ul>
     <li>the 'float' property [[!CSS21]]
     <li>the 'clear' property [[!CSS21]]
@@ -2164,25 +2288,25 @@ Table Caption Mappings: the 'caption-side' keywords</h3>
     <dfn value for='caption-side'>block-start</dfn> and <dfn value for='caption-side'>block-end</dfn>,
     which position the caption before and after the table box, respectively.
     For tables with ''horizontal-tb'' writing mode,
-    they are equivalent to the existing ''top'' and ''bottom'' values, respectively. [[!CSS21]]
+    they are equivalent to the existing ''caption-side/top'' and ''caption-side/bottom'' values, respectively. [[!CSS21]]
 
   <p class='note'>For implementations that support the ''top-outside''
     and ''bottom-outside'' model, corresponding ''start-outside'' and
     ''end-outside'' are similarly introduced.
 
-  <p>Implementations that support the ''top'' and ''bottom'' values
+  <p>Implementations that support the ''caption-side/top'' and ''caption-side/bottom'' values
     of the 'caption-side' property but do not support side captions
-    (i.e. ''left'' and ''right'' captions in horizontal writing modes)
-    must treat both ''top'' and ''bottom'' as <a value>block-start</a>,
+    (i.e. ''caption-side/left'' and ''captionright'' captions in horizontal writing modes)
+    must treat both ''caption-side/top'' and ''captionbottom'' as <a value>block-start</a>,
     when the table is in a vertical writing mode.
 
   <p>For implementations that do support side captions
-    (i.e. the ''left'' and ''right'' values from the obsolete CSS&nbsp;2.0 specification [[CSS2]]),
-    this module also introduces the ''inline-start'' and ''inline-end'' values,
+    (i.e. the ''caption-side/left'' and ''caption-side/right'' values from the obsolete CSS&nbsp;2.0 specification [[CSS2]]),
+    this module also introduces the inline-start and inline-end values,
     which behave similarly and which position the
     caption on the <i>inline-start</i> and <i>inline-end</i> sides of the table box,
     calculated with respect to the writing mode of the table box.
-    For such implementations, the ''top'' and ''bottom'' values must place the
+    For such implementations, the ''caption-side/top'' and ''caption-side/bottom'' values must place the
     caption on the top and bottom sides of the table box, respectively.
 
   <p class="note">The CSS2.0 side caption model had some
@@ -2325,8 +2449,8 @@ Horizontal-in-Vertical Composition: the 'text-combine-upright' property</h3>
     <div class="figure">
       <p><img alt="Diagram of tate-chu-yoko, showing the two digits of a date
                    set halfwidth side-by-side in a vertical column of text"
-              class="example" src="tate-chu-yoko.png">
-      <p class="caption">Example of horizontal-in-vertical <i lang="ja" title=''>tate-chu-yoko</i></p>
+              src="tate-chu-yoko.png">
+      <p class="caption">Example of horizontal-in-vertical <i lang="ja" lt=''>tate-chu-yoko</i></p>
     </div>
 
     <p>The figure is the result of the rules</p>
@@ -2338,7 +2462,7 @@ Horizontal-in-Vertical Composition: the 'text-combine-upright' property</h3>
 <!-- -->&lt;date&gt;&#x5E73;&#x6210;20&#x5E74;4&#x6708;16&#x65E5;&#x306B;&lt;/date&gt;
     </pre>
 
-    <p>In Japanese, this effect is known as <i lang="ja" title=''>tate-chu-yoko</i>.
+    <p>In Japanese, this effect is known as <i lang="ja" lt=''>tate-chu-yoko</i>.
   </div>
 
   <div class="example">
@@ -2350,8 +2474,8 @@ Horizontal-in-Vertical Composition: the 'text-combine-upright' property</h3>
       <p><img alt="Rendering of the above markup with 'text-combine-upright: digits':
                    the first two digits of the number are rendered as tate-chu-yoko
                    while the rest of the number is rendered sideways."
-              class="example" src="bad-tate-chu-yoko.png">
-      <p class="caption">Example of mis-applied <i lang="ja" title=''>tate-chu-yoko</i></p>
+              src="bad-tate-chu-yoko.png">
+      <p class="caption">Example of mis-applied <i lang="ja" lt=''>tate-chu-yoko</i></p>
     </div>
   </div>
 
@@ -2507,14 +2631,14 @@ Full-width Characters</h5>
 
   <p class="note">
     Properties that affect glyph selection,
-    such as the <a property>font-variant</a> and <a property>font-feature-settings</a> properties defined in [CSS3-FONTS],
+    such as the <a property>font-variant</a> and <a property>font-feature-settings</a> properties defined in [[CSS3-FONTS]],
     can potentially affect the selection of variants for characters included in combined text runs.
     Authors are advised to use these properties with care when 'text-combine-upright' is also used.
 
 <h2 class="no-num" id="changes">Changes</h2>
   <h3 class="no-num" id="changes-201311">
   Changes since the <a href="http://www.w3.org/TR/2014/CR-css-writing-modes-3-20140320/">March
-  2014 CSS Writing Modes Module Level 3 Candidate Recommendation</h3>
+  2014 CSS Writing Modes Module Level 3 Candidate Recommendation</a></h3>
   <ul>
     <li>Fixed orthogonal flows auto-sizing rules to better handle shrink-wrapping.
   </ul>
@@ -2572,33 +2696,7 @@ Characters and Properties</h2>
     properties from the first combining character in the sequence.
   </ul>
 
-<h2 id="bidi-html" class=no-num>
-Appendix B: Bidi Rules for HTML 4</h2>
-
-<p>The style sheet rules that would achieve the bidi behaviors specified
-in [[HTML401]] for the HTML Strict doctype are given below:
-  <pre>
-/* HTML dir attribute creates an embedding */
- * NOTE: HTML5 prescribes isolation in place of embedding
- *       (Isolation was not possible at the time HTML4 was written.)
- */
-[dir="ltr"]    { direction: ltr; unicode-bidi: embed; }
-[dir="rtl"]    { direction: rtl; unicode-bidi: embed; }
-
-/* BDO element creates an override */
-bdo[dir="ltr"]  { direction: ltr; unicode-bidi: bidi-override; }
-bdo[dir="rtl"]  { direction: rtl; unicode-bidi: bidi-override; }
-
-/* HTML4.01:8.2.6 - preserve bidi behavior if 'display' is changed */
-html, body,
-div, address, blockquote, p,
-ul, ol, li, dl, dt, dd,
-fieldset, form,
-h1, h2, h3, h4, h5, h6,
-{ unicode-bidi: isolate; }
-  </pre>
-
-<h2 class="no-num" id="script-orientations">Appendix C:
+<h2 class="no-num" id="script-orientations">Appendix B:
 Vertical Scripts in Unicode</h2>
   <p><em>This section is informative.</em></p>
 

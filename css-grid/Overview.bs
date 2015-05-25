@@ -18,8 +18,8 @@ Former editor: Alex Mogilevsky, Microsoft Corporation, alexmog@microsoft.com
 Former editor: Phil Cupp, Microsoft Corporation, pcupp@microsoft.com
 !Issues list: <a href="https://www.w3.org/Bugs/Public/buglist.cgi?product=CSS&amp;component=Grid+Layout&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED">In Bugzilla</a>
 Abstract: This CSS module defines a two-dimensional grid-based layout system, optimized for user interface design. In the grid layout model, the children of a grid container can be positioned into arbitrary slots in a flexible or fixed predefined layout grid.
-Ignored Terms: containing block, <positive-integer>, <ident>, auto, grid-*-start, grid-*-end, flex factor, flex factors, block formatting context, grid-auto-position
-Link Defaults: css21 (property) margin/min-height/max-height/min-width/max-width, css-align-3 (dfn) alignment container/alignment subject/box alignment properties, css-align-3 (value) stretch/baseline, css-position-3 (property) left
+Ignored Terms: containing block, <positive-integer>, <ident>, auto, grid-*-start, grid-*-end, flex factor, flex factors, block formatting context, grid-auto-position, min size property, max size property
+Link Defaults: css21 (property) margin/min-height/max-height/min-width/max-width, css-align-3 (dfn) alignment container/alignment subject/box alignment properties, css-align-3 (value) stretch/baseline, css-position-3 (property) left, css-position-3 (property) position, css-writing-modes-3 (dfn) start/end
 At Risk: the ''grid-template-rows/subgrid'' value of 'grid-template-columns' and 'grid-template-rows', and its component parts individually
 </pre>
 
@@ -55,6 +55,10 @@ dd:last-child {
 dl.phase {
 	padding-left: .5em;
 	border-left: .5em #e0e0e0 solid;
+}
+#grid-property-breakdown tr:nth-child(3) td {
+	width: 25%;
+	border-style: solid;
 }
 </style>
 
@@ -177,13 +181,12 @@ Adapting Layouts to Available Space</h3>
 		 * the ending grid line, which establishes bounds for the part. */
 		#title    { grid-column: 1; grid-row: 1 }
 		#score    { grid-column: 1; grid-row: 3 }
-		#stats    { grid-column: 1; grid-row: 2; justify-self: start }
+		#stats    { grid-column: 1; grid-row: 2; align-self: start }
 		#board    { grid-column: 2; grid-row: 1 / span 2; }
-		#controls { grid-column: 2; grid-row: 3; align-self: center }
+		#controls { grid-column: 2; grid-row: 3; justify-self: center }
 		</pre>
 
 		<pre class="lang-markup">
-
 			&lt;div id="grid">
 			  &lt;div id="title">Game Title&lt;/div>
 			  &lt;div id="score">Score&lt;/div>
@@ -200,18 +203,18 @@ Source-Order Independence</h3>
 	<figure class="sidefigure">
 		<img alt="Image: An arrangement suitable for portrait orientation." src="images/game-portrait.png" />
 
-		<figcaption>An arrangement suitable for ''portrait'' orientation.</figcaption>
+		<figcaption>An arrangement suitable for “portrait” orientation.</figcaption>
 	</figure>
 
 	<figure class="sidefigure">
 		<img alt="Image: An arrangement suitable for landscape orientation." src="images/game-landscape.png" />
 
-		<figcaption>An arrangement suitable for ''landscape'' orientation.</figcaption>
+		<figcaption>An arrangement suitable for “landscape“ orientation.</figcaption>
 	</figure>
 
 	Continuing the prior example,
 	the author also wants the game to adapt to the space available on traditional computer monitors, handheld devices, or tablet computers.
-	Also, the game should optimize the placement of the components when viewed either in landscape or portrait orientation (Figures 4 and 5).
+	Also, the game should optimize the placement of the components when viewed either in portrait or landscape orientation (Figures 4 and 5).
 	By combining grid layout with media queries,
 	the author is able to use the same semantic markup,
 	but rearrange the layout of elements independent of their source order,
@@ -221,63 +224,64 @@ Source-Order Independence</h3>
 	This allows the author to avoid rewriting rules for <a>grid items</a>
 	as the grid’s definition changes.
 
-	<pre class="example">
-		&lt;style type="text/css">
-		  @media (orientation: portrait) {
+	<div class="example">
+		<pre class="lang-css">
+		@media (orientation: portrait) {
 			#grid {
-			  display: grid;
+				display: grid;
 
-			  /* The rows, columns and areas of the grid are defined visually
-			   * using the grid-template-areas property.  Each string is a row, and
-			   * each word an area.  The number of words in a string
-			   * determines the number of columns. Note the number of words
-			   * in each string must be identical. */
-			  grid-template-areas: "title stats"
-								   "score stats"
-								   "board board"
-								   "ctrls ctrls";
+				/* The rows, columns and areas of the grid are defined visually
+				* using the grid-template-areas property.  Each string is a row,
+				* and each word an area.  The number of words in a string
+				* determines the number of columns. Note the number of words
+				* in each string must be identical. */
+				grid-template-areas: "title stats"
+				                     "score stats"
+				                     "board board"
+				                     "ctrls ctrls";
 
-			  /* Columns and rows created with the template property can be
-			   * assigned a sizing function with the grid-template-columns
-			   * and grid-template-rows properties. */
-			  grid-template-columns: auto minmax(min-content, 1fr);
-			  grid-template-rows: auto auto minmax(min-content, 1fr) auto
+				/* Columns and rows created with the template property can be
+				* assigned a sizing function with the grid-template-columns
+				* and grid-template-rows properties. */
+				grid-template-columns: auto minmax(min-content, 1fr);
+				grid-template-rows: auto auto minmax(min-content, 1fr) auto
 			}
-		  }
+		}
 
-		  @media (orientation: landscape) {
+		@media (orientation: landscape) {
 			#grid {
-			  display: grid;
+				display: grid;
 
-			  /* Again the template property defines areas of the same name,
-			   * but this time positioned differently to better suit a
-			   * landscape orientation. */
-			  grid-template-areas: "title board"
-								   "stats board"
-								   "score ctrls";
+				/* Again the template property defines areas of the same name,
+				* but this time positioned differently to better suit a
+				* landscape orientation. */
+				grid-template-areas: "title board"
+				                     "stats board"
+				                     "score ctrls";
 
-			  grid-template-columns: auto minmax(min-content, 1fr);
-			  grid-template-rows: auto minmax(min-content, 1fr) auto
+				grid-template-columns: auto minmax(min-content, 1fr);
+				grid-template-rows: auto minmax(min-content, 1fr) auto
 			}
-		  }
+		}
 
-		  /* The grid-area property places a grid item into a named
-		   * region (area) of the grid. */
-		  #title    { grid-area: title }
-		  #score    { grid-area: score }
-		  #stats    { grid-area: stats }
-		  #board    { grid-area: board }
-		  #controls { grid-area: ctrls }
-		&lt;/style>
-
+		/* The grid-area property places a grid item into a named
+		* region (area) of the grid. */
+		#title    { grid-area: title }
+		#score    { grid-area: score }
+		#stats    { grid-area: stats }
+		#board    { grid-area: board }
+		#controls { grid-area: ctrls }
+		</pre>
+		<pre class="lang-markup">
 		&lt;div id="grid">
-		  &lt;div id="title">Game Title&lt;/div>
-		  &lt;div id="score">Score&lt;/div>
-		  &lt;div id="stats">Stats&lt;/div>
-		  &lt;div id="board">Board&lt;/div>
-		  &lt;div id="controls">Controls&lt;/div>
+			&lt;div id="title">Game Title&lt;/div>
+			&lt;div id="score">Score&lt;/div>
+			&lt;div id="stats">Stats&lt;/div>
+			&lt;div id="board">Board&lt;/div>
+			&lt;div id="controls">Controls&lt;/div>
 		&lt;/div>
-	</pre>
+		</pre>
+	</div>
 
 
 <h3 id='grid-layering'>
@@ -306,60 +310,70 @@ Grid Layering of Elements</h3>
 	which snaps to various positions along the track
 	as the 'grid-template-columns' property of the <a>grid container</a> is updated.
 
-	<pre class="example">
-		&lt;style type="text/css">
-		  #grid {
+	<div class="example">
+		<pre class="lang-css">
+		#grid {
 			display: grid;
 
 			/* The grid-template-columns and rows properties also support
-			 * naming grid lines which can then be used to position grid
-			 * items.  The line names are assigned on either side of a column
-			 * or row sizing function where the line would logically exist. */
+			* naming grid lines which can then be used to position grid
+			* items.  The line names are assigned on either side of a column
+			* or row sizing function where the line would logically exist. */
 			grid-template-columns:
-			  (start)        auto
-			  (track-start)  0.5fr
-			  (thumb-start)  auto
-			  (fill-split)   auto
-			  (thumb-end)    0.5fr
-			  (track-end)    auto
-			  (end);
-		  }
+				[start]        auto
+				[track-start]  0.5fr
+				[thumb-start]  auto
+				[fill-split]   auto
+				[thumb-end]    0.5fr
+				[track-end]    auto
+				[end];
+		}
 
-		  /* The grid-placement properties accept named lines. Below the
-		   * lines are referred to by name. Beyond any
-		   * semantic advantage, the names also allow the author to avoid
-		   * renumbering the grid-column-start and grid-row-start properties of the
-		   * grid items.  This is similar to the concept demonstrated in the
-		   * prior example with the grid-template-areas property during orientation
-		   * changes, but grid lines can also work with layered grid items
-		   * that have overlapping areas of different shapes like the thumb
-		   * and track parts  in this example. */
-		  #lower-label { grid-column-start: start }
-		  #track       { grid-column: track-start / track-end; align-self: center }
-		  #upper-label { grid-column-end: end; }
+		/* The grid-placement properties accept named lines. Below the
+		* lines are referred to by name. Beyond any
+		* semantic advantage, the names also allow the author to avoid
+		* renumbering the grid-column-start and grid-row-start properties of the
+		* grid items.  This is similar to the concept demonstrated in the
+		* prior example with the grid-template-areas property during orientation
+		* changes, but grid lines can also work with layered grid items
+		* that have overlapping areas of different shapes like the thumb
+		* and track parts in this example. */
+		#lower-label { grid-column-start: start }
+		#track       { grid-column: track-start / track-end; justify-self: center }
+		#upper-label { grid-column-end: end; }
 
-		  /* Fill parts are drawn above the track so set z-index to 5. */
-		  #lower-fill  { grid-column: track-start / fill-split;
-						 align-self: end;
-						 z-index: 5 }
-		  #upper-fill  { grid-column: fill-split / track-end;
-						 align-self: start;
-						 z-index: 5 }
+		/* Fill parts are drawn above the track so set z-index to 5. */
+		#lower-fill  { grid-column: track-start / fill-split;
+		               justify-self: end;
+		               z-index: 5 }
+		#upper-fill  { grid-column: fill-split / track-end;
+		               justify-self: start;
+		               z-index: 5 }
 
-		  /* Thumb is the topmost part; assign it the highest z-index value. */
-		  #thumb       { grid-column: thumb-start / thumb-end; z-index: 10 }
-		&lt;/style>
-
+		/* Thumb is the topmost part; assign it the highest z-index value. */
+		#thumb       { grid-column: thumb-start / thumb-end; z-index: 10 }
+		</pre>
+		<pre class="lang-markup">
 		&lt;div id="grid">
-		  &lt;div id="lower-label">Lower Label&lt;/div>
-		  &lt;div id="upper-label">Upper Label&lt;/div>
-		  &lt;div id="track">Track&lt;/div>
-		  &lt;div id="lower-fill">Lower Fill&lt;/div>
-		  &lt;div id="upper-fill">Upper Fill&lt;/div>
-		  &lt;div id="thumb">Thumb&lt;/div>
+			&lt;div id="lower-label">Lower Label&lt;/div>
+			&lt;div id="upper-label">Upper Label&lt;/div>
+			&lt;div id="track">Track&lt;/div>
+			&lt;div id="lower-fill">Lower Fill&lt;/div>
+			&lt;div id="upper-fill">Upper Fill&lt;/div>
+			&lt;div id="thumb">Thumb&lt;/div>
 		&lt;/div>
-	</pre>
+		</pre>
+	</div>
 
+<!--
+ ██████   ███████  ██    ██  ██████  ████████ ████████  ████████  ██████
+██    ██ ██     ██ ███   ██ ██    ██ ██       ██     ██    ██    ██    ██
+██       ██     ██ ████  ██ ██       ██       ██     ██    ██    ██
+██       ██     ██ ██ ██ ██ ██       ██████   ████████     ██     ██████
+██       ██     ██ ██  ████ ██       ██       ██           ██          ██
+██    ██ ██     ██ ██   ███ ██    ██ ██       ██           ██    ██    ██
+ ██████   ███████  ██    ██  ██████  ████████ ██           ██     ██████
+-->
 
 <h2 id='grid-concepts'>
 Grid Layout Concepts and Terminology</h2>
@@ -371,9 +385,9 @@ Grid Layout Concepts and Terminology</h2>
 	that divides the <a>grid container</a>’s space into <a>grid areas</a>,
 	into which <a>grid items</a> (representing the <a>grid container</a>’s content) can be placed.
 	There are two sets of <a>grid lines</a>:
-	one set defining <dfn export title="grid column | column">columns</dfn>
+	one set defining <dfn export lt="grid column | column">columns</dfn>
 	that run along the <a href="http://www.w3.org/TR/css3-writing-modes/#block-axis-">block axis</a> (the <dfn export>column axis</dfn>),
-	and an orthogonal set defining <dfn export title="grid row | row">rows</dfn>
+	and an orthogonal set defining <dfn export lt="grid row | row">rows</dfn>
 	along the <a href="http://www.w3.org/TR/css3-writing-modes/#inline-axis-">inline axis</a> (the <dfn export>row axis</dfn>).
 	[[!CSS3-WRITING-MODES]]
 
@@ -425,7 +439,7 @@ Grid Tracks and Cells</h3>
 <h3 id="grid-line-concept">
 Grid Lines</h3>
 
-	<dfn id='grid-line' export title='grid line|grid row line|grid column line'>Grid lines</dfn> are the horizontal and vertical dividing lines of the <a>grid</a>.
+	<dfn id='grid-line' export lt='grid line|grid row line|grid column line'>Grid lines</dfn> are the horizontal and vertical dividing lines of the <a>grid</a>.
 	A <a>grid line</a> exists on either side of a column or row.
 	They can be referred to by numerical index,
 	or by an author-specified name.
@@ -439,30 +453,30 @@ Grid Lines</h3>
 
 		<pre>
 			&lt;style type="text/css">
-			  #grid {
+			#grid {
 				display: grid;
 				grid-template-columns: 150px 1fr;
 				grid-template-rows: 50px 1fr 50px
-			  }
+			}
 
-			  #item1 { grid-column: 2;
-					   grid-row-start: 1; grid-row-end: 4; }
+			#item1 { grid-column: 2;
+			         grid-row-start: 1; grid-row-end: 4; }
 			&lt;/style>
 		</pre>
 
 		<pre>
 			&lt;style type="text/css">
-			  /* equivalent layout to the prior example, but using named lines */
-			  #grid {
+			/* equivalent layout to the prior example, but using named lines */
+			#grid {
 				display: grid;
-				grid-template-columns: 150px (item1-start) 1fr (item1-end);
-				grid-template-rows: (item1-start) 50px 1fr 50px (item1-end);
-			  }
+				grid-template-columns: 150px [item1-start] 1fr [item1-end];
+				grid-template-rows: [item1-start] 50px 1fr 50px [item1-end];
+			}
 
-			  #item1 {
+			#item1 {
 				grid-column: item1-start / item1-end;
 				grid-row: item1-start / item1-end
-			  }
+			}
 			&lt;/style>
 		</pre>
 	</div>
@@ -482,25 +496,25 @@ Grid Areas</h3>
 	<div class="example">
 		<pre>
 			&lt;style type="text/css">
-			  /* using the template syntax */
-			  #grid  {
-			  display: grid;
-			  grid-template-areas: ". a"
-								   "b a"
-								   ". a";
-			  grid-template-columns: 150px 1fr;
-			  grid-template-rows: 50px 1fr 50px
-			  }
+			/* using the template syntax */
+			#grid  {
+			display: grid;
+			grid-template-areas: ". a"
+			                     "b a"
+			                     ". a";
+			grid-template-columns: 150px 1fr;
+			grid-template-rows: 50px 1fr 50px
+			}
 
-			  #item1 { grid-area: a }
-			  #item2 { grid-area: b }
-			  #item3 { grid-area: b }
+			#item1 { grid-area: a }
+			#item2 { grid-area: b }
+			#item3 { grid-area: b }
 
-			  /* Align items 2 and 3 at different points in the Grid Area "b".  */
-			  /* By default, Grid Items are stretched to fit their Grid Area    */
-			  /* and these items would layer one over the other. */
-			  #item2 { align-self: start }
-			  #item3 { justify-self: end; align-self: end }
+			/* Align items 2 and 3 at different points in the Grid Area "b".  */
+			/* By default, Grid Items are stretched to fit their Grid Area    */
+			/* and these items would layer one over the other. */
+			#item2 { align-self: start }
+			#item3 { justify-self: end; align-self: end }
 			&lt;/style>
 		</pre>
 	</div>
@@ -511,9 +525,22 @@ Grid Areas</h3>
 	resolve against the height of its containing block,
 	rather than the width (as for blocks).
 
+	Issue: This margin/padding behavior is disputed.
+	<a href="https://lists.w3.org/Archives/Public/www-style/2015Mar/0273.html">(see discussion)</a>
+
 	<a>Grid items</a> placed into the same <a>grid area</a> do not directly affect each other's layout.
-	Indirectly, a <a>grid item</a> can affect the position of a <a>grid line</a> in a column or row that uses a contents-based relative size,
+	Indirectly, a <a>grid item</a> can affect the position of a <a>grid line</a> in a column or row that uses a content-based relative size,
 	which in turn can affect the position or size of another <a>grid item</a>.
+
+<!--
+████████  ████  ██████  ████████  ██          ███    ██    ██  ██   ██████   ████████  ████ ████████
+██     ██  ██  ██    ██ ██     ██ ██         ██ ██    ██  ██  ████ ██    ██  ██     ██  ██  ██     ██
+██     ██  ██  ██       ██     ██ ██        ██   ██    ████    ██  ██        ██     ██  ██  ██     ██
+██     ██  ██   ██████  ████████  ██       ██     ██    ██         ██   ████ ████████   ██  ██     ██
+██     ██  ██        ██ ██        ██       █████████    ██     ██  ██    ██  ██   ██    ██  ██     ██
+██     ██  ██  ██    ██ ██        ██       ██     ██    ██    ████ ██    ██  ██    ██   ██  ██     ██
+████████  ████  ██████  ██        ████████ ██     ██    ██     ██   ██████   ██     ██ ████ ████████
+-->
 
 <h2 id="grid-model">
 Grid Containers</h2>
@@ -541,8 +568,8 @@ Establishing Grid Containers: the ''display/grid'' and ''inline-grid'' 'display'
 	except that grid layout is used instead of block layout:
 	floats do not intrude into the grid container,
 	and the grid container's margins do not collapse with the margins of its contents.
-	<a>Grid containers</a> form a containing block for their contents
-	<a href="http://www.w3.org/TR/CSS21/visudet.html#containing-block-details">exactly like block containers do</a>. [[!CSS21]]
+	The contents of a <a>grid container</a> are laid out into a <a>grid</a>,
+	with <a>grid lines</a> forming the boundaries of each <a>grid items</a>’ containing block.
 	The 'overflow' property applies to <a>grid containers</a>.
 
 	Grid containers are not block containers,
@@ -552,12 +579,12 @@ Establishing Grid Containers: the ''display/grid'' and ''inline-grid'' 'display'
 
 	<ul>
 		<li>
-			all of the 'column-*' properties in the Multicol module have no effect on a grid container.
+			the 'column-*' properties in the Multi-column Layout module [[!CSS3COL]] have no effect on a grid container.
 
 		<li>
 			'float' and 'clear' have no effect on a <a>grid item</a>.
 			(However, the 'float' property still affects the computed value of 'display' on children of a grid container,
-			as this occurs <em title=''>before</em> <a>grid items</a> are determined.)
+			as this occurs <em>before</em> <a>grid items</a> are determined.)
 
 		<li>
 			'vertical-align' has no effect on a grid item.
@@ -573,7 +600,7 @@ Establishing Grid Containers: the ''display/grid'' and ''inline-grid'' 'display'
 	The table in <a href="http://www.w3.org/TR/CSS2/visuren.html#dis-pos-flo">CSS 2.1 Chapter 9.7</a> is thus amended
 	to contain an additional row,
 	with ''inline-grid'' in the "Specified Value" column
-	and <a>grid</a> in the "Computed Value" column.
+	and ''grid'' in the "Computed Value" column.
 
 <h3 id='intrinsic-sizes'>
 Sizing Grid Containers</h3>
@@ -599,18 +626,26 @@ Sizing Grid Containers</h3>
 
 	See [[!CSS3-SIZING]] for a definition of the terms in this section.
 
-
+<!--
+ ██████   ████████  ████ ████████        ████ ████████ ████████ ██     ██  ██████
+██    ██  ██     ██  ██  ██     ██        ██     ██    ██       ███   ███ ██    ██
+██        ██     ██  ██  ██     ██        ██     ██    ██       ████ ████ ██
+██   ████ ████████   ██  ██     ██        ██     ██    ██████   ██ ███ ██  ██████
+██    ██  ██   ██    ██  ██     ██        ██     ██    ██       ██     ██       ██
+██    ██  ██    ██   ██  ██     ██        ██     ██    ██       ██     ██ ██    ██
+ ██████   ██     ██ ████ ████████        ████    ██    ████████ ██     ██  ██████
+-->
 
 <h2 id="grid-items">
 Grid Items</h2>
 
-	The contents of a <a>grid container</a> consists of zero or more <dfn export id="grid-item" title="grid item">grid items</dfn>:
+	The contents of a <a>grid container</a> consists of zero or more <dfn export id="grid-item" lt="grid item">grid items</dfn>:
 	each child of a <a>grid container</a>
 	becomes a <a>grid item</a>,
 	and each contiguous run of text that is directly contained inside a <a>grid container</a>
 	is wrapped in an anonymous <a>grid item</a>.
 	However, an anonymous grid item that contains only
-	<a href="http://www.w3.org/TR/CSS21/text.html#white-space-prop">white space</a>
+	<a href="http://www.w3.org/TR/css-text/#white-space-processing">white space</a>
 	is not rendered, as if it were ''display:none''.
 
 	<div class="example">
@@ -637,6 +672,13 @@ Grid Items</h2>
 &lt;/div></pre>
 	</div>
 
+	The 'display' value of a <a>grid item</a> is <a>blockified</a>:
+	if the specified 'display' of an in-flow child of an element generating a <a>grid container</a>
+	is an inline-level value, it computes to its block-level equivalent.
+	(See <a href="http://www.w3.org/TR/CSS21/visuren.html#dis-pos-flo">CSS2.1&sect;9.7</a> [[!CSS21]]
+	and <a href="http://www.w3.org/TR/css-display/#transformations">CSS Display</a> [[!CSS3-DISPLAY]]
+	for details on this type of 'display' value conversion.)
+
 	Some values of 'display' trigger the generation of anonymous boxes.
 	For example, a misparented ''display/table-cell'' child is fixed up
 	by <a href="http://www.w3.org/TR/CSS21/tables.html#anonymous-boxes">generating anonymous <css>table</css> and <css>table-row</css> elements</a> around it. [[!CSS21]]
@@ -653,7 +695,7 @@ Grid Items</h2>
 	The computed 'display' of a <a>grid item</a>
 	is determined by applying the table in
 	<a href="http://www.w3.org/TR/CSS2/visuren.html#dis-pos-flo">CSS 2.1 Chapter 9.7</a>.
-	However, grid items are grid-level boxes, not block-level boxes:
+	However, grid items are <dfn>grid-level</dfn> boxes, not block-level boxes:
 	they participate in their container's <a>grid formatting context</a>,
 	not in a block formatting context.
 
@@ -665,7 +707,7 @@ Grid Items</h2>
 	The ''min-width/auto'' value of 'min-width' and 'min-height'
 	behaves on <a>grid items</a> in the relevant axis
 	analogously to its behavior on <a>flex items</a> in the <a>main axis</a>.
-	See [[!CSS3-FLEXBOX]].
+	See [[#min-size-auto]].
 
 	ISSUE: Review implications of intrinsic ratio and Grid's 2D nature.
 
@@ -706,27 +748,12 @@ Reordered Grid Items: the 'order' property</h3>
 	The 'order' property also applies to <a>grid items</a>.
 	It affects their <a href="#grid-auto-flow-property">auto-placement</a> and <a href="#z-order">painting order</a>.
 
-
-<h3 id="static-position">
-Static Position of Grid Container Children</h3>
-
-	The <a href="http://www.w3.org/TR/CSS21/visudet.html#abs-non-replaced-width">static position</a> [[!CSS21]]
-	of an absolutely-positioned child of a <a>grid container</a>
-	is determined as if it were the sole grid item
-	in a <a>grid area</a>
-	whose edges coincide with the padding edges of the <a>grid container</a>.
-
-	Note: Note that this position is affected by the values of 'justify-self' and 'align-self' on the child,
-	and that, as in most other layout models,
-	the absolutely-positioned child has no effect on the size of the containing block
-	or layout of its contents.
-
 <h3 id='z-order'>
 Z-axis Ordering: the 'z-index' property</h3>
 
 	<a>Grid items</a> can overlap when they are positioned into intersecting <a>grid areas</a>,
 	or even when positioned in non-intersecting areas because of negative margins or positioning.
-	The painting order of <a>grid items</a> is exactly the same as inline blocks [CSS21],
+	The painting order of <a>grid items</a> is exactly the same as inline blocks [[CSS21]],
 	except that <a>order-modified document order</a> is used in place of raw document order,
 	and 'z-index' values other than <a value for=z-index>auto</a> create a stacking context even if 'position' is ''static''.
 	Thus the 'z-index' property can easily be used to control the z-axis order of grid items.
@@ -748,34 +775,139 @@ Z-axis Ordering: the 'z-index' property</h3>
 
 		<pre>
 			&lt;style type="text/css">
-			  #grid {
+			#grid {
 				display: grid;
 				grid-template-columns: 1fr 1fr;
 				grid-template-rows: 1fr 1fr
-			  }
-			  #A { grid-column: 1 / span 2; grid-row: 2; align-self: end; }
-			  #B { grid-column: 1; grid-row: 1; z-index: 10; }
-			  #C { grid-column: 2; grid-row: 1; align-self: start; margin-left: -20px; }
-			  #D { grid-column: 2; grid-row: 2; justify-self: end; align-self: start; }
-			  #E { grid-column: 1 / span 2; grid-row: 1 / span 2;
-				   z-index: 5; justify-self: center; align-self: center; }
+			}
+			#A { grid-column: 1 / span 2; grid-row: 2; align-self: end; }
+			#B { grid-column: 1; grid-row: 1; z-index: 10; }
+			#C { grid-column: 2; grid-row: 1; align-self: start; margin-left: -20px; }
+			#D { grid-column: 2; grid-row: 2; justify-self: end; align-self: start; }
+			#E { grid-column: 1 / span 2; grid-row: 1 / span 2;
+			     z-index: 5; justify-self: center; align-self: center; }
 			&lt;/style>
 
 			&lt;div id="grid">
-			  &lt;div id="A">A&lt;/div>
-			  &lt;div id="B">B&lt;/div>
-			  &lt;div id="C">C&lt;/div>
-			  &lt;div id="D">D&lt;/div>
-			  &lt;div id="E">E&lt;/div>
+				&lt;div id="A">A&lt;/div>
+				&lt;div id="B">B&lt;/div>
+				&lt;div id="C">C&lt;/div>
+				&lt;div id="D">D&lt;/div>
+				&lt;div id="E">E&lt;/div>
 			&lt;/div>
 		</pre>
 	</div>
+
+<!--
+██     ██ ████ ██    ██
+███   ███  ██  ███   ██          ██   ██
+████ ████  ██  ████  ██           ██ ██
+██ ███ ██  ██  ██ ██ ██ ███████ █████████
+██     ██  ██  ██  ████           ██ ██
+██     ██  ██  ██   ███          ██   ██
+██     ██ ████ ██    ██
+-->
+
+<h3 id="min-size-auto">
+Implied Minimum Size of Grid Items</h3>
+
+	To provide a more reasonable default minimum size for <a>grid items</a>,
+	this specification defines the effects of the 'min-width'/'min-height' ''min-width/auto'' value
+	for <a>grid items</a>.
+
+	On a <a>grid item</a> whose 'overflow' is ''overflow/visible'',
+	when ''min-width/auto'' is specified on the <a>grid item</a>,
+	the following table gives the minimum size in that dimension:
+
+	<table class=data>
+		<colgroup span=2></colgroup>
+		<colgroup span=1></colgroup>
+		<thead>
+			<tr>
+				<th>Specified Size
+				<th>Transferred Size
+				<th>Minimum Size
+		<tbody>
+			<tr>
+				<td>
+				<td>
+				<td><var>content size</var>
+			<tr>
+				<td>✓
+				<td>
+				<td>min(<var>specified size</var>, <var>content size</var>)
+			<tr>
+				<td>
+				<td>✓
+				<td>min(<var>transferred size</var>, <var>content size</var>)
+			<tr>
+				<td>✓
+				<td>✓
+				<td>min(<var>specified size</var>, <var>content size</var>)
+	</table>
+
+	Where:
+
+	<dl>
+		<dt><var>specified size</var>
+		<dd>
+			If the item’s computed width/height is <a>definite</a>,
+			then the <var>specified size</var> is that size
+			(clamped by its <a>max size property</a> in that dimension if it's <a>definite</a>).
+			It is otherwise undefined.
+
+		<dt><var>transferred size</var>
+		<dd>
+			If the item has an intrinsic aspect ratio
+			and its computed height/width is <a>definite</a>,
+			then the <var>transferred size</var> is that size
+			(clamped by its <a lt="min size property">min and max size properties</a> in that dimension if they are <a>definite</a>),
+			converted through the aspect ratio.
+			It is otherwise undefined.
+
+		<dt><var>content size</var>
+		<dd>
+			The <var>content size</var> is the <a>min-content size</a> in that dimension,
+			clamped, if it has an aspect ratio, by any <a>definite</a> <a lt="min size property">min and max size properties</a>
+			in the perpendicular dimension
+			converted through the aspect ratio,
+			and then further clamped by the <a>max size property</a> in the relevant dimension if that is <a>definite</a>.
+	</dl>
+
+
+	<div class="note" id="min-size-opt">
+		Note that while a content-based minimum size is often appropriate,
+		and helps prevent content from overlapping or spilling outside its container,
+		in some cases it is not:
+
+		In particular, if flex sizing is being used for a major content area of a document,
+		it is better to set an explicit font-relative minimum width such as ''min-width: 12em''.
+		A content-based minimum width could result in a large table or large image
+		stretching the size of the entire content area into an overflow zone,
+		and thereby making lines of text gratuitously long and hard to read.
+
+		Note also, when content-based sizing is used on an item with large amounts of content,
+		the layout engine must traverse all of this content before finding its minimum size,
+		whereas if the author sets an explicit minimum, this is not necessary.
+		(For items with small amounts of content, however,
+		this traversal is trivial and therefore not a performance concern.)
+	</div>
+
+<!--
+████████ ██     ██ ████████  ██       ████  ██████  ████ ████████
+██        ██   ██  ██     ██ ██        ██  ██    ██  ██     ██
+██         ██ ██   ██     ██ ██        ██  ██        ██     ██
+██████      ███    ████████  ██        ██  ██        ██     ██
+██         ██ ██   ██        ██        ██  ██        ██     ██
+██        ██   ██  ██        ██        ██  ██    ██  ██     ██
+████████ ██     ██ ██        ████████ ████  ██████  ████    ██
+-->
 
 <h2 id='grid-definition'>
 The Explicit Grid</h2>
 
 	The three properties 'grid-template-rows', 'grid-template-columns', and 'grid-template-areas'
-	together define the <dfn export>explicit grid</dfn> of a <a>grid container</a>.
+	together define the <dfn export local-lt="explicit">explicit grid</dfn> of a <a>grid container</a>.
 	The 'grid-template' property is a shorthand that sets all three at the same time.
 	The final grid may end up larger due to <a>grid items</a> placed outside the <a>explicit grid</a>;
 	in this case, any implicit tracks are sized by the 'grid-auto-rows' and 'grid-auto-columns' properties.
@@ -785,12 +917,15 @@ The Explicit Grid</h2>
 	and the number of rows/columns sized by 'grid-template-rows'/'grid-template-columns'.
 	Any rows/columns defined by 'grid-template-areas' but not sized by 'grid-template-rows'/'grid-template-columns'
 	take their size from the 'grid-auto-rows'/'grid-auto-columns' properties.
+	If these properties don't define <em>any</em> <a>explicit</a> tracks,
+	the <a>explicit grid</a> still contains one <a>grid line</a> in each axis.
 
 	Numeric indexes in the <a>grid-placement properties</a>
-	count from the edges of the <a>explicit grid</a>,
-	starting from 1.
-	Positive indexes count from the before/start side,
-	while negative indexes count from the after/end side.
+	count from the edges of the <a>explicit grid</a>.
+	Positive indexes count from the <a>start</a> side
+	(starting from 1 for the <a>start</a>-most <a>explicit</a> line),
+	while negative indexes count from the <a>end</a> side
+	(starting from -1 for the <a>end</a>-most <a>explicit</a> line).
 
 <h3 id='track-sizing'>
 Track Sizing: the 'grid-template-rows' and 'grid-template-columns' properties</h3>
@@ -803,29 +938,29 @@ Track Sizing: the 'grid-template-rows' and 'grid-template-columns' properties</h
 	Inherited: no
 	Percentages: refer to corresponding dimension of the content area
 	Media: visual
-	Computed value: As specified, except for ''grid-template-columns/auto'' (see prose), with lengths made absolute
+	Computed value: As specified, with lengths made absolute
 	</pre>
 
 	These properties specify,
 	as a space-separated <dfn export>track list</dfn>,
 	the line names and <a>track sizing functions</a> of the <a>grid</a>.
-	Each <dfn title="track sizing function|sizing function">track sizing function</dfn> can be specified as a length,
+	Each <dfn lt="track sizing function|sizing function">track sizing function</dfn> can be specified as a length,
 	a percentage of the <a>grid container</a>’s size,
 	a measurement of the contents occupying the column or row,
 	or a fraction of the free space in the grid.
 	It can also be specified as a range using the ''minmax()'' notation,
 	which can combine any of the previously mentioned mechanisms
-	to specify separate <a title="min track sizing function">min</a>
+	to specify separate <a lt="min track sizing function">min</a>
 	and <a>max track sizing functions</a> for the column or row.
 
 	The 'grid-template-columns' property specifies the <a>track list</a> for the grid's columns,
 	while 'grid-template-rows' specifies the <a>track list</a> for the grid's rows.
 
-	The <dfn value for="grid-template-rows grid-template-columns">none</dfn> value indicates that there is no <a>explicit grid</a>;
+	The <dfn value for="grid-template-rows, grid-template-columns">none</dfn> value indicates that there is no <a>explicit grid</a>;
 	any rows/columns will be implicitly generated,
 	and their size will be determined by the 'grid-auto-rows' and 'grid-auto-columns' properties.
 
-	The <dfn value for="grid-template-rows grid-template-columns">subgrid</dfn> value indicates that the grid will align to its parent grid in that axis.
+	The <dfn value for="grid-template-rows, grid-template-columns">subgrid</dfn> value indicates that the grid will align to its parent grid in that axis.
 	Rather than specifying the sizes of rows/columns explicitly,
 	they'll be taken from the parent grid's definition.
 
@@ -835,13 +970,13 @@ Track Sizing: the 'grid-template-rows' and 'grid-template-columns' properties</h
 		<dfn>&lt;track-list></dfn>     = [ <<line-names>>? [ <<track-size>> | <<repeat()>> ] ]+ <<line-names>>?
 		<dfn>&lt;track-size></dfn>     = minmax( <<track-breadth>> , <<track-breadth>> ) | <<track-breadth>>
 		<dfn>&lt;track-breadth></dfn>  = <<length>> | <<percentage>> | <<flex>> | min-content | max-content | auto
-		<dfn>&lt;line-names></dfn>     = ( <<custom-ident>>* )
+		<dfn>&lt;line-names></dfn>     = '[' <<custom-ident>>* ']'
 		<dfn>&lt;line-name-list></dfn> = [ <<line-names>> | repeat([ <<positive-integer>> | auto ], <<line-names>>+) ]+
 	</pre>
 
 	Where:
 
-	<dl dfn-for="grid-template-columns grid-template-rows" dfn-type=value>
+	<dl dfn-for="grid-template-columns, grid-template-rows" dfn-type=value>
 		<dt><dfn><<length>></dfn>
 		<dd>
 			A non-negative length, as defined by CSS3 Values. [[!CSS3VAL]]
@@ -851,7 +986,7 @@ Track Sizing: the 'grid-template-rows' and 'grid-template-columns' properties</h
 			A non-negative percentage, as defined by CSS3 Values. [[!CSS3VAL]]
 			<<percentage>> values are relative to the <a>inline size</a> of the <a>grid container</a> in column <a>grid tracks</a>,
 			and the <a>block size</a> of the <a>grid container</a> in row <a>grid tracks</a>.
-			If the <a title="inline size">inline</a> or <a>block size</a> of the <a>grid container</a>
+			If the <a lt="inline size">inline</a> or <a>block size</a> of the <a>grid container</a>
 			is <a>indefinite</a>,
 			<<percentage>> values relative to that size are treated as <a value for=width>auto</a>.
 
@@ -874,7 +1009,7 @@ Track Sizing: the 'grid-template-rows' and 'grid-template-columns' properties</h
 			Represents the largest <a>min-content contribution</a>
 			of the  <a>grid items</a> occupying the <a>grid track</a>.
 
-		<dt><dfn title="minmax()">minmax(min, max)</dfn>
+		<dt><dfn lt="minmax()">minmax(min, max)</dfn>
 		<dd>
 			Defines a size range
 			greater than or equal to <var>min</var>
@@ -941,12 +1076,21 @@ Track Sizing: the 'grid-template-rows' and 'grid-template-columns' properties</h
 		</pre>
 	</div>
 
+<!--
+██    ██    ███    ██     ██ ████████ ████████        ██       ████ ██    ██ ████████  ██████
+███   ██   ██ ██   ███   ███ ██       ██     ██       ██        ██  ███   ██ ██       ██    ██
+████  ██  ██   ██  ████ ████ ██       ██     ██       ██        ██  ████  ██ ██       ██
+██ ██ ██ ██     ██ ██ ███ ██ ██████   ██     ██       ██        ██  ██ ██ ██ ██████    ██████
+██  ████ █████████ ██     ██ ██       ██     ██       ██        ██  ██  ████ ██             ██
+██   ███ ██     ██ ██     ██ ██       ██     ██       ██        ██  ██   ███ ██       ██    ██
+██    ██ ██     ██ ██     ██ ████████ ████████        ████████ ████ ██    ██ ████████  ██████
+-->
 
 <h4 id='named-lines'>
 Named Grid Lines: the <css>(<<custom-ident>>*)</css> syntax</h4>
 
 	While <a>grid lines</a> can always be referred to by their numerical index,
-	<dfn export title="named line">named lines</dfn>
+	<dfn export lt="named line">named lines</dfn>
 	can make the <a>grid-placement properties</a> easier to understand and maintain.
 	Lines can be explicitly named in the 'grid-template-rows' and 'grid-template-columns' properties,
 	or <a href="#implicit-named-lines">implicitly named</a> by creating <a>named grid areas</a> with the 'grid-template-areas' property.
@@ -958,11 +1102,11 @@ Named Grid Lines: the <css>(<<custom-ident>>*)</css> syntax</h4>
 
 		<pre>
 			&lt;style>
-			  #grid {
+			#grid {
 				display: grid;
-				grid-template-columns: (first nav) 150px (main) 1fr (last);
-				grid-template-rows: (first header) 50px (main) 1fr (footer) 50px (last);
-			  }
+				grid-template-columns: [first nav] 150px [main] 1fr [last];
+				grid-template-rows: [first header] 50px [main] 1fr [footer] 50px [last];
+			}
 			&lt;/style>
 		</pre>
 
@@ -972,6 +1116,15 @@ Named Grid Lines: the <css>(<<custom-ident>>*)</css> syntax</h4>
 		</figure>
 	</div>
 
+<!--
+████████  ████████ ████████  ████████    ███    ████████   ███ ███
+██     ██ ██       ██     ██ ██         ██ ██      ██     ██     ██
+██     ██ ██       ██     ██ ██        ██   ██     ██    ██       ██
+████████  ██████   ████████  ██████   ██     ██    ██    ██       ██
+██   ██   ██       ██        ██       █████████    ██    ██       ██
+██    ██  ██       ██        ██       ██     ██    ██     ██     ██
+██     ██ ████████ ██        ████████ ██     ██    ██      ███ ███
+-->
 
 <h4 id='repeat-notation'>
 Repeating Rows and Columns: the ''repeat()'' notation</h4>
@@ -993,12 +1146,15 @@ Repeating Rows and Columns: the ''repeat()'' notation</h4>
 	doing so makes the declaration invalid.
 
 	If the number of repetitions is <dfn value for=repeat()>auto</dfn>
-	and the <a>grid container</a> has a definite size in the relevant axis,
-	then the number of repetitions is the largest possible integer 
+	and the <a>grid container</a> has a <a>definite</a> size or max size in the relevant axis,
+	then the number of repetitions is the largest possible integer
 	that does not cause the <a>grid</a> to overflow its <a>grid container</a>
 	(treating all tracks as their <a>max track sizing function</a> if that is <a>definite</a> or as zero otherwise).
 	Otherwise, the <a>track list</a> repeats only once.
 	A <<track-list>> with more than one ''repeat()/auto'' ''repeat()'' function is invalid.
+
+	Issue: François suggests a way to generate "just enough" repeated columns for the number of items in the grid.
+	<a href="https://lists.w3.org/Archives/Public/www-style/2015May/0113.html">(see discussion)</a>
 
 	<div class='example'>
 		This example shows two equivalent ways of writing the same grid definition.
@@ -1007,31 +1163,41 @@ Repeating Rows and Columns: the ''repeat()'' notation</h4>
 
 		<pre>
 			&lt;style>
-			  #grid {
+			#grid {
 				display: grid;
-				grid-template-columns: 10px (col-start) 250px (col-end)
-									   10px (col-start) 250px (col-end)
-									   10px (col-start) 250px (col-end)
-									   10px (col-start) 250px (col-end) 10px;
+				grid-template-columns: 10px [col-start] 250px [col-end]
+				                       10px [col-start] 250px [col-end]
+				                       10px [col-start] 250px [col-end]
+				                       10px [col-start] 250px [col-end] 10px;
 				grid-template-rows: 1fr;
-			  }
+			}
 
-			  /* Equivalent definition. */
-			  #grid {
+			/* Equivalent definition. */
+			#grid {
 				display: grid;
-				grid-template-columns: repeat(4, 10px (col-start) 250px (col-end)) 10px;
+				grid-template-columns: repeat(4, 10px [col-start] 250px [col-end]) 10px;
 				grid-template-rows: 1fr;
-			  }
+			}
 			&lt;/style>
 		</pre>
 	</div>
 
 	If the ''repeat()'' function ends up placing two <<line-names>> adjacent to each other,
 	the name lists are merged.
-	For example, ''repeat(2, (a) 1fr (b))'' is equivalent to ''(a) 1fr (b a) 1fr (b)''.
+	For example, ''repeat(2, [a] 1fr [b])'' is equivalent to ''[a] 1fr [b a] 1fr [b]''.
 
 	Note: It is expected that a future level of this specification will define a value to be inserted between the repetitions,
 	similar to the argument of the <code>Array#join</code> method in JavaScript.
+
+<!--
+████████ ████████        ██     ██ ██    ██ ████ ████████
+██       ██     ██       ██     ██ ███   ██  ██     ██
+██       ██     ██       ██     ██ ████  ██  ██     ██
+██████   ████████        ██     ██ ██ ██ ██  ██     ██
+██       ██   ██         ██     ██ ██  ████  ██     ██
+██       ██    ██        ██     ██ ██   ███  ██     ██
+██       ██     ██        ███████  ██    ██ ████    ██
+-->
 
 <h4 id='fr-unit'>
 Flexible Lengths: the ''fr'' unit</h4>
@@ -1046,7 +1212,7 @@ Flexible Lengths: the ''fr'' unit</h4>
 	Note: Flexible lengths in a <a>track list</a> work similarly to flexible lengths with a zero base size in [[CSS3-FLEXBOX]].
 
 	Each column or row's share of the <a>free space</a> can be computed as the column or row's
-	<code>&lt;flex> * &lt;free space> / &lt;sum of all <a>flex factors</a></code>.
+	<code>&lt;flex> * &lt;free space> / &lt;sum of all <a>flex factors</a>&gt;</code>.
 	For the purpose of this calculation,
 	a flexible length in the <var>min</var> position of a ''minmax()'' function is treated as ''0'' (an inflexible length).
 
@@ -1060,6 +1226,15 @@ Flexible Lengths: the ''fr'' unit</h4>
 	The maximum of those is used as the resolved ''1fr'' length (the <dfn>flex fraction</dfn>),
 	which is then multiplied by each <a>grid track</a>’s <a>flex factor</a> to determine its final size.
 
+<!--
+ ██████  ██     ██ ████████   ██████   ████████  ████ ████████
+██    ██ ██     ██ ██     ██ ██    ██  ██     ██  ██  ██     ██
+██       ██     ██ ██     ██ ██        ██     ██  ██  ██     ██
+ ██████  ██     ██ ████████  ██   ████ ████████   ██  ██     ██
+      ██ ██     ██ ██     ██ ██    ██  ██   ██    ██  ██     ██
+██    ██ ██     ██ ██     ██ ██    ██  ██    ██   ██  ██     ██
+ ██████   ███████  ████████   ██████   ██     ██ ████ ████████
+-->
 
 <h4 id="subgrids">
 Subgrids: the ''grid-template-rows/subgrid'' keyword</h4>
@@ -1077,7 +1252,7 @@ Subgrids: the ''grid-template-rows/subgrid'' keyword</h4>
 	allowing the contents of both grids to align.
 
 	If a <a>grid container</a> that is <em>not</em> a <a>grid item</a> uses the ''grid-template-rows/subgrid'' keyword,
-	it 'grid-template-rows'/'grid-template-columns' value is treated identically to ''grid-template-rows/none''
+	its 'grid-template-rows'/'grid-template-columns' value is treated identically to ''grid-template-rows/none''
 	(i.e. it doesn't have an <a>explicit grid</a> in that dimension).
 
 	<div class="example">
@@ -1132,7 +1307,7 @@ Subgrids: the ''grid-template-rows/subgrid'' keyword</h4>
 
 		<li>
 			The <a>subgrid</a>'s own grid items participate in the sizing of its parent grid and are aligned to it.
-			In this process, the sum of the item's margin, padding, and borders are applied as an extra layer of margin to the items at those edges.
+			In this process, the sum of the <a>subgrid</a>'s margin, padding, and borders are applied as an extra layer of margin to the items at those edges.
 
 			<div class="example">
 				For example, if we have a 3&times;3 grid with the following tracks:
@@ -1172,9 +1347,9 @@ Subgrids: the ''grid-template-rows/subgrid'' keyword</h4>
 			</div>
 
 		<li>
-			The <a>subgrid</a> is always stretched;
-			the 'align-self'/'justify-self' properties on it are ignored.
-			Any specified width/height constraints are also ignored.
+			The <a>subgrid</a> is always stretched in its subgridded dimension:
+			the 'align-self'/'justify-self' properties on it are ignored in that dimension,
+			and any specified width/height constraints are also ignored in that dimension.
 
 		<li>
 			Layoutwise, the <a>subgrid</a>’s <a>explicit grid</a> is always aligned with the corresponding section of the parent <a>grid</a>;
@@ -1192,7 +1367,7 @@ Subgrids: the ''grid-template-rows/subgrid'' keyword</h4>
 			<div class="example">
 				For example, if the subgrid above were specified with 5 names:
 
-				<pre>#subgrid { grid-template-columns: subgrid (first) (second) (third) (fourth) (fifth); }</pre>
+				<pre>#subgrid { grid-template-columns: subgrid [first] [second] [third] [fourth] [fifth]; }</pre>
 
 				Items within the subgrid could be positioned using the first four line names;
 				the last name would be ignored (as if it didn't exist),
@@ -1204,6 +1379,16 @@ Subgrids: the ''grid-template-rows/subgrid'' keyword</h4>
 			(In such cases the author can rely on the names specified in the parent grid,
 			and does not need to duplicate those names in each subgrid declaration.)
 	</ul>
+
+<!--
+████████  ████████  ██████   ███████  ██       ██     ██ ████████ ████████
+██     ██ ██       ██    ██ ██     ██ ██       ██     ██ ██       ██     ██
+██     ██ ██       ██       ██     ██ ██       ██     ██ ██       ██     ██
+████████  ██████    ██████  ██     ██ ██       ██     ██ ██████   ██     ██
+██   ██   ██             ██ ██     ██ ██        ██   ██  ██       ██     ██
+██    ██  ██       ██    ██ ██     ██ ██         ██ ██   ██       ██     ██
+██     ██ ████████  ██████   ███████  ████████    ███    ████████ ████████
+-->
 
 <h4 id='resolved-track-list'>
 Resolved Values</h4>
@@ -1233,14 +1418,14 @@ Resolved Values</h4>
 	<div class="example">
 		<pre>
 			&lt;style>
-			  #grid {
+			#grid {
 				width: 500px;
 				grid-template-columns:
-				  (a)     auto
-				  (b)     minmax(min-content, 1fr)
-				  (b c d) repeat(2, (e) 40px)
-						  repeat(5, auto);
-			  }
+				  [a]     auto
+				  [b]     minmax(min-content, 1fr)
+				  [b c d] repeat(2, [e] 40px)
+				          repeat(5, auto);
+			}
 			&lt;/style>
 			&lt;div id="grid">
 			  &lt;div style="grid-column-start:1; width:50px">&lt;/div>
@@ -1248,8 +1433,8 @@ Resolved Values</h4>
 			&lt;/div>
 			&lt;script>
 			  var gridElement = document.getElementById("grid");
-			  getComputedStyle(gridElement).gridDefinitionColumns;
-			  // (a) 50px (b) 320px (b c d) repeat(2, (e) 40px) repeat(4, 0px) 50px
+			  getComputedStyle(gridElement).gridTemplateColumns;
+			  // [a] 50px [b] 320px [b c d] repeat(2, [e] 40px) repeat(4, 0px) 50px
 			&lt;/script>
 		</pre>
 	</div>
@@ -1262,6 +1447,15 @@ Resolved Values</h4>
 	<a href="http://dev.w3.org/csswg/cssom/#the-getstyleutils-interface"><code>.rawComputedStyle</code> and <code>.usedStyle</code> attributes</a>
 	instead of <code>getComputedStyle()</code>.
 
+<!--
+ ██████   ████████  ████ ████████           ███    ████████  ████████    ███     ██████
+██    ██  ██     ██  ██  ██     ██         ██ ██   ██     ██ ██         ██ ██   ██    ██
+██        ██     ██  ██  ██     ██        ██   ██  ██     ██ ██        ██   ██  ██
+██   ████ ████████   ██  ██     ██       ██     ██ ████████  ██████   ██     ██  ██████
+██    ██  ██   ██    ██  ██     ██       █████████ ██   ██   ██       █████████       ██
+██    ██  ██    ██   ██  ██     ██       ██     ██ ██    ██  ██       ██     ██ ██    ██
+ ██████   ██     ██ ████ ████████        ██     ██ ██     ██ ████████ ██     ██  ██████
+-->
 
 <h3 id="grid-template-areas-property">
 Named Areas: the 'grid-template-areas' property</h3>
@@ -1277,7 +1471,7 @@ Named Areas: the 'grid-template-areas' property</h3>
 	Computed value: specified value
 	</pre>
 
-	This property specifies <dfn export title="named grid area">named grid areas</dfn>,
+	This property specifies <dfn export lt="named grid area">named grid areas</dfn>,
 	which are not associated with any particular <a>grid item</a>,
 	but can be referenced from the <a>grid-placement properties</a>.
 	The syntax of the 'grid-template-areas' property also provides a visualization
@@ -1306,7 +1500,7 @@ Named Areas: the 'grid-template-areas' property</h3>
 					representing a <dfn>named cell token</dfn>
 					with a name consisting of its code points.
 				<li>
-					A "." (U+002E FULL STOP),
+					A sequence of one or more "." (U+002E FULL STOP),
 					representing a <dfn>null cell token</dfn>.
 
 				<li>
@@ -1360,16 +1554,16 @@ Named Areas: the 'grid-template-areas' property</h3>
 
 		<pre>
 			&lt;style type="text/css">
-			  #grid {
+			#grid {
 				display: grid;
 				grid-template-areas: "head head"
-									 "nav  main"
-									 "foot .   "
-			  }
-			  #grid > header { grid-area: head; }
-			  #grid > nav    { grid-area: nav; }
-			  #grid > main   { grid-area: main; }
-			  #grid > footer { grid-area: foot; }
+				                     "nav  main"
+				                     "foot ...."
+			}
+			#grid > header { grid-area: head; }
+			#grid > nav    { grid-area: nav; }
+			#grid > main   { grid-area: main; }
+			#grid > footer { grid-area: foot; }
 			&lt;/style>
 		</pre>
 	</div>
@@ -1377,7 +1571,7 @@ Named Areas: the 'grid-template-areas' property</h3>
 <h4 id="implicit-named-lines">
 Implicit Named Lines</h4>
 
-	The 'grid-template-areas' property creates <dfn export title="implicit named line">implicit named lines</dfn> from the <a>named grid areas</a> in the template.
+	The 'grid-template-areas' property creates <dfn export lt="implicit named line">implicit named lines</dfn> from the <a>named grid areas</a> in the template.
 	For each <a>named grid area</a> <var>foo</var>, four <a>implicit named lines</a> are created:
 	two named ''<var>foo</var>-start'', naming the row-start and column-start lines of the <a>named grid area</a>,
 	and two named ''<var>foo</var>-end'', naming the row-end and column-end lines of the <a>named grid area</a>.
@@ -1393,8 +1587,18 @@ Implicit Named Areas</h4>
 	Since a <a>named grid area</a> is referenced by the <a>implicit named lines</a> it produces,
 	explicitly adding named lines of the same form (''foo-start''/''foo-end'')
 	effectively creates a <a>named grid area</a>.
-	Such <dfn export title="implicit named area">implicit named areas</dfn> do not appear in the value of 'grid-template-areas',
+	Such <dfn export lt="implicit named area">implicit named areas</dfn> do not appear in the value of 'grid-template-areas',
 	but can still be referenced by the <a>grid-placement properties</a>.
+
+<!--
+ ██████   ████████  ████ ████████          ████████ ████████ ██     ██ ████████  ██          ███    ████████ ████████
+██    ██  ██     ██  ██  ██     ██            ██    ██       ███   ███ ██     ██ ██         ██ ██      ██    ██
+██        ██     ██  ██  ██     ██            ██    ██       ████ ████ ██     ██ ██        ██   ██     ██    ██
+██   ████ ████████   ██  ██     ██ ███████    ██    ██████   ██ ███ ██ ████████  ██       ██     ██    ██    ██████
+██    ██  ██   ██    ██  ██     ██            ██    ██       ██     ██ ██        ██       █████████    ██    ██
+██    ██  ██    ██   ██  ██     ██            ██    ██       ██     ██ ██        ██       ██     ██    ██    ██
+ ██████   ██     ██ ████ ████████             ██    ████████ ██     ██ ██        ████████ ██     ██    ██    ████████
+-->
 
 <h3 id='explicit-grid-shorthand'>
 Explicit Grid Shorthand: the 'grid-template' property</h3>
@@ -1462,17 +1666,17 @@ Explicit Grid Shorthand: the 'grid-template' property</h3>
 			<div class='example'>
 				<pre>
 					grid-template: auto 1fr auto /
-					  (header-top) "a   a   a"     (header-bottom)
-						(main-top) "b   b   b" 1fr (main-bottom);
+					  [header-top] "a   a   a"     [header-bottom]
+					    [main-top] "b   b   b" 1fr [main-bottom];
 				</pre>
 
 					is equivalent to
 
 				<pre>
 					grid-template-columns: auto 1fr auto;
-					grid-template-rows: (header-top) auto (header-bottom main-top) 1fr (main-bottom);
+					grid-template-rows: [header-top] auto [header-bottom main-top] 1fr [main-bottom];
 					grid-template-areas: "a a a"
-										 "b b b";
+					                     "b b b";
 				</pre>
 			</div>
 	</dl>
@@ -1482,20 +1686,42 @@ Explicit Grid Shorthand: the 'grid-template' property</h3>
 	Unless authors want those to cascade in separately,
 	it is therefore recommended to use 'grid' instead of 'grid-template'.
 
+<!--
+████ ██     ██ ████████  ██       ████  ██████  ████ ████████
+ ██  ███   ███ ██     ██ ██        ██  ██    ██  ██     ██
+ ██  ████ ████ ██     ██ ██        ██  ██        ██     ██
+ ██  ██ ███ ██ ████████  ██        ██  ██        ██     ██
+ ██  ██     ██ ██        ██        ██  ██        ██     ██
+ ██  ██     ██ ██        ██        ██  ██    ██  ██     ██
+████ ██     ██ ██        ████████ ████  ██████  ████    ██
+-->
+
 <h2 id='implicit-grids'>
 The Implicit Grid</h2>
 
-	While 'grid-template' and its longhand properties define the <a>explicit grid</a>,
-	<a>grid items</a> can be positioned outside of these bounds.
-	This causes the <a>grid container</a> to generate <a>implicit grid tracks</a>,
-	forming the <dfn export>implicit grid</dfn>.
+	The 'grid-template' property and its longhands define a fixed number of tracks that form the <a>explicit grid</a>.
+	When <a>grid items</a> are positioned outside of these bounds,
+	the <a>grid container</a> generates
+	<dfn export lt="implicit grid track|implicit grid row|implicit grid column">implicit grid tracks</dfn>
+	by adding <dfn>implicit grid lines</dfn> to the <a>grid</a>.
+	These lines together with the <a>explicit grid</a> form the <dfn export local-lt="implicit">implicit grid</dfn>.
 	The 'grid-auto-rows' and 'grid-auto-columns' properties size these <a>implicit grid tracks</a>.
 
 	The 'grid-auto-flow' property controls auto-placement of <a>grid items</a>
 	without an explicit position.
 	Once the <a>explicit grid</a> is filled
 	(or if there is no <a>explicit grid</a>)
-	auto-placement 
+	auto-placement will also cause the generation of <a>implicit grid tracks</a>.
+
+<!--
+   ███    ██     ██ ████████  ███████        ████████ ████████     ███     ██████  ██    ██  ██████
+  ██ ██   ██     ██    ██    ██     ██          ██    ██     ██   ██ ██   ██    ██ ██   ██  ██    ██
+ ██   ██  ██     ██    ██    ██     ██          ██    ██     ██  ██   ██  ██       ██  ██   ██
+██     ██ ██     ██    ██    ██     ██          ██    ████████  ██     ██ ██       █████     ██████
+█████████ ██     ██    ██    ██     ██          ██    ██   ██   █████████ ██       ██  ██         ██
+██     ██ ██     ██    ██    ██     ██          ██    ██    ██  ██     ██ ██    ██ ██   ██  ██    ██
+██     ██  ███████     ██     ███████           ██    ██     ██ ██     ██  ██████  ██    ██  ██████
+-->
 
 <h3 id='auto-tracks'>
 Sizing Auto-generated Rows and Columns: the 'grid-auto-rows' and 'grid-auto-columns' properties</h3>
@@ -1513,7 +1739,7 @@ Sizing Auto-generated Rows and Columns: the 'grid-auto-rows' and 'grid-auto-colu
 
 	If a grid item is positioned into a row or column that is not explicitly sized
 	by 'grid-template-rows' or 'grid-template-columns',
-	<dfn export title="implicit grid track|implicit grid row|implicit grid column">implicit grid tracks</dfn> are created to hold it.
+	<a>implicit grid tracks</a> are created to hold it.
 	This can happen either by explicitly positioning into a row or column that is out of range,
 	or by the <a>auto-placement algorithm</a> creating additional rows or columns.
 	The 'grid-auto-columns' and 'grid-auto-rows' properties specify the size of such implicitly-created tracks.
@@ -1553,8 +1779,18 @@ Sizing Auto-generated Rows and Columns: the 'grid-auto-rows' and 'grid-auto-colu
 		</pre>
 	</div>
 
+<!--
+ ██████   ████████  ████ ████████             ███    ██     ██ ████████  ███████          ████████ ██        ███████  ██      ██
+██    ██  ██     ██  ██  ██     ██           ██ ██   ██     ██    ██    ██     ██         ██       ██       ██     ██ ██  ██  ██
+██        ██     ██  ██  ██     ██          ██   ██  ██     ██    ██    ██     ██         ██       ██       ██     ██ ██  ██  ██
+██   ████ ████████   ██  ██     ██ ███████ ██     ██ ██     ██    ██    ██     ██ ███████ ██████   ██       ██     ██ ██  ██  ██
+██    ██  ██   ██    ██  ██     ██         █████████ ██     ██    ██    ██     ██         ██       ██       ██     ██ ██  ██  ██
+██    ██  ██    ██   ██  ██     ██         ██     ██ ██     ██    ██    ██     ██         ██       ██       ██     ██ ██  ██  ██
+ ██████   ██     ██ ████ ████████          ██     ██  ███████     ██     ███████          ██       ████████  ███████   ███  ███
+-->
+
 <h3 id="grid-auto-flow-property">
-<dfn title="auto-placement|automatic placement">Automatic Placement</dfn>: the 'grid-auto-flow' property</h3>
+<dfn lt="auto-placement|automatic placement">Automatic Placement</dfn>: the 'grid-auto-flow' property</h3>
 
 	<pre class='propdef'>
 	Name: grid-auto-flow
@@ -1623,82 +1859,91 @@ Sizing Auto-generated Rows and Columns: the 'grid-auto-rows' and 'grid-auto-colu
 
 		<pre>
 			&lt;style type="text/css">
-			  form {
+			form {
 				display: grid;
 				/* Define three columns, all content-sized,
 				   and name the corresponding lines. */
-				grid-template-columns: (labels) auto (controls) auto (oversized) auto;
+				grid-template-columns: [labels] auto [controls] auto [oversized] auto;
 				grid-auto-flow: row;
-			  }
-			  form > label {
+			}
+			form > label {
 				/* Place all labels in the "labels" column and
 				   automatically find the next available row. */
 				grid-column: labels;
 				grid-row: auto;
-			  }
-			  form > input, form > select {
+			}
+			form > input, form > select {
 				/* Place all controls in the "controls" column and
 				   automatically find the next available row. */
 				grid-column: controls;
 				grid-row: auto;
-			  }
+			}
 
-			  #department {
+			#department {
 				/* Auto place this item in the "oversized" column
 				   in the first row where an area that spans three rows
 				   won't overlap other explicitly placed items or areas
 				   or any items automatically placed prior to this area. */
 				grid-column: oversized;
 				grid-row: span 3;
-			  }
+			}
 
-			  /* Place all the buttons of the form
-				 in the explicitly defined grid area. */
-			  #buttons {
+			/* Place all the buttons of the form
+			   in the explicitly defined grid area. */
+			#buttons {
 				grid-row: auto;
 
 				/* Ensure the button area spans the entire grid element
 				   in the row axis. */
 				grid-column: 1 / -1;
 				text-align: end;
-			  }
+			}
 			&lt;/style>
 			&lt;form>
-			  &lt;label for="firstname">First name:&lt;/label>
-			  &lt;input type="text" id="firstname" name="firstname" />
-			  &lt;label for="lastname">Last name:&lt;/label>
-			  &lt;input type="text" id="lastname" name="lastname" />
-			  &lt;label for="address">Address:&lt;/label>
-			  &lt;input type="text" id="address" name="address" />
-			  &lt;label for="address2">Address 2:&lt;/label>
-			  &lt;input type="text" id="address2" name="address2" />
-			  &lt;label for="city">City:&lt;/label>
-			  &lt;input type="text" id="city" name="city" />
-			  &lt;label for="state">State:&lt;/label>
-			  &lt;select type="text" id="state" name="state">
-				&lt;option value="WA">Washington&lt;/option>
-			  &lt;/select>
-			  &lt;label for="zip">Zip:&lt;/label>
-			  &lt;input type="text" id="zip" name="zip" />
-
-			  &lt;div id="department">
-				&lt;label for="department">Department:&lt;/label>
-				&lt;select id="department" name="department" multiple>
-				  &lt;option value="finance">Finance&lt;/option>
-				  &lt;option value="humanresources">Human Resources&lt;/option>
-				  &lt;option value="marketing">Marketing&lt;/option>
+				&lt;label for="firstname">First name:&lt;/label>
+				&lt;input type="text" id="firstname" name="firstname" />
+				&lt;label for="lastname">Last name:&lt;/label>
+				&lt;input type="text" id="lastname" name="lastname" />
+				&lt;label for="address">Address:&lt;/label>
+				&lt;input type="text" id="address" name="address" />
+				&lt;label for="address2">Address 2:&lt;/label>
+				&lt;input type="text" id="address2" name="address2" />
+				&lt;label for="city">City:&lt;/label>
+				&lt;input type="text" id="city" name="city" />
+				&lt;label for="state">State:&lt;/label>
+				&lt;select type="text" id="state" name="state">
+					&lt;option value="WA">Washington&lt;/option>
 				&lt;/select>
-			  &lt;/div>
+				&lt;label for="zip">Zip:&lt;/label>
+				&lt;input type="text" id="zip" name="zip" />
 
-			  &lt;div id="buttons">
-				&lt;button id="cancel">Cancel&lt;/button>
-				&lt;button id="back">Back&lt;/button>
-				&lt;button id="next">Next&lt;/button>
-			  &lt;/div>
+				&lt;div id="department">
+					&lt;label for="department">Department:&lt;/label>
+					&lt;select id="department" name="department" multiple>
+						&lt;option value="finance">Finance&lt;/option>
+						&lt;option value="humanresources">Human Resources&lt;/option>
+						&lt;option value="marketing">Marketing&lt;/option>
+					&lt;/select>
+				&lt;/div>
+
+				&lt;div id="buttons">
+					&lt;button id="cancel">Cancel&lt;/button>
+					&lt;button id="back">Back&lt;/button>
+					&lt;button id="next">Next&lt;/button>
+				&lt;/div>
 			&lt;/form>
 		</pre>
 	</div>
 
+<!--
+ ██████   ████████  ████ ████████
+██    ██  ██     ██  ██  ██     ██
+██        ██     ██  ██  ██     ██
+██   ████ ████████   ██  ██     ██
+██    ██  ██   ██    ██  ██     ██
+██    ██  ██    ██   ██  ██     ██
+ ██████   ██     ██ ████ ████████
+-->
 
 <h2 id='grid-shorthand'>
 Grid Definition Shorthand: the 'grid' property</h2>
@@ -1749,6 +1994,16 @@ Grid Definition Shorthand: the 'grid' property</h2>
 		</pre>
 	</div>
 
+<!--
+ ██████  ██          ███    ██     ██ ████████  ████ ██    ██  ██████
+██    ██ ██         ██ ██   ███   ███ ██     ██  ██  ███   ██ ██    ██
+██       ██        ██   ██  ████ ████ ██     ██  ██  ████  ██ ██
+██       ██       ██     ██ ██ ███ ██ ████████   ██  ██ ██ ██ ██   ████
+██       ██       █████████ ██     ██ ██         ██  ██  ████ ██    ██
+██    ██ ██       ██     ██ ██     ██ ██         ██  ██   ███ ██    ██
+ ██████  ████████ ██     ██ ██     ██ ██        ████ ██    ██  ██████
+-->
+
 <h2 id="overlarge-grids">
 Clamping Overlarge Grids</h2>
 
@@ -1756,11 +2011,46 @@ Clamping Overlarge Grids</h2>
 	UAs may clamp the the possible size of the <a>grid</a>
 	to within a UA-defined limit,
 	dropping all lines outside that limit.
-	If a <a>grid item</a> spans outside this limit,
-	its span must be clamped to the last line of the limited <a>grid</a>.
-	If a <a>grid item</a> is placed outside this limit,
-	its span must be truncated to 1
-	and the item repositioned into the last <a>grid track</a> on that side of the grid.
+	If a grid item is placed outside this limit,
+	its grid area must be <a>clamped</a> to within this limited grid.
+
+	To <dfn local-lt=clamp>clamp a grid area</dfn>:
+	* If the <a>grid area</a> would span outside the limited grid,
+		its span is clamped to the last line of the limited <a>grid</a>.
+	* If the <a>grid area</a> would be placed completely outside the limited grid
+		is span must be truncated to 1
+		and the area repositioned into the last <a>grid track</a> on that side of the grid.
+
+	<div class='example'>
+		For example, if a UA only supported grids with at most 1000 tracks in each dimension,
+		the following placement properties:
+
+		<pre class="lang-css">
+		.grid-item {
+			grid-row: 500 / 1500;
+			grid-column: 2000 / 3000;
+		}
+		</pre>
+
+		Would end up being equivalent to:
+
+		<pre class="lang-css">
+		.grid-item {
+			grid-row: 500 / 1000;
+			grid-column: 999 / 1000;
+		}
+		</pre>
+	</div>
+
+<!--
+████████  ██          ███     ██████  ████ ██    ██  ██████
+██     ██ ██         ██ ██   ██    ██  ██  ███   ██ ██    ██
+██     ██ ██        ██   ██  ██        ██  ████  ██ ██
+████████  ██       ██     ██ ██        ██  ██ ██ ██ ██   ████
+██        ██       █████████ ██        ██  ██  ████ ██    ██
+██        ██       ██     ██ ██    ██  ██  ██   ███ ██    ██
+██        ████████ ██     ██  ██████  ████ ██    ██  ██████
+-->
 
 <h2 id="placement">
 Placing Grid Items</h2>
@@ -1773,26 +2063,26 @@ Placing Grid Items</h2>
 	defined in [[#layout-algorithm]].
 
 	The location of a <a>grid item’s</a> <a>grid area</a> within the <a>grid</a>
-	is defined by its <dfn export title="grid placement" local-title="placement">placement</dfn>,
+	is defined by its <dfn export lt="grid placement" local-lt="placement">placement</dfn>,
 	which consists of a <a>grid position</a> and a <a>grid span</a>:
 
 	<dl export>
-		<dt><dfn export local-title="position|row position|column position">grid position</dfn>
+		<dt><dfn export local-lt="position|row position|column position">grid position</dfn>
 		<dd>
 			The <a>grid item</a>’s location in the <a>grid</a>.
 			A <a>grid position</a> can be either
-			<dfn export title="definite grid position|definite row position|definite column position|definite position">definite</dfn> (explicitly specified)
-			or <dfn export title="automatic grid position|automatic row position|automatic column position|automatic position">automatic</dfn> (determined by <a>auto-placement</a>).
+			<dfn export lt="definite grid position|definite row position|definite column position|definite position">definite</dfn> (explicitly specified)
+			or <dfn export lt="automatic grid position|automatic row position|automatic column position|automatic position">automatic</dfn> (determined by <a>auto-placement</a>).
 
-		<dt><dfn export local-title="span|row span|column span">grid span</dfn>
+		<dt><dfn export local-lt="span|row span|column span">grid span</dfn>
 		<dd>
 			How many <a>grid tracks</a> the <a>grid item</a> occupies.
-			A <a>subgrid</a>’s <a>grid span</a> can be <dfn title="automatic grid span|automatic row span|automatic column span|automatic span">automatic</dfn>
+			A <a>subgrid</a>’s <a>grid span</a> can be <dfn lt="automatic grid span|automatic row span|automatic column span|automatic span">automatic</dfn>
 			(determined by its <a>implicit grid</a>) if not specified or implied;
-			a <a>grid item</a>’s <a>grid span</a> is otherwise always <dfn export title="definite grid span|definite row span|definite column span|definite span">definite</dfn> (defaulting to 1).
+			a <a>grid item</a>’s <a>grid span</a> is otherwise always <dfn export lt="definite grid span|definite row span|definite column span|definite span">definite</dfn> (defaulting to 1).
 	</dl>
 
-	The <dfn export title="grid-placement property">grid-placement properties</dfn>--
+	The <dfn export lt="grid-placement property">grid-placement properties</dfn>--
 	the longhands 'grid-row-start', 'grid-row-end', 'grid-column-start', 'grid-column-end', and their shorthands 'grid-row', 'grid-column', and 'grid-area'--
 	allow the author to specify a <a>grid item</a>’s <a>placement</a>
 	by providing any (or none) of the following six pieces of information:
@@ -1820,7 +2110,7 @@ Placing Grid Items</h2>
 
 	A definite value for any two of <var>Start</var>, <var>End</var>, and <var>Span</var> in a given dimension implies a definite value for the third.
 
-	The following table summarizes the conditions under which a grid position or span is <a title>definite</a> or <a title>automatic</a>:
+	The following table summarizes the conditions under which a grid position or span is <i lt>definite</i> or <i lt>automatic</i>:
 
 	<table class='data'>
 		<thead>
@@ -1860,13 +2150,6 @@ Common Patterns for Grid Placement</h3>
 			<td>'grid-row-start'
 			<td>'grid-row-end'
 	</table>
-
-	<style scoped>
-	#grid-property-breakdown tr:nth-child(3) td {
-		width: 25%;
-		border-style: solid;
-	}
-	</style>
 
 <h4 id='common-uses-named-areas'>
 Named Areas</h4>
@@ -2031,6 +2314,16 @@ Auto Sizing Subgrids</h4>
 	The above example would auto-place the <code>.adverts</code> block,
 	if no further rules specified its position.
 
+<!--
+ ██████   ████████  ████ ████████          ████████   ███████  ██      ██          ██████  ████████    ███    ████████  ████████
+██    ██  ██     ██  ██  ██     ██         ██     ██ ██     ██ ██  ██  ██         ██    ██    ██      ██ ██   ██     ██    ██
+██        ██     ██  ██  ██     ██         ██     ██ ██     ██ ██  ██  ██         ██          ██     ██   ██  ██     ██    ██
+██   ████ ████████   ██  ██     ██ ███████ ████████  ██     ██ ██  ██  ██ ███████  ██████     ██    ██     ██ ████████     ██
+██    ██  ██   ██    ██  ██     ██         ██   ██   ██     ██ ██  ██  ██               ██    ██    █████████ ██   ██      ██
+██    ██  ██    ██   ██  ██     ██         ██    ██  ██     ██ ██  ██  ██         ██    ██    ██    ██     ██ ██    ██     ██
+ ██████   ██     ██ ████ ████████          ██     ██  ███████   ███  ███           ██████     ██    ██     ██ ██     ██    ██
+-->
+
 <h3 id='line-placement'>
 Line-based Placement: the 'grid-row-start', 'grid-column-start', 'grid-row-end', and 'grid-column-end' properties</h3>
 
@@ -2046,7 +2339,7 @@ Line-based Placement: the 'grid-row-start', 'grid-column-start', 'grid-row-end',
 	</pre>
 
 	<pre>
-		<dfn for="grid-row-start grid-column-start grid-row-end grid-column-end"><<grid-line>></dfn> =
+		<dfn for="grid-row-start, grid-column-start, grid-row-end, grid-column-end"><<grid-line>></dfn> =
 		  auto |
 		  <<custom-ident>> |
 		  [ <<integer>> && <<custom-ident>>? ] |
@@ -2085,7 +2378,7 @@ Line-based Placement: the 'grid-row-start', 'grid-column-start', 'grid-row-end',
 			If a name is given as a <<custom-ident>>,
 			only lines with that name are counted.
 			If not enough lines with that name exist,
-			all lines in the implicit grid are assumed to have that name for the purpose of finding this position.
+			all <a>implicit grid lines</a> are assumed to have that name for the purpose of finding this position.
 
 			A <<integer>> value of zero makes the declaration invalid.
 
@@ -2097,7 +2390,7 @@ Line-based Placement: the 'grid-row-start', 'grid-column-start', 'grid-row-end',
 			If a name is given as a <<custom-ident>>,
 			only lines with that name are counted.
 			If not enough lines with that name exist,
-			all lines in the implicit grid are assumed to have that name for the purpose of counting this span.
+			all <a>implicit grid lines</a> are assumed to have that name for the purpose of counting this span.
 
 			If the <<integer>> is omitted, it defaults to ''1''.
 			Negative integers or zero are invalid.
@@ -2106,7 +2399,7 @@ Line-based Placement: the 'grid-row-start', 'grid-column-start', 'grid-row-end',
 		<dd>
 			The property contributes nothing to the <a>grid item</a>’s <a>placement</a>,
 			indicating <a>auto-placement</a>, an <a>automatic span</a>, or a default span of one.
-			(See <a href="#placement">Placing Grid Items</a>, above.)
+			(See [[#placement]], above.)
 	</dl>
 
 	<div class='example'>
@@ -2161,17 +2454,25 @@ Line-based Placement: the 'grid-row-start', 'grid-column-start', 'grid-row-end',
 <h4 id='grid-placement-errors'>
 Grid Placement Conflict Handling</h4>
 
-	If 'grid-row-end'/'grid-column-end' specifies a line at or before that specified by 'grid-row-start'/'grid-column-start',
-	it instead contributes nothing.
+	If the <a>placement</a> for a <a>grid item</a> contains two lines,
+	and the <a>end</a> line's index is less than or equal to the <a>start</a> line's index,
+	remove the <a>end</a> line from the <a>placement</a>.
 
-	If both 'grid-row-start' and 'grid-row-end', or 'grid-column-start' and 'grid-column-end',
-	specify a span,
-	the <a>end</a> span is ignored.
+	If the <a>placement</a> contains two spans,
+	remove the one contributed by the <a>end</a> <a>grid-placement property</a>.
 
-	If the <a>grid item</a> has an automatic position
-	and a <a>grid span</a> for a named line
-	in a given dimension,
-	instead treat the <a>grid span</a> as one.
+	If the <a>placement</a> contains only a span for a named line,
+	replace it with a span of 1.
+
+<!--
+ ██████   ████████  ████ ████████           ██████   ███████  ██       ██     ██ ██     ██ ██    ██
+██    ██  ██     ██  ██  ██     ██         ██    ██ ██     ██ ██       ██     ██ ███   ███ ███   ██
+██        ██     ██  ██  ██     ██         ██       ██     ██ ██       ██     ██ ████ ████ ████  ██
+██   ████ ████████   ██  ██     ██ ███████ ██       ██     ██ ██       ██     ██ ██ ███ ██ ██ ██ ██
+██    ██  ██   ██    ██  ██     ██         ██       ██     ██ ██       ██     ██ ██     ██ ██  ████
+██    ██  ██    ██   ██  ██     ██         ██    ██ ██     ██ ██       ██     ██ ██     ██ ██   ███
+ ██████   ██     ██ ████ ████████           ██████   ███████  ████████  ███████  ██     ██ ██    ██
+-->
 
 <h3 id='placement-shorthands'>
 Placement Shorthands: the 'grid-column', 'grid-row', and 'grid-area' properties</h3>
@@ -2234,68 +2535,20 @@ Placement Shorthands: the 'grid-column', 'grid-row', and 'grid-area' properties<
 	which goes CCW for LTR pages,
 	the opposite direction of the related 4-edge properties using physical directions, like 'margin'.
 
-
-<h3 id="abspos-items">
-Absolutely-positioned Grid Items</h3>
-
-	If an absolutely positioned element's <a>containing block</a>
-	is generated by a <a>grid container</a>,
-	its containing block edges are the edges of the element's <a>grid area</a>
-	as given by its <a>grid-placement properties</a>.
-	In this case, an <a value for="<grid-line>">auto</a> value for a <a>grid-placement property</a>
-	contributes the corresponding padding edge of the <a>grid container</a> as a line.
-	(Thus, by default, the <a>containing block</a> will correspond to the padding edges of the <a>grid container</a>.)
-	The offset properties ('top'/'right'/'bottom'/'left')
-	then indicate offsets inwards from the corresponding edges
-	of the resulting <a>containing block</a>, as normal.
-
-	Note: Note that, while absolutely-positioning an element to a <a>grid container</a>
-	does allow it to align to that container's <a>grid lines</a>,
-	such elements
-	do not take up space or otherwise participate in the layout of the grid.
-
-	<div class='example'>
-		<pre>
-			.grid {
-				grid: 10rem 10rem 10rem 10rem / 1fr 1fr 1fr 1fr;
-				/* 4 columns of ''10rem'' each,
-				   4 equal-height rows filling the <a>grid container</a> */
-				justify-content: center;
-				/* center the grid horizontally within the <a>grid container</a> */
-				position: relative;
-				/* Establish abspos <a>containing block</a> */
-			}
-
-			.abspos {
-				grid-row-start: 1;     /* 1st grid row line = top of grid container */
-				grid-row-end: span 2;  /* 3rd grid row line */
-				grid-column-start: 3;  /* 3rd grid col line */
-				grid-column-end: auto; /* right padding edge */
-				/* <a>Containing block</a> covers the top right quadrant of the <a>grid container</a> */
-
-				position: absolute;
-				top: 70px;
-				bottom: 40px;
-				left: 100px;
-				right: 30px;
-			}
-		</pre>
-
-		<figure>
-			<img src="images/abspos-grid.svg" width="702" height="402" alt=''>
-		</figure>
-
-		Note: Note that grids and the <a>grid-placement properties</a> are <a>flow-relative</a>,
-		while abspos offsets are <a>physical</a>,
-		so if the 'direction' or 'writing-mode' properties change,
-		the grid will transform to match,
-		but the offsets won't.
-	</div>
+<!--
+   ███    ██     ██ ████████  ███████          ████████  ██          ███     ██████  ████████ ██     ██ ████████ ██    ██ ████████
+  ██ ██   ██     ██    ██    ██     ██         ██     ██ ██         ██ ██   ██    ██ ██       ███   ███ ██       ███   ██    ██
+ ██   ██  ██     ██    ██    ██     ██         ██     ██ ██        ██   ██  ██       ██       ████ ████ ██       ████  ██    ██
+██     ██ ██     ██    ██    ██     ██ ███████ ████████  ██       ██     ██ ██       ██████   ██ ███ ██ ██████   ██ ██ ██    ██
+█████████ ██     ██    ██    ██     ██         ██        ██       █████████ ██       ██       ██     ██ ██       ██  ████    ██
+██     ██ ██     ██    ██    ██     ██         ██        ██       ██     ██ ██    ██ ██       ██     ██ ██       ██   ███    ██
+██     ██  ███████     ██     ███████          ██        ████████ ██     ██  ██████  ████████ ██     ██ ████████ ██    ██    ██
+-->
 
 <h3 id='auto-placement-algo'>
 Grid Item Placement Algorithm</h3>
 
-	The following <dfn export local-title="auto-placement algorithm">grid item placement algorithm</dfn>
+	The following <dfn export local-lt="auto-placement algorithm">grid item placement algorithm</dfn>
 	resolves <a>automatic positions</a> of <a>grid items</a> into <a>definite positions</a>,
 	ensuring that every <a>grid item</a> has a well-defined <a>grid area</a> to lay out into.
 	(<a>Grid spans</a> need no special resolution;
@@ -2308,7 +2561,7 @@ Grid Item Placement Algorithm</h3>
 	if there is no room in the <a>explicit grid</a> to place an auto-positioned <a>grid item</a>.
 
 	Every <a>grid cell</a>
-	(in both the <a title="explicit grid">explicit</a> and <a>implicit grids</a>)
+	(in both the <a>explicit</a> and <a>implicit grids</a>)
 	can be <dfn>occupied</dfn> or <dfn>unoccupied</dfn>.
 	A cell is <a>occupied</a>
 	if it's covered by a <a>named grid area</a>,
@@ -2323,26 +2576,28 @@ Grid Item Placement Algorithm</h3>
 	If it is instead set to ''grid-auto-flow/column'',
 	swap all mentions of rows and columns, inline and block, etc. in this algorithm.
 
-	1. <b>Process the items locked to a given row.</b>
+	1. <strong>Position anything that's not auto-positioned.</strong>
+
+	2. <strong>Process the items locked to a given row.</strong>
 
 		For each <a>grid item</a> with a <a>definite row position</a>
 		(that is, the 'grid-row-start' and 'grid-row-end' properties define a <a>definite grid position</a>),
 		in <a>order-modified document order</a>:
 
 		: “sparse” packing (omitted ''dense'' keyword)
-		:: 
-			Set the row-start line of its <a>placement</a>
+		::
+			Set the column-start line of its <a>placement</a>
 			to the earliest (smallest positive index) line index
 			that ensures this item’s <a>grid area</a> will not overlap any <a>occupied</a> grid cells
 			and that is past any <a>grid items</a> previously placed in this row by this step.
 
 		: “dense” packing (''dense'' specified)
 		::
-			Set the row-start line of its <a>placement</a>
+			Set the column-start line of its <a>placement</a>
 			to the earliest (smallest positive index) line index
 			that ensures this item’s <a>grid area</a> will not overlap any <a>occupied</a> grid cells.
 
-	2. <b>Determine the number of columns in the implicit grid.</b>
+	3. <strong>Determine the number of columns in the implicit grid.</strong>
 
 		Set the number of columns in the <a>implicit grid</a> to the larger of:
 
@@ -2374,9 +2629,9 @@ Grid Item Placement Algorithm</h3>
 			which is larger than the <a>explicit grid</a>’s 5 columns.
 		</div>
 
-	3. <b>Position the remaining grid items.</b>
+	4. <strong>Position the remaining grid items.</strong>
 
-		The <dfn export local-title="cursor">auto-placement cursor</dfn> defines the current “insertion point” in the grid,
+		The <dfn export local-lt="cursor">auto-placement cursor</dfn> defines the current “insertion point” in the grid,
 		specified as a pair of row and column <a>grid lines</a>.
 		Initially the <a>auto-placement cursor</a> is specified with a row and column position both equal to 1.
 
@@ -2444,6 +2699,131 @@ Grid Item Placement Algorithm</h3>
 					set its column position to 1,
 					and return to the previous step.
 
+<!--
+   ███    ████████   ██████  ████████   ███████   ██████
+  ██ ██   ██     ██ ██    ██ ██     ██ ██     ██ ██    ██
+ ██   ██  ██     ██ ██       ██     ██ ██     ██ ██
+██     ██ ████████   ██████  ████████  ██     ██  ██████
+█████████ ██     ██       ██ ██        ██     ██       ██
+██     ██ ██     ██ ██    ██ ██        ██     ██ ██    ██
+██     ██ ████████   ██████  ██         ███████   ██████
+-->
+
+<h2 id="abspos">
+Absolute Positioning</h2>
+
+<h3 id="abspos-items">
+With a Grid Container as Containing Block</h3>
+
+	If an absolutely positioned element's <a>containing block</a>
+	is generated by a <a>grid container</a>,
+	the containing block corresponds to the <a>grid area</a> determined by its <a>grid-placement properties</a>.
+	The offset properties ('top'/'right'/'bottom'/'left')
+	then indicate offsets inwards from the corresponding edges
+	of this <a>containing block</a>, as normal.
+
+	Note: While absolutely-positioning an element to a <a>grid container</a>
+	does allow it to align to that container's <a>grid lines</a>,
+	such elements do not take up space or otherwise participate in the layout of the grid.
+
+	<div class='example'>
+		<pre>
+			.grid {
+				grid: 10rem 10rem 10rem 10rem / 1fr 1fr 1fr 1fr;
+				/* 4 columns of ''10rem'' each,
+				   4 equal-height rows filling the <a>grid container</a> */
+				justify-content: center;
+				/* center the grid horizontally within the <a>grid container</a> */
+				position: relative;
+				/* Establish abspos <a>containing block</a> */
+			}
+
+			.abspos {
+				grid-row-start: 1;     /* 1st grid row line = top of grid container */
+				grid-row-end: span 2;  /* 3rd grid row line */
+				grid-column-start: 3;  /* 3rd grid col line */
+				grid-column-end: auto; /* right padding edge */
+				/* <a>Containing block</a> covers the top right quadrant of the <a>grid container</a> */
+
+				position: absolute;
+				top: 70px;
+				bottom: 40px;
+				left: 100px;
+				right: 30px;
+			}
+		</pre>
+
+		<figure>
+			<img src="images/abspos-grid.svg" width="702" height="402" alt=''>
+		</figure>
+
+		Note: Grids and the <a>grid-placement properties</a> are <a>flow-relative</a>,
+		while abspos offsets are <a>physical</a>,
+		so if the 'direction' or 'writing-mode' properties change,
+		the grid will transform to match,
+		but the offsets won't.
+	</div>
+
+	Instead of auto-placement, an ''auto'' value for a <a>grid-placement property</a>
+	contributes a special line to the <a>placement</a>
+	whose position is that of the corresponding padding edge of the <a>grid container</a>
+	(the padding edge of the scrollable area, if the <a>grid container</a> overflows).
+
+	Note: Thus, by default, the absolutely-positioned box's <a>containing block</a> will correspond
+	to the padding edges of the <a>grid container</a>, as it does for <a>block containers</a>.
+
+	<div class="issue">
+		A grid with visible overflow is problematic here, because it puts the last line of the grid after the padding edge.
+		Options are:
+		<ul>
+			<li>Use the grid edge instead of the padding edge when there's non-scrollable overflow.
+				This is inconsistent with how block containers work.
+			<li>Deal with negative-width grid tracks resulting from this inversion.
+			<li>Use the grid edge, but then clamp the containing block to the padding area.
+			<li>Honor the non-''auto'' edge and clamp the size to zero.
+			<li>Something else?
+		</ul>
+	</div>
+
+	Absolute positioning occurs after layout of the <a>grid</a>	and its in-flow contents
+	and does not contribute to the sizing of any grid tracks.
+	Any <em>new</em> <a>implicit grid lines</a> added by a <a>grid-placement property</a>
+	are positioned atop the last <a>grid line</a> on that side of the <a>grid</a>
+	(rather than having their placement determined by 'grid-auto-rows'/'grid-auto-columns' and the <a>grid sizing algorithm</a>).
+
+	If the <a>placement</a> only contains a <a>grid span</a>,
+	replace it with the two ''auto'' lines in that axis.
+	(This happens when both <a>grid-placement properties</a> in an axis contributed a span originally,
+	and [[#grid-placement-errors]] caused the second span to be ignored.)
+
+	Issue: This section is under discussion.
+
+
+<h3 id="static-position">
+With a Grid Container as Parent</h3>
+
+	The <a href="http://www.w3.org/TR/CSS21/visudet.html#abs-non-replaced-width">static position</a> [[!CSS21]]
+	of an absolutely-positioned child of a <a>grid container</a>
+	is determined as if it were the sole grid item
+	in a <a>grid area</a>
+	whose edges coincide with the padding edges of the <a>grid container</a>.
+	However, if the <a>grid container</a> parent is also the generator of the absolutely positioned element's <a>containing block</a>,
+	instead use the <a>grid area</a> determined in [[#abspos-items]].
+
+	Note: Note that this position is affected by the values of 'justify-self' and 'align-self' on the child,
+	and that, as in most other layout models,
+	the absolutely-positioned child has no effect on the size of the containing block
+	or layout of its contents.
+
+<!--
+   ███    ██       ████  ██████   ██    ██ ██     ██ ████████ ██    ██ ████████
+  ██ ██   ██        ██  ██    ██  ███   ██ ███   ███ ██       ███   ██    ██
+ ██   ██  ██        ██  ██        ████  ██ ████ ████ ██       ████  ██    ██
+██     ██ ██        ██  ██   ████ ██ ██ ██ ██ ███ ██ ██████   ██ ██ ██    ██
+█████████ ██        ██  ██    ██  ██  ████ ██     ██ ██       ██  ████    ██
+██     ██ ██        ██  ██    ██  ██   ███ ██     ██ ██       ██   ███    ██
+██     ██ ████████ ████  ██████   ██    ██ ██     ██ ████████ ██    ██    ██
+-->
 
 <h2 id='alignment'>
 Alignment</h2>
@@ -2577,7 +2957,7 @@ Grid Baselines</h3>
 	if its value for 'align-self' or 'justify-self', as appropriate, is ''baseline''
 	and its inline axis is parallel to that dimension.
 
-	<dfn export title="order-modified grid order">'order'-modified grid order</dfn> is the order in which
+	<dfn export lt="order-modified grid order">'order'-modified grid order</dfn> is the order in which
 	<a>grid items</a> are encountered when traversing the grid's <a>grid cells</a>,
 	in row-major order if calculating the inline-axis baseline,
 	or in column-major order if calculating the block-axis baseline.
@@ -2592,7 +2972,15 @@ Grid Baselines</h3>
 	When <a href="http://www.w3.org/TR/CSS21/tables.html#height-layout">determining the baseline of a table cell</a>,
 	a grid container provides a baseline just as a line box or table-row does. [[!CSS21]]
 
-
+<!--
+ ██████  ████ ████████ ████ ██    ██  ██████
+██    ██  ██       ██   ██  ███   ██ ██    ██
+██        ██      ██    ██  ████  ██ ██
+ ██████   ██     ██     ██  ██ ██ ██ ██   ████
+      ██  ██    ██      ██  ██  ████ ██    ██
+██    ██  ██   ██       ██  ██   ███ ██    ██
+ ██████  ████ ████████ ████ ██    ██  ██████
+-->
 
 <h2 id='layout-algorithm'>
 Grid Sizing</h2>
@@ -2601,8 +2989,8 @@ Grid Sizing</h2>
 	which determines the size of all <a>grid tracks</a>
 	and, by extension, the entire grid.
 
-	Each track has specified <a title="min track sizing function">minimum</a> and
-	<a title="max track sizing function">maximum</a> <a>sizing functions</a>
+	Each track has specified <a lt="min track sizing function">minimum</a> and
+	<a lt="max track sizing function">maximum</a> <a>sizing functions</a>
 	(which may be the same).
 	Each <a>sizing function</a> is either:
 
@@ -2649,9 +3037,11 @@ Grid Sizing Algorithm</h3>
 		<li>
 			Finally, the <a>grid container</a> is sized
 			using the resulting size of the <a>grid</a> as its content size,
-			and the tracks are aligned within the <a>grid container</a> 
+			and the tracks are aligned within the <a>grid container</a>
 			according to the 'align-content' and 'justify-content' properties.
 			<span class="note">Note: This can introduce extra space within or between tracks.</a>
+			(When introducing space within tracks,
+			only tracks with an <a lt="intrinsic sizing function">intrinsic</a> <a>max track sizing function</a> accept space.)
 	</ol>
 
 	Once the size of each <a>grid area</a> is thus established,
@@ -2692,7 +3082,7 @@ Track Sizing Terminology</h3>
 Track Sizing Algorithm</h3>
 
 	The remainder of this section is the <dfn>track sizing algorithm</dfn>,
-	which calculates from the <a title="min track sizing function">min</a> and <a>max track sizing functions</a>
+	which calculates from the <a lt="min track sizing function">min</a> and <a>max track sizing functions</a>
 	the used track size.
 	Each track has a <dfn>base size</dfn>,
 	a <<length>> which grows throughout the algorithm
@@ -2847,7 +3237,44 @@ Resolve Intrinsic Track Sizes</h3>
 					Mark any tracks whose <a>growth limit</a> changed
 					from infinite to finite in this step
 					as <dfn>infinitely growable</dfn> for the next step.
-					<!-- http://lists.w3.org/Archives/Public/www-style/2014Mar/0500.html -->
+
+					<details class=why>
+						<summary>Why does the <a>infinitely growable</a> flag exist?</summary>
+
+						<a href="http://lists.w3.org/Archives/Public/www-style/2014Mar/0500.html">Peter Salas explains</a>:
+
+						<blockquote cite="http://lists.w3.org/Archives/Public/www-style/2014Mar/0500.html">
+							Consider the following case:
+
+							Two "auto" tracks (i.e. "minmax(min-content, max-content) minmax(min-content, max-content)").
+							Item 1 is in track 1, and has min-content = max-content = 10.
+							Item 2 spans tracks 1 and 2, and has min-content = 30, max-content = 100.
+
+							After resolving min-content/max-content for the first item, we have this.
+
+							track 1: used breadth = 10 max breadth = 10
+
+							track 2: used breadth = 0 max breadth = infinity
+
+							Then we resolve min-content/max-content for the second item.
+
+							Phase 1 sets the used breadth of track 2 to 20 so that the two tracks' used breadths sum to 30.
+							Phase 2 does nothing because there are no relevant tracks.
+							Phase 3 sets the max breadth of track 2 to 20 so that the two tracks' max breadths sum to 30.
+							In phase 4, we need to grow the sum of the max breadths by 70 to accommodate item 2.
+							Two options are:
+
+							1. Grow each track's max breadth equally,
+								and end up with max breadths = [45, 55].
+							2. Grow only the second track's max breadth,
+								and end up with max breadths = [10, 90].
+
+							By not considering the just-set max breadth as a constraint during space distribution
+							(i.e. by treating it as infinity),
+							we get the second result,
+							which we considered a better result because the first track remains sized exactly to the first item.
+						</blockquote>
+					</details>
 				<li>
 					<strong>For max-content maximums:</strong>
 					Lastly continue to increase the <a>growth limit</a> of tracks with
@@ -2906,7 +3333,7 @@ Resolve Intrinsic Track Sizes</h3>
 
 					<ul>
 						<li>
-							when handling ''min-content'' <a>base sizes</a>:
+							when handling ''min-content'' or ''auto'' <a>base sizes</a>:
 							any affected track that happens to also have an intrinsic <a>max track sizing function</a>;
 							if there are no such tracks, then all affected tracks.
 						<li>
@@ -3055,16 +3482,80 @@ Find the Size of an ''fr''</h4>
 			Return the <a>hypothetical fr size</a>.
 	</ol>
 
+<!--
+████████ ████████     ███     ██████   ██     ██ ████████ ██    ██ ████████ ████ ██    ██  ██████
+██       ██     ██   ██ ██   ██    ██  ███   ███ ██       ███   ██    ██     ██  ███   ██ ██    ██
+██       ██     ██  ██   ██  ██        ████ ████ ██       ████  ██    ██     ██  ████  ██ ██
+██████   ████████  ██     ██ ██   ████ ██ ███ ██ ██████   ██ ██ ██    ██     ██  ██ ██ ██ ██   ████
+██       ██   ██   █████████ ██    ██  ██     ██ ██       ██  ████    ██     ██  ██  ████ ██    ██
+██       ██    ██  ██     ██ ██    ██  ██     ██ ██       ██   ███    ██     ██  ██   ███ ██    ██
+██       ██     ██ ██     ██  ██████   ██     ██ ████████ ██    ██    ██    ████ ██    ██  ██████
+-->
+
 <h2 id='pagination'>
 Fragmenting Grid Layout</h2>
 
-	Grid containers break across fragment containers (fragmentainers) [[!CSS3-BREAK]] between
-	grid rows. The break-* properties do not apply to grid areas. When fragmentating grid containers
-	the goal is to minimize the number of grid areas that get fragmented due to their grid row
-	being fragmented.
+
+	<p>
+		<a>Grid containers</a> can break across pages
+		between rows
+		and inside items.
+		The <a property lt="break-before">break-*</a> properties apply to grid containers
+		as normal for the formatting context in which they participate.
+		This section defines how they apply to grid items
+		and the contents of grid items.
+
+	<p>
+		The following breaking rules refer to the fragmentation container as the “page”.
+		The same rules apply to any other fragmentation containers.
+		(Substitute “page” with the appropriate fragmentation container type as needed.)
+		See the CSS3 Fragmentation Module [[!CSS3-BREAK]].
+
+	<p>
+		The exact layout of a fragmented grid container is not defined in this level of Grid Layout.
+		However, breaks inside a grid container are subject to the following rules:
+
+	<ul>
+		<li>
+			The 'break-before' and 'break-after' properties on flex items
+			are propagated to their grid row.
+			The 'break-before' property on the first row
+			and the 'break-after' property on the last row
+			are propagated to the grid container.
+
+		<li>
+			A forced break inside a grid item effectively increases the size of its contents;
+			it does not trigger a forced break inside sibling items.
+
+		<li>
+			<a href="http://www.w3.org/TR/css3-break/#btw-blocks">Class A break opportunities</a> occur between rows,
+			and <a href="http://www.w3.org/TR/css3-break/#end-block">Class C break opportunities</a> occur between the first/last row and the flex container's content edges.
+			[[!CSS3-BREAK]]
+
+		<li>
+			When a grid container is continued after a break,
+			the space available to its <a>grid items</a>
+			(in the block flow direction of the fragmentation context)
+			is reduced by the space consumed by grid container fragments on previous pages.
+			The space consumed by a grid container fragment is
+			the size of its content box on that page.
+			If as a result of this adjustment the available space becomes negative,
+			it is set to zero.
+
+		<li>
+			Aside from the rearrangement of items imposed by the previous point,
+			UAs should attempt to minimize distortation of the grid container
+			with respect to unfragmented flow.
+	</ul>
+
 
 <h3 id="fragmentation-alg">
 Sample Fragmentation Algorithm</h3>
+
+	<p class="issue">
+		This is just a rough draft.
+		This section needs to be severely cross-checked with the [[CSS3-FLEXBOX]] algorithm.
+		Feedback overall is welcome; please reference the rules above instead as implementation guidance.
 
 	<ol>
 		<li>
@@ -3074,10 +3565,6 @@ Sample Fragmentation Algorithm</h3>
 
 		<li>
 			Layout the grid container using the values resolved in the previous step.
-
-		<li>
-			If a grid row extends past the current fragment and it is not the first grid row in
-			this fragment; push it to the next fragment. Do this even if the grid row has no items.
 
 		<li>
 			If a grid area dimensions change due to fragmentation (do not include items that
@@ -3111,26 +3598,45 @@ Acknowledgements</h2>
 	This specification is made possible by input from
 	Erik Anderson,
 	Rossen Atanassov,
+	Manuel Rego Casasnovas,
 	Arron Eicholz,
 	Sylvain Galineau,
 	Markus Mielke,
+	Daniel Holbert,
 	John Jansen,
 	Chris Jones,
 	Kathy Kam,
 	Veljko Miljanic,
+	Mats Palmgren,
+	François Remy,
 	Peter Salas,
+	Sergio Villar Senin,
 	Christian Stockwell,
 	Eugene Veselov,
 	and the CSS Working Group members.
-	Thanks to Eliot Graff for editorial input.
+	Thanks also to Eliot Graff for editorial input.
 
 <h2 class="no-num" id="changes">
 Changes</h2>
 
 	The following significant changes were made since the
-	<a href=http://www.w3.org/TR/2014/WD-css3-grid-layout-20140513/>13 May 2014 Working Draft</a>.
+	<a href=http://www.w3.org/TR/2015/WD-css-grid-1-20150317/>17 March 2015 Working Draft</a>.
+
+	* A <a>subgrid</a> now only ignores width/height/alignment constraints in the subgridded dimension(s).
+	* Made ''repeat(auto)'' pay attention to max size when it's definite, too.
+	* Per WG resolution, switched to using square brackets for <<line-names>>, rather than parentheses.
+	* Per WG resolution, made a *sequence* of "." characters a single <a>null cell token</a>,
+		so authors can match the number of dots to the width of the column.
+
+
+<h3 id="changes-20140513">
+Changes since the 13 May 2014 Working Draft</h3>
+
+	The following significant changes were made since the
+	<a href=http://www.w3.org/TR/2014/WD-css-grid-1-20140513/>13 May 2014 Working Draft</a>.
 
 	<ul>
+		<li>Added first draft of grid container <a href="#pagination">fragmenting rules</a>.
 		<li>Applied 'align-content' and 'justify-content' to the <a>grid tracks</a> rather than to the <a>grid</a> as a monolithic unit, to allow justification of grid items across the grid container.
 		<li>Removed <css>stack</css> value from 'grid-auto-flow'.
 		<li>Added ''auto'' keyword to ''repeat()'' function for auto-filled tracks.

@@ -6,14 +6,15 @@ Shortname: css-animations
 Level: 1
 Group: csswg
 TR: http://www.w3.org/TR/css3-animations/
-ED: http://dev.w3.org/csswg/css3-animations/
+ED: http://dev.w3.org/csswg/css-animations/
 Previous Version: http://www.w3.org/TR/2013/WD-css3-animations-20130219/
 Previous Version: http://www.w3.org/TR/2012/WD-css3-animations-20120403/
 Editor: Dean Jackson, Apple Inc., dino@apple.com
 Editor: L. David Baron, Mozilla, dbaron@dbaron.org
-Editor: Sylvain Galineau, Adobe, galineau@adobe.com
+Editor: Tab Atkins Jr., Google, http://xanthir.com/contact/
 Former Editor: David Hyatt, Apple Inc.
 Former Editor: Chris Marrin, Apple Inc.
+Former Editor: Sylvain Galineau, Adobe, galineau@adobe.com
 !Issues List: <a href="https://www.w3.org/Bugs/Public/buglist.cgi?component=Animations&list_id=36653&product=CSS&query_format=advanced&resolution=---">In Bugzilla</a>
 
 Abstract: This CSS module describes a way for authors to animate the values of CSS properties over time, using keyframes. The behavior of these keyframe animations can be controlled by specifying their duration, number of repeats, and repeating behavior.
@@ -22,6 +23,9 @@ At Risk: the <code>pseudoElement</code> property of the ''AnimationEvent'' inter
 
 Link Defaults: css-values-3 (type) <time>, cssom-1 (interface) cssstyledeclaration, dom-core-ls (interface) event, webidl (type) SyntaxError, css-position-3 (property) left
 Ignored Terms: domstring, float, animationeventinit, event, eventinit, eventtarget, document
+</pre>
+<pre class="anchors">
+url: http://w3c.github.io/dom/#constructing-events; type: dfn; text: event constructor;
 </pre>
 
 <h2 id="intro">
@@ -304,6 +308,13 @@ Keyframes</h2>
 		{T}{O}                         {return TO_SYM;}
 	</pre>
 
+	<p class="issue">
+		This specification needs to define
+		how the value is determined from the keyframes,
+		like the section on
+		<a href="http://dev.w3.org/csswg/css-transitions/#application">Application of transitions</a>
+		does for CSS Transitions.
+	</p>
 
 <h3 id="timing-functions">
 Timing functions for keyframes</h3>
@@ -780,7 +791,7 @@ Animation Events</h2>
 <h3 id="interface-animationevent">
 The <code>AnimationEvent</code> Interface</h3>
 
-	The <dfn>AnimationEvent</dfn> interface provides specific contextual information associated with
+	The <code>AnimationEvent</code> interface provides specific contextual information associated with
 	Animation events.
 
 <h4 id="interface-animationevent-idl">
@@ -821,7 +832,7 @@ Attributes</h4>
 			target of the event is that element).
 	</dl>
 
-	<dfn>AnimationEvent(type, animationEventInitDict)</dfn> is an <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#constructing-events">event constructor</a>.
+	<dfn>AnimationEvent(type, animationEventInitDict)</dfn> is an <a>event constructor</a>.
 
 <h3 id="event-animationevent">
 Types of <code>AnimationEvent</code></h3>
@@ -869,6 +880,8 @@ DOM Interfaces</h2>
 
 	CSS animations are exposed to the CSSOM through a pair of new interfaces describing the keyframes.
 
+    Note: the interfaces defined below reflect the interoperable API available as of this level of the specification. Future levels may deprecate parts of this API and extend others.
+
 <h3 id="interface-cssrule">
 The <code>CSSRule</code> Interface</h3>
 
@@ -905,7 +918,7 @@ Attributes</h4>
 
 	<dl dfn-type=attribute dfn-for=CSSKeyframeRule>
 
-		<dt><dfn attribute for="CSSKeyframeRule">keyText</dfn>, of type <a interface>DOMString</a>
+		<dt><dfn attribute for="CSSKeyframeRule">keyText</dfn>
 		<dd>
 			This attribute represents the keyframe selector as a comma-separated list of
 			percentage values. The ''from'' and ''to'' keywords map to 0% and 100%,
@@ -914,7 +927,7 @@ Attributes</h4>
             If <a attribute for="CSSKeyframeRule">keyText</a> is updated with an invalid keyframe selector, 
             a <a spec="webidl">SyntaxError</a> exception must be thrown.
  
-		<dt><dfn>style</dfn>, of type <a interface>CSSStyleDeclaration</a>
+		<dt><dfn>style</dfn>
 		<dd>
 			This attribute represents the style associated with this keyframe.
 	</dl>
@@ -944,7 +957,7 @@ Attributes</h4>
 
 	<dl dfn-type=attribute dfn-for=CSSKeyframesRule>
 
-		<dt><dfn>name</dfn>, of type <a interface>DOMString</a>
+		<dt><dfn>name</dfn>
 		<dd>
 			This attribute is the name of the keyframes, used by the 'animation-name' property.
 			
@@ -953,7 +966,7 @@ Attributes</h4>
 			or any keyword defined for the 'animation-name' property will throw a <a spec="webidl">SyntaxError</a>
 			exception.
 
-		<dt><dfn>cssRules</dfn>, of type <a interface>CSSRuleList</a>
+		<dt><dfn>cssRules</dfn>
 		<dd>
 			This attribute gives access to the keyframes in the list.
 	</dl>
@@ -968,7 +981,7 @@ The <code>appendRule</code> method</h4>
 
 	<dl>
 
-		<dt><dfn argument for="CSSKeyframesRule/appendRule()">rule</dfn> of type <a interface>DOMString</a>
+		<dt><dfn argument for="CSSKeyframesRule/appendRule(rule)">rule</dfn> of type <a interface>DOMString</a>
 		<dd>
 			The rule to be appended, expressed in the same syntax as one entry in the
 			''@keyframes'' rule. A valid rule is always appended e.g. even if its key(s) already
@@ -982,7 +995,7 @@ The <code>appendRule</code> method</h4>
 <h4 id="interface-csskeyframesrule-deleterule">
 The <code>deleteRule</code> method</h4>
 
-	The <dfn method for="CSSKeyframesRule">deleteRule()</dfn> deletes the 
+	The <dfn method for="CSSKeyframesRule">deleteRule()</dfn> method deletes the 
     last declared <a idl>CSSKeyframeRule</a> matching the specified keyframe selector. 
     If no matching rule exists, the method does nothing.
 
@@ -990,7 +1003,7 @@ The <code>deleteRule</code> method</h4>
 
 	<dl>
 
-		<dt><dfn argument for="CSSKeyframesRule/deleteRule()">select</dfn> of type <a interface>DOMString</a>
+		<dt><dfn argument for="CSSKeyframesRule/deleteRule(select)">select</dfn> of type <a interface>DOMString</a>
 		<dd>
 			The keyframe selector of the rule to be deleted: a comma-separated list of percentage values between 0% and 100% or the keywords ''from'' or ''to'' which resolve to 0% and 100%, respectively.
 
@@ -1012,7 +1025,7 @@ The <code>findRule</code> method</h4>
 	Parameters:
 
 	<dl>
-		<dt><dfn argument for="CSSKeyframesRule/findRule()">select</dfn> of type <a interface>DOMString</a>
+		<dt><dfn argument for="CSSKeyframesRule/findRule(select)">select</dfn> of type <a interface>DOMString</a>
 		<dd>
 			The keyframe selector of the rule to be deleted: a comma-separated list of percentage values between 0% and 100% or the keywords ''from'' or ''to'' which resolve to 0% and 100%, respectively.
 
@@ -1028,6 +1041,66 @@ The <code>findRule</code> method</h4>
 	</dl>
 
 	No Exceptions
+
+    <div class='example'>
+        For example, given the following animation:
+        <pre>
+        
+        @keyframes colorful-diagonal-slide {
+
+          from {
+            left: 0;
+            top: 0;
+          }
+
+          10% {
+            background-color: blue; 
+          }
+
+          10% {
+            background-color: green;
+          }
+
+          25%, 75% {
+            background-color: red;
+          }
+
+          100% {
+            left: 100px;
+            top: 100px;
+          }
+
+        }
+        </pre>
+
+        Assuming the variable <code>anim</code> holds a reference to a CSSKeyframesRule object for this animation, then:
+
+        <pre>
+        anim.deleteRule('10%');
+        var tenPercent = anim.findRule('10%');
+        </pre>
+
+        will start by deleting the last 10% rule i.e. the green background color rule; then find the remaining blue background rule and return it into <code>tenPercent</code>.
+
+        The following:
+        <pre>
+        var red = anim.findRule('75%');
+        </pre>
+
+        will set <code>red</code> to <code>null</code>. The full selector for the red background color rule must be used instead:
+
+        <pre>
+        var red = anim.findRule('25%,75%');
+        </pre>
+
+        Since ''from'' maps to 0% and ''to'' maps to 100%, we can find these rules using either value:
+
+        <pre>
+        var from = anim.findRule('0%'); // Returns from { left: 0; top: 0; } rule
+        var to = anim.findRule('to');   // Returns 100% { left: 100px; top: 100px; } rule
+        </pre>
+    </div>
+
 
 
 
@@ -1058,7 +1131,7 @@ Working Group Resolutions that are pending editing</h2>
     	<li>2014-09-09 minutes (Antibes f2f)
     		<ul>
     		<li>Detail how/when keyframe values are computed; using <a href="http://lists.w3.org/Archives/Public/www-style/2014Aug/0132.html">G.beta in dbaron's mail</a>
-    		<li>Agreed that both transitions and animations animate all properties. css-transitions to define animation of non-interoperable/discrete values. They take their starting values below 50% timing function progress, and end values above
+    		<li><del>Agreed that both transitions and animations animate all properties. css-transitions to define animation of non-interoperable/discrete values. They take their starting values below 50% timing function progress, and end values above</del>
     		<li><del>Dynamic changes to animation properties/keyframes. Tab to propose resolution. (<a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=14713">Bug 14713</a>)
     		<li><del>Negative animation-delay values apply against the active duration of the animation i.e. (animation-duration*animation-iteration-count). The delay can thus swallow iterations for which no iteration event will be fired. The start/end events are still fired. Even when delay == (-1*active_duration)
     		<li><del>Fire animation start/end events when animation-duration is zero, with 0 elapsedTime

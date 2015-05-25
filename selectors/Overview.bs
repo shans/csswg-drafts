@@ -21,8 +21,8 @@ Abstract: Selectors Level 4 describes the selectors that already exist in [[!SEL
 At Risk: the column combinator
 At Risk: the '':drop()'' pseudo-class
 At Risk: the '':read-write'' pseudo-class
-Ignored Terms: DocumentFragment, math, h1, shadow tree, box tree, query(), quirks mode, button, a, span, object, p, div, q, area, link, label, input, html, em, li, ol, pre
-Link Defaults: dom-core-ls (interface) document
+Ignored Terms: Document, DocumentFragment, math, h1, shadow tree, box tree, query(), quirks mode, button, a, span, object, p, div, q, area, link, label, input, html, em, li, ol, pre
+Link Defaults: dom-core-ls (interface) Document
 </pre>
 <style>
 #selector-examples td:first-child {
@@ -456,7 +456,7 @@ Selectors Overview</h2>
 	Note: Some Level 4 selectors (noted above as "3-UI") were introduced in [[CSS3UI]].
 
 <h3 id="profiles">
-<a>Fast</a> vs <a>Complete</a> Selector Profiles</h3>
+<a>Dynamic</a> vs <a>Static</a> Selector Profiles</h3>
 
 	Selectors are used in many different contexts,
 	with wildly varying performance characteristics.
@@ -465,9 +465,9 @@ Selectors Overview</h2>
 	To accommodate this, two profiles of the Selectors spec are defined:
 
 	<dl>
-		<dt><dfn id='fast-profile'>fast</dfn>
+		<dt><dfn local-lt="dynamic">dynamic profile</dfn>
 		<dd>
-			The <a>fast</a> profile is appropriate for use in any context,
+			The <a>dynamic</a> profile is appropriate for use in any context,
 			including dynamic browser CSS selector matching.
 			It includes every selector defined in this document,
 			except for:
@@ -476,18 +476,21 @@ Selectors Overview</h2>
 				<li>The '':has()'' pseudo-class
 			</ul>
 
-		<dt><dfn id='complete-profile'>complete</dfn>
+		<dt><dfn local-lt="static">static profile</dfn>
 		<dd>
-			The <a>complete</a> profile is appropriate for contexts which aren't extremely performance sensitive.
-			For example, the <a method for=Element>query()</a> method defined in [[DOM]] should use the ''complete'' profile.
+			The <a>static</a> profile is appropriate for contexts which aren't extremely performance sensitive;
+			in particular, it's appropriate for contexts which evaluate selectors against a static DOM.
+			For example, the {{Element/query()}} method defined in [[DOM]] should use the <a>static</a> profile.
 			It includes all of the selectors defined in this document.
 	</dl>
 
-	CSS implementations conformant to Selectors Level 4 must use the ''fast'' profile for CSS selection.
+	CSS implementations conformant to Selectors Level 4 must use the <a>dynamic</a> profile for CSS selection.
+	Implementations using the <a>dynamic</a> profile must treat selectors that are not included in the profile
+	as unknown and invalid.
 
 	<p class='issue'>
-		The categorization of things into the "fast" or "complete" profiles needs implementor review.
-		If some things currently not in the fast profile can reasonably be done in CSS Selectors,
+		The categorization of things into the "dynamic" or "static" profiles needs implementor review.
+		If some things currently not in the dynamic profile can reasonably be done in CSS Selectors,
 		we should move them.
 
 
@@ -668,47 +671,20 @@ Data Model</h3>
 		<li>Attributes, which are pairs of strings consisting of an attribute name and an attribute value.
 	</ul>
 
-	These aspects are referred to as <dfn export title="feature">features</dfn>.
-	The <a>simple selectors</a> which are keyed off of them
-	(<a>universal selector</a>, <a>type selectors</a>, <a>ID selectors</a>, <a>class selectors</a>, and <a>attribute selectors</a>)
-	are called <dfn export title="feature selector">feature selectors</dfn>.
-
-	While elements may lack any of the individual <a>features</a>,
+	While individual elements may lack any of the above features,
 	some elements are <dfn export>featureless</dfn>.
-	A <a>featureless</a> element does not match any <a>feature selector</a>,
-	or any selector that resolves based on <a>features</a>
-	(such as '':not(div)''),
-	with the exception of namespace selectors--
-	a <a>featureless</a> element is treated as having <em>all</em> namespaces.
-	Thus, only <a>pseudo-classes</a> or <a>pseudo-elements</a> can be used to select them.
-	Individual <a>featureless</a> elements may define additional restrictions on what kinds of selectors can match them.
+	A <a>featureless</a> element does not match any selector at all,
+	except those it is explicitly defined to match.
+	If a given selector <em>is</em> allowed to match a <a>featureless</a> element,
+	it must do so while ignoring the default namespace. [[CSS3NAMESPACE]]
 
 	<div class='example'>
 		For example, the <a>host element</a> in a <a>shadow tree</a> is <a>featureless</a>,
 		and can't be matched by <em>any</em> <a>pseudo-class</a> except for '':host'' and '':host-context()''.)
 	</div>
 
-	<details class='why'>
-		<summary>Why do featureless elements match all namespaces?</summary>
-
-		In a previous version of Selectors,
-		all <a>compound selectors</a> contained a <a>type selector</a>;
-		if you didn't supply one explicitly,
-		a <a>universal selector</a> was implied.
-		Default namespaces [[CSS3NAMESPACE]] affected the implied universal selector,
-		so that selectors like '':hover'' actually meant ''defaultNS|*:hover''.
-
-		The universal selector is no longer implied,
-		but default namespaces still exist,
-		and have to apply to all compound selectors.
-		The behavior of <a>featureless</a> elements,
-		like the <a>host element</a> in a shadow tree,
-		thus needs to accommodate that and work appropriately.
-		In this case, "appropriately" means "ignoring the default namespace".
-	</details>
-
 	When matching a selector against a document which is in <a>quirks mode</a>,
-	class and ID selectors must be matched <a title="ASCII case-insensitive">ASCII case-insensitively</a>
+	class and ID selectors must be matched <a lt="ASCII case-insensitive">ASCII case-insensitively</a>
 	against the classes and ID of the elements in the document.
 
 <h4 id='dom-mapping'>
@@ -732,26 +708,25 @@ Guidance on Mapping Document Languages to DOM</h4>
 	element/neighbors in graph-based structures--
 	should be reflected as the child nodes of an element.
 
-	Other features of the element should be reflected as <a>features</a> when possible,
-	mapping to something that serves a similar purpose to the same feature in DOM:
+	Other features of the element should be mapped to something that serves a similar purpose to the same feature in DOM:
 
 	<dl>
 		<dt>type
 		<dd>
 			If the elements in the document language have some notion of "type"
 			as a basic distinguisher between different groups of elements,
-			it should be reflected as the "type" <a>feature</a>.
+			it should be reflected as the "type" feature.
 
 			If this "type" can be separated into a "basic" name
 			and a "namespace" that groups names into higher-level groups,
-			the latter should be reflected as the "namespace" <a>feature</a>.
-			Otherwise, the element shouldn't have a "namespace" <a>feature</a>,
-			and the entire name should be reflected as the "type" <a>feature</a>.
+			the latter should be reflected as the "namespace" feature.
+			Otherwise, the element shouldn't have a "namespace" feature,
+			and the entire name should be reflected as the "type" feature.
 
 		<dt>id
 		<dd>
 			If some aspect of the element functions as a unique identifier across the document,
-			it should be mapped to the "id" <a>feature</a>.
+			it should be mapped to the "id" feature.
 
 			Note: While HTML only allows an element to have a single ID,
 			this should not be taken as a general restriction.
@@ -762,7 +737,7 @@ Guidance on Mapping Document Languages to DOM</h4>
 		<dd>
 			Aspects of the element that are useful for identifying the element,
 			but are not generally unique to elements within a document,
-			should be mapped to the "class" or "attribute" <a>features</a>
+			should be mapped to the "class" or "attribute" features
 			depending on if they're something equivalent to a "label" (a string by itself)
 			or a "property" (a name/value pair)
 
@@ -817,16 +792,16 @@ Guidance on Mapping Document Languages to DOM</h4>
 <h3 id="scoping">
 Scoped Selectors</h3>
 
-	Some host applications may choose to <dfn export title="scope | scoped selector">scope</dfn> selectors
+	Some host applications may choose to <dfn export lt="scope | scoped selector">scope</dfn> selectors
 	to a particular subtree or fragment of the document.
 	The root of the scoping subtree is called the <dfn export>scoping root</dfn>,
 	and may be either a true element (the <dfn export>scoping element</dfn>)
-	or a <dfn export title="virtual scoping root">virtual</dfn> one (such as a <a interface>DocumentFragment</a>).
+	or a <dfn export lt="virtual scoping root">virtual</dfn> one (such as a <a interface>DocumentFragment</a>).
 
-	There are two <dfn export title="scoping method | selector scoping method">scoping methods</dfn> for selectors:
+	There are two <dfn export lt="scoping method | selector scoping method">scoping methods</dfn> for selectors:
 
 	<dl>
-		<dt><dfn export title="scope-contained | scope-contained selector">scope-contained</dfn>
+		<dt><dfn export lt="scope-contained | scope-contained selector">scope-contained</dfn>
 		<dd>
 			With this method of scoping, selectors match as if
 			the <a>scoping root</a> were the root of the document:
@@ -834,7 +809,7 @@ Scoped Selectors</h3>
 			(The '':root'' pseudo-class, however,
 			still only matches the actual root of the document.)
 
-		<dt><dfn export title="scope-filtered | scope-filtered selector">scope-filtered</dfn>
+		<dt><dfn export lt="scope-filtered | scope-filtered selector">scope-filtered</dfn>
 		<dd>
 			With this method of scoping, a selector matches an element only if the element is within the scope,
 			even if other components of the selector are outside the scope.
@@ -856,7 +831,7 @@ Scoped Selectors</h3>
 <h3 id="relative">
 Relative Selectors</h3>
 
-	Certain contexts may accept <dfn title="relative selector | relative | scope-relative" export>relative selectors</dfn>,
+	Certain contexts may accept <dfn lt="relative selector | relative | scope-relative" export>relative selectors</dfn>,
 	which are a shorthand for selectors that represent elements relative to a <a>:scope element</a>
 	(i.e. an element that matches '':scope'').
 	In a <a>relative selector</a>,
@@ -1001,7 +976,7 @@ Pseudo-classes</h3>
 	</div>
 
 	<a>Pseudo-elements</a> are <a>featureless</a>,
-	and so can't be matched by any <a>feature selector</a>.
+	and so can't be matched by any other selector.
 	They also do not affect the interpretation of <a>structural pseudo-classes</a>,
 	which are evaluated based solely on real elements.
 	Other <a>pseudo-classes</a> <em>can</em> match <a>pseudo-elements</a>,
@@ -1100,7 +1075,7 @@ Types of Pseudo-Elements</h4>
 Characters and case sensitivity</h3>
 
 	All Selectors syntax is case-insensitive within the ASCII range
-	(i.e. [a-z]  and [A-Z] are equivalent),
+	(i.e. [a-z]  and \[A-Z] are equivalent),
 	except for the following parts,
 	which are not under the control of Selectors:
 	the case-sensitivity of
@@ -1144,7 +1119,7 @@ Namespaces</h3>
 <h3 id="invalid">
 Invalid Selectors and Error Handling</h3>
 
-	User agents must observe the rules for handling <dfn title="invalid selector|invalid">invalid selectors</dfn>:
+	User agents must observe the rules for handling <dfn lt="invalid selector|invalid">invalid selectors</dfn>:
 
 	<ul>
 		<li>a parsing error in a selector,
@@ -1261,9 +1236,9 @@ The Negation Pseudo-class: '':not()''</h3>
 		For example, the following selector matches all <a element>button</a> elements in an HTML document
 		that are not disabled.
 
-		<pre>button:not([DISABLED]) </pre>
+		<pre>button:not(\[DISABLED]) </pre>
 
-		The following selector represents all but <a element title>FOO</a> elements.
+		The following selector represents all but FOO elements.
 
 		<pre>*:not(FOO)</pre>
 
@@ -1285,7 +1260,7 @@ The Negation Pseudo-class: '':not()''</h3>
 The Relational Pseudo-class: '':has()''</h3>
 
 	The relational pseudo-class, <dfn id='has-pseudo'>:has()</dfn>,
-	is a functional pseudo-class taking a <a>relative selector</a> <a title="selector list">list</a> as an argument.
+	is a functional pseudo-class taking a <a>relative selector</a> <a lt="selector list">list</a> as an argument.
 	It represents an element if any of the <a>relative selectors</a>,
 	when <a href="#absolutize">absolutized</a>
 	and evaluated with the element as the <a>:scope elements</a>,
@@ -1351,7 +1326,7 @@ Universal selector </h3>
 
 	Unless an element is <a>featureless</a>,
 	the presence of a <a>universal selector</a> has no effect on whether the element matches the selector.
-	(<a>Featureless</a> elements do not match any <a>feature</a> selector,
+	(<a>Featureless</a> elements do not match any selector,
 		including the <a>universal selector</a>.)
 
 	<div class="example">
@@ -1552,7 +1527,7 @@ Attribute presence and value selectors</h3>
 
 		<pre>a[hreflang|="en"] </pre>
 
-		The following selectors represent a <a element title=''>DIALOGUE</a> element
+		The following selectors represent a <a element lt=''>DIALOGUE</a> element
 		whenever it has one of two different values for an attribute
 		<code>character</code>:
 
@@ -2076,7 +2051,7 @@ The Target Pseudo-class: '':target''</h3>
 <h3 id="the-scope-pseudo">
 The Reference Element Pseudo-class: '':scope''</h3>
 
-	In some contexts, selectors can be matched with an explicit set of <dfn dfn export title=":scope element">:scope elements</dfn>.
+	In some contexts, selectors can be matched with an explicit set of <dfn dfn export lt=":scope element">:scope elements</dfn>.
 	This is is a (potentially empty) set of elements
 	that provide a reference point for selectors to match against,
 	such as that specified by the <code>querySelector()</code> call in [[DOM]],
@@ -2597,7 +2572,7 @@ Child-indexed Pseudo-classes</h3>
 <h4 id="the-nth-child-pseudo">
 '':nth-child()'' pseudo-class</h4>
 
-	The <dfn id='nth-child-pseudo' title=":nth-child()">:nth-child(<var>An+B</var> [of <var>S</var>]? )</dfn>
+	The <dfn id='nth-child-pseudo' lt=":nth-child()">:nth-child(<var>An+B</var> [of <var>S</var>]? )</dfn>
 	pseudo-class notation represents the <var>An+B</var>th element
 	which matches the <a>selector list</a> <var>S</var>
 	among its siblings.
@@ -2673,7 +2648,7 @@ Child-indexed Pseudo-classes</h3>
 <h4 id="the-nth-last-child-pseudo">
 '':nth-last-child()'' pseudo-class</h4>
 
-	The <dfn id='nth-last-child-pseudo' title=":nth-last-child()">:nth-last-child(<var>An+B</var> [of <var>S</var>]? )</dfn>
+	The <dfn id='nth-last-child-pseudo' lt=":nth-last-child()">:nth-last-child(<var>An+B</var> [of <var>S</var>]? )</dfn>
 	pseudo-class notation represents the <var>An+B</var>th element
 	which matches the <a>selector list</a> <var>S</var>
 	among its siblings,
@@ -2770,7 +2745,7 @@ Typed Child-indexed Pseudo-classes</h3>
 <h4 id="the-nth-of-type-pseudo">
 '':nth-of-type()'' pseudo-class</h4>
 
-	The <dfn id='nth-of-type-pseudo' title=":nth-of-type()">:nth-of-type(<var>An+B</var>)</dfn> pseudo-class notation
+	The <dfn id='nth-of-type-pseudo' lt=":nth-of-type()">:nth-of-type(<var>An+B</var>)</dfn> pseudo-class notation
 	represents the <var>An+B</var>th element
 	with the same <a section href="#type-nmsp">namespace</a> and <a section href="#type-selectors">type</a>
 	among its siblings.
@@ -2796,7 +2771,7 @@ Typed Child-indexed Pseudo-classes</h3>
 <h4 id="the-nth-last-of-type-pseudo">
 '':nth-last-of-type()'' pseudo-class</h4>
 
-	The <dfn id='nth-last-of-type' title=":nth-last-of-type()">:nth-last-of-type(<var>An+B</var>)</dfn> pseudo-class notation
+	The <dfn id='nth-last-of-type' lt=":nth-last-of-type()">:nth-last-of-type(<var>An+B</var>)</dfn> pseudo-class notation
 	represents the <var>An+B</var>th element
 	with the same <a section href="#type-nmsp">namespace</a> and <a section href="#type-selectors">type</a>
 	among its siblings,
@@ -3078,7 +3053,7 @@ Column combinator</h3>
 <h3 id="the-nth-column-pseudo">
 '':nth-column()'' pseudo-class</h3>
 
-	The <dfn id='nth-column-pseudo' title=":nth-column()">:nth-column(<var>An+B</var>)</dfn>
+	The <dfn id='nth-column-pseudo' lt=":nth-column()">:nth-column(<var>An+B</var>)</dfn>
 	pseudo-class notation represents a cell element belonging to a column
 	that has <var>An+B</var>-1 columns
 	<strong>before</strong> it, for any positive
@@ -3095,7 +3070,7 @@ Column combinator</h3>
 <h3 id="the-nth-last-column-pseudo">
 '':nth-last-column()'' pseudo-class</h3>
 
-	The <dfn id='nth-last-column-pseudo' title=":nth-last-column()">:nth-last-column(<var>An+B</var>)</dfn>
+	The <dfn id='nth-last-column-pseudo' lt=":nth-last-column()">:nth-last-column(<var>An+B</var>)</dfn>
 	pseudo-class notation represents a cell element belonging to a column
 	that has <var>An+B</var>-1 columns
 	<strong>after</strong> it, for any positive
@@ -3370,7 +3345,7 @@ Parse A Relative Selector</h3>
 
 		<li>
 			Otherwise,
-			<a title="absolutize a relative selector list">absolutize <var>selector</var></a> with <var>refs</var> as the <a>:scope elements</a>.
+			<a lt="absolutize a relative selector list">absolutize <var>selector</var></a> with <var>refs</var> as the <a>:scope elements</a>.
 
 		<li>
 			Return <var>selector</var>.

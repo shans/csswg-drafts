@@ -41,6 +41,7 @@ spec: css-sizing-3; type: value; for: width
 	text: fit-content
 spec: css-align-3; type: value; text: start
 spec: css-position-3; type: property; text: left
+spec: css-writing-modes-3; type: dfn; text: end
 </pre>
 
 <style>
@@ -233,126 +234,111 @@ ol.continue > li::before { content: counter(list) "."; position: absolute; left:
 <h2 id="intro">
 Introduction</h2>
 
-	<p><em>This section is not normative.</em>
+	<em>This section is not normative.</em>
 
-	<p>
-		CSS 2.1 defined four layout modes &mdash; algorithms which determine
-		the size and position of boxes based on their relationships
-		with their sibling and ancestor boxes:
+	CSS 2.1 defined four layout modes &mdash; algorithms which determine
+	the size and position of boxes based on their relationships
+	with their sibling and ancestor boxes:
 
-	<ul class="compact">
-		<li>block layout, designed for laying out documents
-		<li>inline layout, designed for laying out text
-		<li>table layout, designed for laying out 2D data in a tabular format
-		<li>positioned layout, designed for very explicit positioning without much regard for other elements in the document
-	</ul>
+	* block layout, designed for laying out documents
+	* inline layout, designed for laying out text
+	* table layout, designed for laying out 2D data in a tabular format
+	* positioned layout, designed for very explicit positioning without much regard for other elements in the document
 
-	<p>
-		This module introduces a new layout mode, <dfn export>flex layout</dfn>,
-		which is designed for laying out more complex applications and webpages.
+	This module introduces a new layout mode, <dfn export>flex layout</dfn>,
+	which is designed for laying out more complex applications and webpages.
 
 <h3 id="overview">
 Overview</h3>
-	<p><em>This section is not normative.</em>
 
-	<p>
-		Flex layout is superficially similar to block layout.
-		It lacks many of the more complex text- or document-centric properties
-		that can be used in block layout, such as
-		<a href="http://www.w3.org/TR/CSS21/visuren.html#floats">floats</a> and
-		<a href="http://www.w3.org/TR/css3-multicol/">columns</a>.
-		In return it gains simple and powerful tools
-		for distributing space and aligning content
-		in ways that webapps and complex web pages often need.
-		The contents of a flex container:
-	<ul>
-		<li>
-			can be laid out in any <a href="#flex-direction-property">flow direction</a>
-			(leftwards, rightwards, downwards, or even upwards!)
-		<li>
-			can have their display order <a value for="flex-direction" title="row-reverse">reversed</a> or
-			<a href="#order-property">rearranged</a> at the style layer
-			(i.e., visual order can be independent of source and speech order)
-		<li>
-			can be laid out linearly along a single (<a title="main axis">main</a>) axis or
-			<a href="#flex-wrap-property">wrapped</a> into multiple lines along a secondary (<a title="cross axis">cross</a>) axis
-		<li>
-			can <a href="#flexibility">&ldquo;flex&rdquo; their sizes</a>
-			to respond to the available space
-		<li>
-			can be <a href="#alignment">aligned</a> with respect to their container or each other
-		<li>
-			can be dynamically <a href="#visibility-collapse">collapsed</a> or uncollapsed
-			along the <a>main axis</a> while preserving the container's <a>cross size</a>
-	</ul>
+	<em>This section is not normative.</em>
+
+	Flex layout is superficially similar to block layout.
+	It lacks many of the more complex text- or document-centric properties
+	that can be used in block layout, such as
+	<a href="http://www.w3.org/TR/CSS21/visuren.html#floats">floats</a> and
+	<a href="http://www.w3.org/TR/css3-multicol/">columns</a>.
+	In return it gains simple and powerful tools
+	for distributing space and aligning content
+	in ways that webapps and complex web pages often need.
+	The contents of a flex container:
+
+	* can be laid out in any <a href="#flex-direction-property">flow direction</a>
+		(leftwards, rightwards, downwards, or even upwards!)
+	* can have their display order <a value for="flex-direction" lt="row-reverse">reversed</a> or
+		<a href="#order-property">rearranged</a> at the style layer
+		(i.e., visual order can be independent of source and speech order)
+	* can be laid out linearly along a single (<a lt="main axis">main</a>) axis or
+		<a href="#flex-wrap-property">wrapped</a> into multiple lines along a secondary (<a lt="cross axis">cross</a>) axis
+	* can <a href="#flexibility">&ldquo;flex&rdquo; their sizes</a>
+		to respond to the available space
+	* can be <a href="#alignment">aligned</a> with respect to their container or each other
+	* can be dynamically <a href="#visibility-collapse">collapsed</a> or uncollapsed
+		along the <a>main axis</a> while preserving the container's <a>cross size</a>
 
 	<div class='example'>
-		<p>
-			Here's an example of a catalog where each item has a title, an photo, a description, and a purchase button.
-			The designer's intention is that each entry has the same overall size,
-			that the photo be above the text,
-			and that the purchase buttons aligned at the bottom, regardless of the length of the item's description.
-			Flex layout makes many aspects of this design easy:
+		Here's an example of a catalog where each item has a title, an photo, a description, and a purchase button.
+		The designer's intention is that each entry has the same overall size,
+		that the photo be above the text,
+		and that the purchase buttons aligned at the bottom, regardless of the length of the item's description.
+		Flex layout makes many aspects of this design easy:
 
-		<ul>
-			<li>
-				The catalog uses flex layout to lay out rows of items horizontally,
-				and to ensure that items within a row are all equal-height.
-				Each entry is then itself a column flex container,
-				laying out its contents vertically.
+		* The catalog uses flex layout to lay out rows of items horizontally,
+			and to ensure that items within a row are all equal-height.
+			Each entry is then itself a column flex container,
+			laying out its contents vertically.
 
-			<li>
-				Within each entry, the source document content is ordered logically
-				with the title first, followed by the description and the photo.
-				This provides a sensible ordering for speech rendering and in non-CSS browsers.
-				For a more compelling visual presentation, however,
-				'order' is used to pull the image up from later in the content to the top,
-				and 'align-self' is used to center it horizontally.
+		* Within each entry, the source document content is ordered logically
+			with the title first, followed by the description and the photo.
+			This provides a sensible ordering for speech rendering and in non-CSS browsers.
+			For a more compelling visual presentation, however,
+			'order' is used to pull the image up from later in the content to the top,
+			and 'align-self' is used to center it horizontally.
 
-			<li>
-				An <a href="#auto-margins"><span class=css>auto</span> margin</a> above the purchase button
-				forces it to the bottom within each entry box,
-				regardless of the height of that item's description.
-		</ul>
+		* An <a href="#auto-margins"><css>auto</css> margin</a> above the purchase button
+			forces it to the bottom within each entry box,
+			regardless of the height of that item's description.
 
-		<pre>
-&lt;style>
-#deals {
-	display: flex;        /* Flex layout so items <a property title="align-self">have equal height</a>  */
-	flex-flow: row wrap;  /* <a section href="#flex-flow-property">Allow items to wrap into multiple lines</a> */
-}
-.sale-item {
-	display: flex;        /* Lay out each item using flex layout */
-	flex-flow: column;    /* <a section href="#flex-flow-property">Lay out item's contents vertically</a>  */
-}
-.sale-item > img {
-	order: -1;            /* <a section href="#order-property">Shift image before other content (in visual order)</a> */
-	align-self: center;   /* <a property title="align-self">Center the image cross-wise (horizontally)</a>         */
-}
-.sale-item > button {
-	margin-top: auto;     /* <a section href="#auto-margins">Auto top margin pushes button to bottom</a> */
-}
-&lt;/style></pre>
-<pre>
-&lt;section id='deals'>
-  &lt;section class='sale-item'>
-    &lt;h1>Computer Starter Kit&lt;/h1>
-    &lt;p>This is the best computer money can buy, if you don't have much money.
-    &lt;ul>
-      &lt;li>Computer
-      &lt;li>Monitor
-      &lt;li>Keyboard
-      &lt;li>Mouse
-    &lt;/ul>
-    &lt;img src='images/computer.jpg'
-         alt='You get: a white computer with matching peripherals.'>
-    &lt;button>BUY NOW&lt;/button>
-  &lt;/section>
-  &lt;section class='sale-item'>
-    &hellip;
-  &lt;/section>
-  &hellip;
-&lt;/section></pre>
+		<pre class="lang-css">
+		#deals {
+			display: flex;        /* Flex layout so items <a property lt="align-self">have equal height</a>  */
+			flex-flow: row wrap;  /* <a section href="#flex-flow-property">Allow items to wrap into multiple lines</a> */
+		}
+		.sale-item {
+			display: flex;        /* Lay out each item using flex layout */
+			flex-flow: column;    /* <a section href="#flex-flow-property">Lay out item's contents vertically</a>  */
+		}
+		.sale-item > img {
+			order: -1;            /* <a section href="#order-property">Shift image before other content (in visual order)</a> */
+			align-self: center;   /* <a property lt="align-self">Center the image cross-wise (horizontally)</a>         */
+		}
+		.sale-item > button {
+			margin-top: auto;     /* <a section href="#auto-margins">Auto top margin pushes button to bottom</a> */
+		}
+		</pre>
+
+		<pre class="lang-markup">
+		&lt;section id="deals">
+		  &lt;section class="sale-item">
+		    &lt;h1>Computer Starter Kit&lt;/h1>
+		    &lt;p>This is the best computer money can buy, if you don’t have much money.
+		    &lt;ul>
+		      &lt;li>Computer
+		      &lt;li>Monitor
+		      &lt;li>Keyboard
+		      &lt;li>Mouse
+		    &lt;/ul>
+		    &lt;img src="images/computer.jpg"
+		         alt="You get: a white computer with matching peripherals.">
+		    &lt;button>BUY NOW&lt;/button>
+		  &lt;/section>
+		  &lt;section class="sale-item">
+		    &hellip;
+		  &lt;/section>
+		  &hellip;
+		&lt;/section>
+		</pre>
+
 		<figure>
 			<div id="overview-example">
 				<div class="col"></div>
@@ -394,43 +380,29 @@ Overview</h3>
 <h3 id="placement">
 Module interactions</h3>
 
-	<p>
-		This module extends the definition of the 'display' property [[!CSS21]],
-		adding a new block-level and new inline-level display type,
-		and defining a new type of formatting context
-		along with properties to control its layout.
-		None of the properties defined in this module apply to the ''::first-line'' or ''::first-letter'' pseudo-elements.
-
-<h3 id="values">
-Values</h3>
-
-	<p>
-		This specification follows the <a href="http://www.w3.org/TR/CSS21/about.html#property-defs">CSS property definition conventions</a> from [[!CSS21]].
-		Value types not defined in this specification are defined in CSS Level 2 Revision 1 [[!CSS21]].
-		Other CSS modules may expand the definitions of these value types:
-		for example [[CSS3VAL]], when combined with this module,
-		expands the definition of the <var>&lt;length&gt;</var> value type as used in this specification.
-
-	<p>In addition to the property-specific values listed in their definitions, all properties defined in this specification also accept the ''inherit'' keyword as their property value. For readability it has not been repeated explicitly.
+	This module extends the definition of the 'display' property [[!CSS21]],
+	adding a new block-level and new inline-level display type,
+	and defining a new type of formatting context
+	along with properties to control its layout.
+	None of the properties defined in this module apply to the ''::first-line'' or ''::first-letter'' pseudo-elements.
 
 <h2 id='box-model'>
 Flex Layout Box Model and Terminology</h2>
 
-	<p>
-		A <dfn export>flex container</dfn> is the box generated by an element with a
-		computed 'display' of ''flex'' or ''inline-flex''.
-		In-flow children of a flex container are called <dfn export title="flex item" id="flex-item">flex items</dfn>
-		and are laid out using the flex layout model.
+	A <dfn export>flex container</dfn> is the box generated by an element with a
+	computed 'display' of ''flex'' or ''inline-flex''.
+	In-flow children of a flex container are called <dfn export lt="flex item" id="flex-item">flex items</dfn>
+	and are laid out using the flex layout model.
 
-	<p>
-		Unlike block and inline layout,
-		whose layout calculations are biased to the <a href="http://www.w3.org/TR/css3-writing-modes/#abstract-box">block and inline flow directions</a>,
-		flex layout is biased to the <dfn title="flex direction">flex directions</dfn>.
-		To make it easier to talk about flex layout,
-		this section defines a set of flex flow&ndash;relative terms.
-		The 'flex-flow' value determines how these terms map
-		to physical directions (top/right/bottom/left),
-		axes (vertical/horizontal), and sizes (width/height).
+	Unlike block and inline layout,
+	whose layout calculations are biased to the <a href="http://www.w3.org/TR/css3-writing-modes/#abstract-box">block and inline flow directions</a>,
+	flex layout is biased to the <dfn lt="flex direction">flex directions</dfn>.
+	To make it easier to talk about flex layout,
+	this section defines a set of flex flow&ndash;relative terms.
+	The 'flex-flow' value and the <a>writing mode</a>
+	determine how these terms map
+	to physical directions (top/right/bottom/left),
+	axes (vertical/horizontal), and sizes (width/height).
 
 	<figure>
 		<img src='images/flex-direction-terms.svg' width=665 height=277 alt>
@@ -443,7 +415,7 @@ Flex Layout Box Model and Terminology</h2>
 		<dt class='axis'>main axis
 		<dt class='axis'>main dimension
 		<dd>
-			The <dfn title="main axis|main-axis">main axis</dfn> of a flex container is the primary axis along which <a>flex items</a> are laid out.
+			The <dfn lt="main axis|main-axis">main axis</dfn> of a flex container is the primary axis along which <a>flex items</a> are laid out.
 			It extends in the <dfn>main dimension</dfn>.
 
 		<dt class='side'>main-start
@@ -459,7 +431,7 @@ Flex Layout Box Model and Terminology</h2>
 			A <a>flex item</a>’s width or height,
 			whichever is in the <a>main dimension</a>,
 			is the item's <dfn>main size</dfn>.
-			The <a>flex item</a>’s <dfn title="main size property|max main size property|min main size property">main size property</dfn> is
+			The <a>flex item</a>’s <dfn lt="main size property|max main size property|min main size property">main size property</dfn> is
 			either the 'width' or 'height' property,
 			whichever is in the <a>main dimension</a>.
 	</dl>
@@ -468,7 +440,7 @@ Flex Layout Box Model and Terminology</h2>
 		<dt class='axis'>cross axis
 		<dt class='axis'>cross dimension
 		<dd>
-			The axis perpendicular to the <a>main axis</a> is called the <dfn title="cross axis|cross-axis">cross axis</dfn>.
+			The axis perpendicular to the <a>main axis</a> is called the <dfn lt="cross axis|cross-axis">cross axis</dfn>.
 			It extends in the <dfn>cross dimension</dfn>.
 
 		<dt class='side'>cross-start
@@ -484,7 +456,7 @@ Flex Layout Box Model and Terminology</h2>
 			The width or height of a <a>flex item</a>,
 			whichever is in the <a>cross dimension</a>,
 			is the item's <dfn>cross size</dfn>.
-			The <dfn title="cross size property|max cross size property|min cross size property">cross size property</dfn> is
+			The <dfn lt="cross size property|max cross size property|min cross size property">cross size property</dfn> is
 			whichever of 'width' or 'height' that is in the <a>cross dimension</a>.
 	</dl>
 
@@ -501,7 +473,7 @@ Flex Layout Box Model and Terminology</h2>
 <h2 id='flex-containers'>
 Flex Containers: the ''flex'' and ''inline-flex'' 'display' values</h2>
 
-	<pre class="propdef">
+	<pre class="propdef partial">
 	Name: display
 	New values: flex | inline-flex
 	</pre>
@@ -516,55 +488,41 @@ Flex Containers: the ''flex'' and ''inline-flex'' 'display' values</h2>
 			This value causes an element to generate an inline-level <a>flex container</a> box.
 	</dl>
 
-	<p>
-		A <a>flex container</a> establishes a new <dfn export>flex formatting context</dfn> for its contents.
-		This is the same as establishing a block formatting context,
-		except that flex layout is used instead of block layout:
-		floats do not intrude into the flex container,
-		and the flex container's margins do not collapse with the margins of its contents.
-		<a>Flex containers</a> form a containing block for their contents
-		<a href="http://www.w3.org/TR/CSS21/visudet.html#containing-block-details">exactly like block containers do</a>. [[!CSS21]]
-		The 'overflow' property applies to <a>flex containers</a>.
+	A <a>flex container</a> establishes a new <dfn export>flex formatting context</dfn> for its contents.
+	This is the same as establishing a block formatting context,
+	except that flex layout is used instead of block layout:
+	floats do not intrude into the flex container,
+	and the flex container's margins do not collapse with the margins of its contents.
+	<a>Flex containers</a> form a containing block for their contents
+	<a href="http://www.w3.org/TR/CSS21/visudet.html#containing-block-details">exactly like block containers do</a>. [[!CSS21]]
+	The 'overflow' property applies to <a>flex containers</a>.
 
+	Flex containers are not block containers,
+	and so some properties that were designed with the assumption of block layout don't apply in the context of flex layout.
+	In particular:
 
-	<p>
-		Flex containers are not block containers,
-		and so some properties that were designed with the assumption of block layout don't apply in the context of flex layout.
-		In particular:
-
-	<ul>
-		<li>
-			all of the 'column-*' properties in the Multicol module have no effect on a flex container.
-
-		<li>
-			'float' and 'clear' have no effect on a <a>flex item</a>,
+		* the 'column-*' properties in the Multi-column Layout module [[!CSS3COL]] have no effect on a flex container.
+		* 'float' and 'clear' have no effect on a <a>flex item</a>,
 			and do not take it out-of-flow.
 			However, the 'float' property can still affect box generation
 			by influencing the 'display' property's computed value.
-
-		<li>
-			'vertical-align' has no effect on a flex item.
-
-		<li>
-			the ''::first-line'' and ''::first-letter'' pseudo-elements do not apply to <a>flex containers</a>,
+		* 'vertical-align' has no effect on a flex item.
+		* the ''::first-line'' and ''::first-letter'' pseudo-elements do not apply to <a>flex containers</a>,
 			and <a>flex containers</a> do not contribute a <a>first formatted line</a> or <a>first letter</a>
 			to their ancestors.
 
-<!--
+			<!--
 			Issue: When the Pseudo-Elements spec exists,
 			align this language with whatever algo we define for figuring out where to search for first-line/letter content.
--->
+			-->
 
-	</ul>
-
-	<p>
-		If an element's specified 'display' is ''inline-flex'',
-		then its 'display' property computes to ''flex''
-		in certain circumstances:
-		the table in <a href="http://www.w3.org/TR/CSS2/visuren.html#dis-pos-flo">CSS 2.1 Section 9.7</a>
-		is amended to contain an additional row,
-		with ''inline-flex'' in the "Specified Value" column
-		and ''flex'' in the "Computed Value" column.
+	If an element's specified 'display' is ''inline-flex'',
+	then its 'display' property computes to ''flex''
+	in certain circumstances:
+	the table in <a href="http://www.w3.org/TR/CSS2/visuren.html#dis-pos-flo">CSS 2.1 Section 9.7</a>
+	is amended to contain an additional row,
+	with ''inline-flex'' in the "Specified Value" column
+	and ''flex'' in the "Computed Value" column.
 
 <!--
 ████████ ██       ████████ ██     ██       ████ ████████ ████████ ██     ██  ██████
@@ -581,51 +539,51 @@ Flex Items</h2>
 
 	Loosely speaking, the <a>flex items</a> of a <a>flex container</a>
 	are boxes representing its in-flow contents.
-		Each in-flow child of a <a>flex container</a>
-		becomes a <a>flex item</a>,
-		and each contiguous run of text that is directly contained inside a <a>flex container</a>
-		is wrapped in an anonymous <a>flex item</a>.
-		However, an anonymous flex item that contains only
-		<a href="http://www.w3.org/TR/CSS21/text.html#white-space-prop">white space</a>
-		(i.e. characters that can be affected by the 'white-space' property)
-		is not rendered, as if it were ''display:none''.
+
+	Each in-flow child of a <a>flex container</a>
+	becomes a <a>flex item</a>,
+	and each contiguous run of text that is directly contained inside a <a>flex container</a>
+	is wrapped in an anonymous <a>flex item</a>.
+	However, an anonymous flex item that contains only
+	<a href="http://www.w3.org/TR/CSS21/text.html#white-space-prop">white space</a>
+	(i.e. characters that can be affected by the 'white-space' property)
+	is not rendered, as if it were ''display:none''.
 
 	<div class="example">
 		<p>Examples of flex items:
-		<pre>
-&lt;div style="display:flex">
+		<pre class="lang-markup">
+		&lt;div style="display:flex">
 
-    &lt;!-- flex item: block child -->
-    &lt;div id="item1">block&lt;/div>
+		    &lt;!-- flex item: block child -->
+		    &lt;div id="item1">block&lt;/div>
 
-    &lt;!-- flex item: floated element; floating is ignored -->
-    &lt;div id="item2" style="float: left;">float&lt;/div>
+		    &lt;!-- flex item: floated element; floating is ignored -->
+		    &lt;div id="item2" style="float: left;">float&lt;/div>
 
-    &lt;!-- flex item: anonymous block box around inline content -->
-    anonymous item 3
+		    &lt;!-- flex item: anonymous block box around inline content -->
+		    anonymous item 3
 
-    &lt;!-- flex item: inline child -->
-    &lt;span>
-        item 4
-        &lt;!-- flex items do not split around blocks -->
-        &lt;div id=not-an-item>item 4&lt;/div>
-        item 4
-    &lt;/span>
-&lt;/div></pre>
+		    &lt;!-- flex item: inline child -->
+		    &lt;span>
+		        item 4
+		        &lt;!-- flex items do not split around blocks -->
+		        &lt;div id=not-an-item>item 4&lt;/div>
+		        item 4
+		    &lt;/span>
+		&lt;/div>
+		</pre>
 	</div>
 
-	<p>
-		A <a>flex item</a> establishes a new formatting context for its contents.
-		The type of this formatting context is determined by its 'display' value, as usual.
-		However, flex items themselves are flex-level boxes, not block-level boxes:
-		they participate in their container's flex formatting context,
-		not in a block formatting context.
+	A <a>flex item</a> establishes a new formatting context for its contents.
+	The type of this formatting context is determined by its 'display' value, as usual.
+	However, flex items themselves are <dfn>flex-level</dfn> boxes, not block-level boxes:
+	they participate in their container's flex formatting context,
+	not in a block formatting context.
 
 	<hr>
 
-	<p class="note">
-		Authors reading this spec may want to
-		<a href="#item-margins">skip past the following box-generation details</a>.
+	Note: Authors reading this spec may want to
+	<a href="#item-margins">skip past the following box-generation and static position details</a>.
 
 	The 'display' value of a <a>flex item</a> is <a>blockified</a>:
 	if the specified 'display' of an in-flow child of an element generating a <a>flex container</a>
@@ -678,16 +636,6 @@ Absolutely-Positioned Flex Children</h3>
 	assuming both the child and the flex container
 	were fixed-size boxes of their used size.
 
-	<hr>
-
-	In other words,
-	the <a>static position</a> of an absolutely positioned child of a <a>flex container</a>
-	is determined <em>after flex layout</em>
-	by setting the child’s <a>static-position rectangle</a> to the <a>flex container's</a> content box,
-	then aligning the absolutely positioned child within this rectangle
-	according to the 'justify-content' value of the <a>flex container</a>
-	and the 'align-self' value of the child itself.
-
 	<div class='example'>
 		The effect of this is that if you set, for example,
 		''align-content: center;'' on an absolutely-positioned child of a <a>flex container</a>,
@@ -708,29 +656,28 @@ Absolutely-Positioned Flex Children</h3>
 <h3 id='item-margins'>
 Flex Item Margins and Paddings</h3>
 
-	<p>
-		The margins of adjacent <a>flex items</a> do not collapse.
-		Auto margins absorb extra space in the corresponding dimension and can be used for alignment
-		and to push adjacent flex items apart;
-		see <a href="#auto-margins">Aligning with <span class=css>auto</span> margins</a>.
+	The margins of adjacent <a>flex items</a> do not collapse.
+	Auto margins absorb extra space in the corresponding dimension and can be used for alignment
+	and to push adjacent flex items apart;
+	see <a href="#auto-margins">Aligning with <span class=css>auto</span> margins</a>.
 
-	<p>
-		Percentage margins and paddings on <a>flex items</a> are always resolved against their respective dimensions;
-		unlike blocks, they do not always resolve against the inline dimension of their containing block.
+	Percentage margins and paddings on <a>flex items</a> are always resolved against their respective dimensions;
+	unlike blocks, they do not always resolve against the inline dimension of their containing block.
+
+	Note: This behavior is <a href="https://lists.w3.org/Archives/Public/www-style/2015Mar/0273.html">currently disputed</a>,
+	and might change in a future version of this specification to match the behavior of blocks.
 
 <h3 id='painting'>
 Flex Item Z-Ordering</h3>
 
-	<p>
-		<a>Flex items</a> paint exactly the same as inline blocks [[!CSS21]],
-		except that 'order'-modified document order is used in place of raw document order,
-		and 'z-index'
-		values other than ''z-index/auto'' create a stacking context
-		even if 'position' is ''static''.
+	<a>Flex items</a> paint exactly the same as inline blocks [[!CSS21]],
+	except that 'order'-modified document order is used in place of raw document order,
+	and 'z-index'
+	values other than ''z-index/auto'' create a stacking context
+	even if 'position' is ''static''.
 
-	<p class="note">
-		Note: Descendants that are positioned outside a flex item still participate
-		in any stacking context established by the flex item.
+	Note: Descendants that are positioned outside a flex item still participate
+	in any stacking context established by the flex item.
 
 <!--
  ██████   ███████  ██       ██          ███    ████████   ██████  ████████ ████████
@@ -745,29 +692,27 @@ Flex Item Z-Ordering</h3>
 <h3 id='visibility-collapse'>
 Collapsed Items</h3>
 
-	<p>
-		Specifying ''visibility:collapse'' on a flex item
-		causes it to become a <dfn title="collapsed flex item|collapsed">collapsed flex item</dfn>,
-		producing an effect similar to ''visibility:collapse'' on a table-row or table-column:
-		the collapsed flex item is removed from rendering entirely,
-		but leaves behind a "strut" that keeps the flex line's cross-size stable.
-		Thus, if a flex container has only one flex line,
-		dynamically collapsing or uncollapsing items
-		is guaranteed to have no effect on the flex container's <a>cross size</a>
-		and won't cause the rest of the page's layout to "wobble".
-		Flex line wrapping <em>is</em> re-done after collapsing, however,
-		so the cross-size of a flex container with multiple lines might or might not change.
+	Specifying ''visibility:collapse'' on a flex item
+	causes it to become a <dfn lt="collapsed flex item" local-lt="collapsed">collapsed flex item</dfn>,
+	producing an effect similar to ''visibility:collapse'' on a table-row or table-column:
+	the collapsed flex item is removed from rendering entirely,
+	but leaves behind a "strut" that keeps the flex line's cross-size stable.
+	Thus, if a flex container has only one flex line,
+	dynamically collapsing or uncollapsing items
+	is guaranteed to have no effect on the flex container's <a>cross size</a>
+	and won't cause the rest of the page's layout to "wobble".
+	Flex line wrapping <em>is</em> re-done after collapsing, however,
+	so the cross-size of a flex container with multiple lines might or might not change.
 
-	<p>
-		Though collapsed flex items aren't rendered,
-		they do appear in the <a href="http://www.w3.org/TR/CSS21/intro.html#formatting-structure">formatting structure</a>.
-		Therefore, unlike on ''display:none'' items [[!CSS21]],
-		effects that depend on a box appearing in the formatting structure
-		(like incrementing counters or running animations and transitions)
-		still operate on collapsed items.
+	Though collapsed flex items aren't rendered,
+	they do appear in the <a href="http://www.w3.org/TR/CSS21/intro.html#formatting-structure">formatting structure</a>.
+	Therefore, unlike on ''display:none'' items [[!CSS21]],
+	effects that depend on a box appearing in the formatting structure
+	(like incrementing counters or running animations and transitions)
+	still operate on collapsed items.
 
 	<div class="example">
-		<p>In the following example,
+		In the following example,
 		a sidebar is sized to fit its content.
 		''visibility: collapse'' is used to dynamically hide parts of a navigation sidebar
 		without affecting its width, even though the widest item (&ldquo;Architecture&rdquo;)
@@ -805,8 +750,7 @@ Collapsed Items</h3>
 			</div>
 		</figure>
 
-		<pre>
-			&lt;style>
+		<pre class="lang-css">
 			  @media (min-width: 60em) {
 			    /* <a href="http://www.w3.org/TR/css3-mediaqueries/#width">two column layout only when enough room</a> (relative to default text size) */
 			    header + div { display: flex; }
@@ -825,9 +769,8 @@ Collapsed Items</h3>
 			  nav > ul > li:not(:target):not(:hover) > ul {
 			    visibility: collapse;
 			  }
-			&lt;/style>
-			&hellip;
-			&lt;/header>
+		</pre>
+		<pre class="lang-markup">
 			&lt;div>
 			  &lt;article id="main">
 			    Interesting Stuff to Read
@@ -852,23 +795,21 @@ Collapsed Items</h3>
 		</pre>
 	</div>
 
-	<p>
-		To compute the size of the strut, flex layout is first performed with all items uncollapsed,
-		and then re-run with each collapsed item replaced by a strut that maintains
-		the original cross-size of the item's original line.
-		See the <a href="#layout-algorithm">Flex Layout Algorithm</a>
-		for the normative definition of how ''visibility:collapse''
-		interacts with flex layout.
+	To compute the size of the strut, flex layout is first performed with all items uncollapsed,
+	and then re-run with each collapsed item replaced by a strut that maintains
+	the original cross-size of the item's original line.
+	See the <a href="#layout-algorithm">Flex Layout Algorithm</a>
+	for the normative definition of how ''visibility:collapse''
+	interacts with flex layout.
 
-	<p class='note'>
-		Note that using ''visibility:collapse'' on any flex items
-		will cause the flex layout algorithm to repeat partway through,
-		re-running the most expensive steps.
-		It's recommended that authors continue to use ''display:none'' to hide items
-		if the items will not be dynamically collapsed and uncollapsed,
-		as that is more efficient for the layout engine.
-		(Since only part of the steps need to be repeated when 'visibility' is changed,
-		however, 'visibility: collapse' is still recommended for dynamic cases.)
+	Note: Using ''visibility:collapse'' on any flex items
+	will cause the flex layout algorithm to repeat partway through,
+	re-running the most expensive steps.
+	It's recommended that authors continue to use ''display:none'' to hide items
+	if the items will not be dynamically collapsed and uncollapsed,
+	as that is more efficient for the layout engine.
+	(Since only part of the steps need to be repeated when 'visibility' is changed,
+	however, 'visibility: collapse' is still recommended for dynamic cases.)
 
 <!--
 ██     ██ ████ ██    ██
@@ -894,7 +835,7 @@ Implied Minimum Size of Flex Items</h3>
 	New computed value: the percentage as specified or the absolute length or a keyword
 	</pre>
 
-	<dl dfn-type=value dfn-for="min-width min-height">
+	<dl dfn-type=value dfn-for="min-width, min-height">
 		<dt><dfn>auto</dfn>
 		<dd>
 			On a <a>flex item</a> whose 'overflow' is ''overflow/visible'' in the <a>main axis</a>,
@@ -906,7 +847,7 @@ Implied Minimum Size of Flex Items</h3>
 				<colgroup span=1></colgroup>
 				<thead>
 					<tr>
-						<th>Clamped Size
+						<th>Specified Size
 						<th>Transferred Size
 						<th>Minimum Size
 				<tbody>
@@ -917,7 +858,7 @@ Implied Minimum Size of Flex Items</h3>
 					<tr>
 						<td>✓
 						<td>
-						<td>min(<var>clamped size</var>, <var>content size</var>)
+						<td>min(<var>specified size</var>, <var>content size</var>)
 					<tr>
 						<td>
 						<td>✓
@@ -925,29 +866,32 @@ Implied Minimum Size of Flex Items</h3>
 					<tr>
 						<td>✓
 						<td>✓
-						<td>min(<var>clamped size</var>, <var>content size</var>)
+						<td>min(<var>specified size</var>, <var>content size</var>)
 			</table>
 
 			Where:
 
 			<dl>
-				<dt><var>clamped size</var>
+				<dt><var>specified size</var>
 				<dd>
-					is defined if the item’s computed 'flex-basis' is ''auto''
-					and its computed <a>main size property</a> is <a>definite</a>,
-					and is that size (clamped by its <a>max main size property</a> if it's <a>definite</a>).
+					If the item’s computed <a>main size property</a> is <a>definite</a>,
+					then the <var>specified size</var> is that size
+					(clamped by its <a>max main size property</a> if it's <a>definite</a>).
+					It is otherwise undefined.
 
 				<dt><var>transferred size</var>
 				<dd>
-					is defined if the item has an intrinsic aspect ratio
+					If the item has an intrinsic aspect ratio
 					and its computed <a>cross size property</a> is <a>definite</a>,
-					and is that size (clamped by its <a title="min cross size property">min and max cross size properties</a> if they are <a>definite</a>),
+					then the <var>transferred size</var> is that size
+					(clamped by its <a lt="min cross size property">min and max cross size properties</a> if they are <a>definite</a>),
 					converted through the aspect ratio.
+					It is otherwise undefined.
 
 				<dt><var>content size</var>
 				<dd>
-					is the <a>min-content size</a> in the <a>main axis</a>,
-					clamped, if it has an aspect ratio, by any <a>definite</a> <a title="min cross size property">min and max cross size properties</a> converted through the aspect ratio,
+					The <var>content size</var> is the <a>min-content size</a> in the <a>main axis</a>,
+					clamped, if it has an aspect ratio, by any <a>definite</a> <a lt="min cross size property">min and max cross size properties</a> converted through the aspect ratio,
 					and then further clamped by the <a>max main size property</a> if that is <a>definite</a>.
 			</dl>
 
@@ -957,24 +901,21 @@ Implied Minimum Size of Flex Items</h3>
 	</dl>
 
 	<div class="note" id="min-size-opt">
-		<p>
-			Note that while a content-based minimum size is often appropriate,
-			and helps prevent content from overlapping or spilling outside its container,
-			in some cases it is not:
+		Note that while a content-based minimum size is often appropriate,
+		and helps prevent content from overlapping or spilling outside its container,
+		in some cases it is not:
 
-		<p>
-			In particular, if flex sizing is being used for a major content area of a document,
-			it is better to set an explicit font-relative minimum width such as ''min-width: 12em''.
-			A content-based minimum width could result in a large table or large image
-			stretching the size of the entire content area into an overflow zone,
-			and thereby making lines of text gratuitously long and hard to read.
+		In particular, if flex sizing is being used for a major content area of a document,
+		it is better to set an explicit font-relative minimum width such as ''min-width: 12em''.
+		A content-based minimum width could result in a large table or large image
+		stretching the size of the entire content area into an overflow zone,
+		and thereby making lines of text gratuitously long and hard to read.
 
-		<p>
-			Note also, when content-based sizing is used on an item with large amounts of content,
-			the layout engine must traverse all of this content before finding its minimum size,
-			whereas if the author sets an explicit minimum, this is not necessary.
-			(For items with small amounts of content, however,
-			this traversal is trivial and therefore not a performance concern.)
+		Note also, when content-based sizing is used on an item with large amounts of content,
+		the layout engine must traverse all of this content before finding its minimum size,
+		whereas if the author sets an explicit minimum, this is not necessary.
+		(For items with small amounts of content, however,
+		this traversal is trivial and therefore not a performance concern.)
 	</div>
 
 	In order to prevent cycling sizing,
@@ -988,27 +929,24 @@ Implied Minimum Size of Flex Items</h3>
 <h2 id="flow-order">
 Ordering and Orientation</h2>
 
-	<p>
-		The contents of a flex container can be laid out in any direction and in any order.
-		This allows an author to trivially achieve effects that would previously have required complex or fragile methods,
-		such as hacks using the 'float' and 'clear' properties.
-		This functionality is exposed through the 'flex-direction', 'flex-wrap', and 'order' properties.
+	The contents of a flex container can be laid out in any direction and in any order.
+	This allows an author to trivially achieve effects that would previously have required complex or fragile methods,
+	such as hacks using the 'float' and 'clear' properties.
+	This functionality is exposed through the 'flex-direction', 'flex-wrap', and 'order' properties.
 
-	<p class="note">
-		The reordering capabilities of flex layout intentionally affect
-		<em>only the visual rendering</em>,
-		leaving speech order and navigation based on the source order.
-		This allows authors to manipulate the visual presentation
-		while leaving the source order intact for non-CSS UAs and for
-		linear models such as speech and sequential navigation.
-		See <a href="#order-accessibility">Reordering and Accessibility</a>
-		and the <a href="#overview">Flex Layout Overview</a> for examples
-		that use this dichotomy to improve accessibility.
+	Note: The reordering capabilities of flex layout intentionally affect
+	<em>only the visual rendering</em>,
+	leaving speech order and navigation based on the source order.
+	This allows authors to manipulate the visual presentation
+	while leaving the source order intact for non-CSS UAs and for
+	linear models such as speech and sequential navigation.
+	See <a href="#order-accessibility">Reordering and Accessibility</a>
+	and the <a href="#overview">Flex Layout Overview</a> for examples
+	that use this dichotomy to improve accessibility.
 
-	<p>
-		Authors <em>must not</em> use 'order' or the ''*-reverse'' values of 'flex-flow'/'flex-direction'
-		as a substitute for correct source ordering,
-		as that can ruin the accessibility of the document.
+	Authors <em>must not</em> use 'order' or the ''*-reverse'' values of 'flex-flow'/'flex-direction'
+	as a substitute for correct source ordering,
+	as that can ruin the accessibility of the document.
 
 <!--
 ████████ ██       ████████ ██     ██         ████████  ████ ████████  ████████  ██████  ████████ ████  ███████  ██    ██
@@ -1033,10 +971,9 @@ Flex Flow Direction: the 'flex-direction' property</h3>
 	Media: visual
 	</pre>
 
-	<p>
-		The 'flex-direction' property specifies how <a>flex items</a> are placed in the flex container,
-		by setting the direction of the flex container's <a>main axis</a>.
-		This determines the direction that flex items are laid out in.
+	The 'flex-direction' property specifies how <a>flex items</a> are placed in the flex container,
+	by setting the direction of the flex container's <a>main axis</a>.
+	This determines the direction that flex items are laid out in.
 
 	<dl dfn-type=value dfn-for=flex-direction>
 		<dt><dfn>row</dfn>
@@ -1070,12 +1007,11 @@ Flex Flow Direction: the 'flex-direction' property</h3>
 			except the <a>main-start</a> and <a>main-end</a> directions are swapped.
 	</dl>
 
-	<p class="note">
-		The reverse values do not reverse box ordering:
-		like 'writing-mode' and 'direction' [[CSS3-WRITING-MODES]],
-		they only change the direction of flow.
-		Painting order, speech order, and sequential navigation orders
-		are not affected.
+	Note: The reverse values do not reverse box ordering:
+	like 'writing-mode' and 'direction' [[CSS3-WRITING-MODES]],
+	they only change the direction of flow.
+	Painting order, speech order, and sequential navigation orders
+	are not affected.
 
 <!--
 ████████ ██       ████████ ██     ██         ██      ██ ████████     ███    ████████
@@ -1100,10 +1036,9 @@ Flex Line Wrapping: the 'flex-wrap' property</h3>
 	Media: visual
 	</pre>
 
-	<p>
-		The 'flex-wrap' property controls whether the flex container is <a>single-line</a> or <a>multi-line</a>,
-		and the direction of the <a>cross-axis</a>,
-		which determines the direction new lines are stacked in.
+	The 'flex-wrap' property controls whether the flex container is <a>single-line</a> or <a>multi-line</a>,
+	and the direction of the <a>cross-axis</a>,
+	which determines the direction new lines are stacked in.
 
 	<dl dfn-type=value dfn-for=flex-wrap>
 		<dt><dfn>nowrap</dfn>
@@ -1151,40 +1086,45 @@ Flex Direction and Wrap: the 'flex-flow' shorthand</h3>
 	Value: <'flex-direction'> || <'flex-wrap'>
 	</pre>
 
-	<p>The 'flex-flow' property is a shorthand for setting the 'flex-direction' and 'flex-wrap' properties,
+	The 'flex-flow' property is a shorthand for setting the 'flex-direction' and 'flex-wrap' properties,
 	which together define the flex container's main and cross axes.
 
 	<div class="example">
-		<p>Some examples of valid flows in an English (left-to-right, horizontal writing mode) document:
+		Some examples of valid flows in an English (left-to-right, horizontal writing mode) document:
 
 		<table style="margin: 0 auto; vertical-align: middle; border-spacing: 2em 1em;">
 			<tr>
-				<td><pre>
-div { flex-flow: row; }
-/* Initial value. Main-axis is
-   inline, no wrap. */</pre>
+				<td>
+					<pre class="lang-css">
+					div { flex-flow: row; }
+					/* Initial value. Main-axis is
+					   inline, no wrap. */
+					</pre>
 				<td><img src='images/flex-flow1.svg' width=205 height=46 alt>
 			<tr>
-				<td><pre>
-div { flex-flow: column wrap; }
-/* Main-axis is block-direction (top to bottom)
-   and lines wrap in the inline direction (rightwards). */</pre>
+				<td>
+					<pre class="lang-css">
+					div { flex-flow: column wrap; }
+					/* Main-axis is block-direction (top to bottom)
+					   and lines wrap in the inline direction (rightwards). */
+					</pre>
 				<td><img src='images/flex-flow2.svg' width=89 height=160 alt>
 			<tr>
-				<td><pre>
-div { flex-flow: row-reverse wrap-reverse; }
-/* Main-axis is the opposite of inline direction
-   (right to left). New lines wrap upwards. */</pre>
+				<td>
+					<pre class="lang-css">
+					div { flex-flow: row-reverse wrap-reverse; }
+					/* Main-axis is the opposite of inline direction
+					   (right to left). New lines wrap upwards. */
+					</pre>
 				<td><img src='images/flex-flow3.svg' width=160 height=89 alt>
 		</table>
 	</div>
 
 	<div class='note'>
-		<p>
-			Note that the 'flex-flow' directions are <a>writing mode</a> sensitive.
-			In vertical Japanese, for example,
-			a ''row'' flex container lays out its contents from top to bottom,
-			as seen in this example:
+		Note that the 'flex-flow' directions are <a>writing mode</a> sensitive.
+		In vertical Japanese, for example,
+		a ''row'' flex container lays out its contents from top to bottom,
+		as seen in this example:
 
 		<table style="margin: 1em auto; text-align: center;">
 			<thead>
@@ -1193,8 +1133,8 @@ div { flex-flow: row-reverse wrap-reverse; }
 					<th>Japanese
 			<tbody>
 				<tr>
-					<td><pre>flex-flow: row wrap;<br>writing-mode: horizontal-tb;</pre>
-					<td><pre>flex-flow: row wrap;<br>writing-mode: vertical-rl;</pre>
+					<td><pre class="lang-css">flex-flow: row wrap;<br>writing-mode: horizontal-tb;</pre>
+					<td><pre class="lang-css">flex-flow: row wrap;<br>writing-mode: vertical-rl;</pre>
 				<tr>
 					<td><img src='images/flex-flow-english.svg' alt>
 					<td><img src='images/flex-flow-japanese.svg' alt>
@@ -1214,9 +1154,8 @@ div { flex-flow: row-reverse wrap-reverse; }
 <h3 id='order-property'>
 Display Order: the 'order' property</h3>
 
-	<p>
-		<a>Flex items</a> are, by default, displayed and laid out in the same order as they appear in the source document.
-		The 'order' property can be used to change this ordering.
+	<a>Flex items</a> are, by default, displayed and laid out in the same order as they appear in the source document.
+	The 'order' property can be used to change this ordering.
 
 	<pre class='propdef'>
 	Name: order
@@ -1229,122 +1168,119 @@ Display Order: the 'order' property</h3>
 	Animatable: yes
 	</pre>
 
-	<p>
-		The 'order' property controls the order in which
-		children of a flex container appear within the flex container,
-		by assigning them to ordinal groups.
-		It takes a single <dfn value for=order><<integer>></dfn> value,
-		which specifies which ordinal group the <a>flex item</a> belongs to.
+	The 'order' property controls the order in which
+	children of a flex container appear within the flex container,
+	by assigning them to ordinal groups.
+	It takes a single <dfn value for=order><<integer>></dfn> value,
+	which specifies which ordinal group the <a>flex item</a> belongs to.
 
-	<p>
-		A flex container lays out its content in <dfn export>order-modified document order</dfn>,
-		starting from the lowest numbered ordinal group and going up.
-		Items with the same ordinal group are laid out in the order they appear in the source document.
-		This also affects the <a href="http://www.w3.org/TR/CSS2/zindex.html">painting order</a> [[!CSS21]],
-		exactly as if the flex items were reordered in the source document.
+	A flex container lays out its content in <dfn export>order-modified document order</dfn>,
+	starting from the lowest numbered ordinal group and going up.
+	Items with the same ordinal group are laid out in the order they appear in the source document.
+	This also affects the <a href="http://www.w3.org/TR/CSS2/zindex.html">painting order</a> [[!CSS21]],
+	exactly as if the flex items were reordered in the source document.
 
 	<div class='example'>
-		<p>The following figure shows a simple tabbed interface, where the tab for the active pane is always first:
+		The following figure shows a simple tabbed interface, where the tab for the active pane is always first:
 
-		<div class='figure'><img src="images/flex-order-example.png" alt></div>
+		<figure><img src="images/flex-order-example.png" alt></figure>
 
-		<p>This could be implemented with the following CSS (showing only the relevant code):
+		This could be implemented with the following CSS (showing only the relevant code):
 
-		<pre>
-.tabs {
-	display: flex;
-}
-.tabs > * {
-	min-width: min-content;
-	/* Prevent tabs from getting too small for their content. */
-}
-.tabs > .current {
-	order: -1; /* Lower than the default of 0 */
-}</pre>
-
+		<pre class="lang-css">
+			.tabs {
+				display: flex;
+			}
+			.tabs > * {
+				min-width: min-content;
+				/* Prevent tabs from getting too small for their content. */
+			}
+			.tabs > .current {
+				order: -1; /* Lower than the default of 0 */
+			}
+		</pre>
 	</div>
 
-	<p>
-		Unless otherwise specified by a future specification,
-		this property has no effect on boxes that are not children of a <a>flex container</a>.
+	Unless otherwise specified by a future specification,
+	this property has no effect on boxes that are not children of a <a>flex container</a>.
 
 <h4 id="order-accessibility">
 Reordering and Accessibility</h4>
 
-	<p>
-		The 'order' property <em>does not</em> affect ordering in non-visual media
-		(such as <a href="http://www.w3.org/TR/css3-speech/">speech</a>).
-		Likewise, 'order' does not affect
-		the default traversal order of sequential navigation modes
-		(such as cycling through links, see e.g. 'nav-index' [[CSS3UI]] or <a href="http://www.w3.org/TR/1999/REC-html401-19991224/interact/forms.html#adef-tabindex"><code>tabindex</code></a> [[HTML40]]).
-		Authors <em>must</em> use 'order' only for visual, not logical, reordering of content;
-		style sheets that use 'order' to perform logical reordering are non-conforming.
+	The 'order' property <em>does not</em> affect ordering in non-visual media
+	(such as <a href="http://www.w3.org/TR/css3-speech/">speech</a>).
+	Likewise, 'order' does not affect
+	the default traversal order of sequential navigation modes
+	(such as cycling through links, see e.g. <a href="http://www.w3.org/TR/1999/REC-html401-19991224/interact/forms.html#adef-tabindex"><code>tabindex</code></a> [[HTML40]]).
+	Authors <em>must</em> use 'order' only for visual, not logical, reordering of content;
+	style sheets that use 'order' to perform logical reordering are non-conforming.
 
-	<p class='note'>
-		This is so that non-visual media and non-CSS UAs,
-		which typically present content linearly,
-		can rely on a logical source order,
-		while 'order' is used to tailor the visual order.
-		(Since visual perception is two-dimensional and non-linear,
-		the desired visual order is not always logical.)
+	Note: This is so that non-visual media and non-CSS UAs,
+	which typically present content linearly,
+	can rely on a logical source order,
+	while 'order' is used to tailor the visual order.
+	(Since visual perception is two-dimensional and non-linear,
+	the desired visual order is not always logical.)
 
 	<div class='example'>
-		<p>
-			Many web pages have a similar shape in the markup,
-			with a header on top,
-			a footer on bottom,
-			and then a content area and one or two additional columns in the middle.
-			Generally,
-			it's desirable that the content come first in the page's source code,
-			before the additional columns.
-			However, this makes many common designs,
-			such as simply having the additional columns on the left and the content area on the right,
-			difficult to achieve.
-			This has been addressed in many ways over the years,
-			often going by the name "Holy Grail Layout" when there are two additional columns.
-			'order' makes this trivial.
-			For example, take the following sketch of a page's code and desired layout:
+		Many web pages have a similar shape in the markup,
+		with a header on top,
+		a footer on bottom,
+		and then a content area and one or two additional columns in the middle.
+		Generally,
+		it's desirable that the content come first in the page's source code,
+		before the additional columns.
+		However, this makes many common designs,
+		such as simply having the additional columns on the left and the content area on the right,
+		difficult to achieve.
+		This has been addressed in many ways over the years,
+		often going by the name "Holy Grail Layout" when there are two additional columns.
+		'order' makes this trivial.
+		For example, take the following sketch of a page's code and desired layout:
 
 		<div class='code-and-figure'>
-			<div><pre>
-&lt;!DOCTYPE html>
-&lt;header>...&lt;/header>
-&lt;div id='main'>
-   &lt;article>...&lt;/article>
-   &lt;nav>...&lt;/nav>
-   &lt;aside>...&lt;/aside>
-&lt;/div>
-&lt;footer>...&lt;/footer></pre></div>
+			<div>
+				<pre class="lang-markup">
+					&lt;!DOCTYPE html>
+					&lt;header>...&lt;/header>
+					&lt;div id="main">
+					   &lt;article>...&lt;/article>
+					   &lt;nav>...&lt;/nav>
+					   &lt;aside>...&lt;/aside>
+					&lt;/div>
+					&lt;footer>...&lt;/footer>
+				</pre>
+			</div>
 			<div><img src="images/flex-order-page.svg" width=400 height=360 alt="In this page the header is at the top and the footer at the bottom, but the article is in the center, flanked by the nav on the right and the aside on the left."></div>
 		</div>
 
-		<p>
-			This layout can be easily achieved with flex layout:
+		This layout can be easily achieved with flex layout:
 
-		<pre>
-#main { display: flex; }
-#main > article { order: 2; min-width: 12em; flex:1; }
-#main > nav     { order: 1; width: 200px; }
-#main > aside   { order: 3; width: 200px; }</pre>
+		<pre class="lang-css">
+			#main { display: flex; }
+			#main > article { order: 2; min-width: 12em; flex:1; }
+			#main > nav     { order: 1; width: 200px; }
+			#main > aside   { order: 3; width: 200px; }
+		</pre>
 
-		<p>
-			As an added bonus,
-			the columns will all be <a value for="align-self" title="stretch">equal-height</a> by default,
-			and the main content will be as wide as necessary to fill the screen.
-			Additionally,
-			this can then be combined with media queries to switch to an all-vertical layout on narrow screens:
+		As an added bonus,
+		the columns will all be <a value for="align-self" lt="stretch">equal-height</a> by default,
+		and the main content will be as wide as necessary to fill the screen.
+		Additionally,
+		this can then be combined with media queries to switch to an all-vertical layout on narrow screens:
 
-		<pre>
-@media all and (max-width: 600px) {
-	/* Too narrow to support three columns */
-	#main { flex-flow: column; }
-	#main > article, #main > nav, #main > aside {
-		/* Return them to document order */
-		order: 0; width: auto;
-	}
-}</pre>
+		<pre class="lang-css">
+			@media all and (max-width: 600px) {
+				/* Too narrow to support three columns */
+				#main { flex-flow: column; }
+				#main > article, #main > nav, #main > aside {
+					/* Return them to document order */
+					order: 0; width: auto;
+				}
+			}
+		</pre>
 
-		<p><small>(Further use of multi-line flex containers to achieve even more intelligent wrapping left as an exercise for the reader.)</small>
+		<small>(Further use of multi-line flex containers to achieve even more intelligent wrapping left as an exercise for the reader.)</small>
 	</div>
 
 <!--
@@ -1360,91 +1296,79 @@ Reordering and Accessibility</h4>
 <h2 id='flex-lines'>
 Flex Lines</h2>
 
-	<p>
-		<a>Flex items</a> in a <a>flex container</a> are laid out and aligned
-		within <dfn export title="flex line">flex lines</dfn>,
-		hypothetical containers used for grouping and alignment by the layout algorithm.
-		A flex container can be either <a>single-line</a> or <a>multi-line</a>,
-		depending on the 'flex-wrap' property:
-	<ul>
-		<li>
-			A <dfn>single-line</dfn> flex container lays out all of its children in a single line,
-			even if that would cause its contents to overflow.
+	<a>Flex items</a> in a <a>flex container</a> are laid out and aligned
+	within <dfn export lt="flex line">flex lines</dfn>,
+	hypothetical containers used for grouping and alignment by the layout algorithm.
+	A flex container can be either <a>single-line</a> or <a>multi-line</a>,
+	depending on the 'flex-wrap' property:
 
-		<li>
-			A <dfn>multi-line</dfn> flex container breaks its <a>flex items</a> across multiple lines,
-			similar to how text is broken onto a new line when it gets too wide to fit on the existing line.
-			When additional lines are created,
-			they are stacked in the flex container along the <a>cross axis</a>
-			according to the 'flex-wrap' property.
-			Every line contains at least one <a>flex item</a>,
-			unless the flex container itself is completely empty.
-	</ul>
+	* A <dfn>single-line</dfn> flex container lays out all of its children in a single line,
+		even if that would cause its contents to overflow.
+	* A <dfn>multi-line</dfn> flex container breaks its <a>flex items</a> across multiple lines,
+		similar to how text is broken onto a new line when it gets too wide to fit on the existing line.
+		When additional lines are created,
+		they are stacked in the flex container along the <a>cross axis</a>
+		according to the 'flex-wrap' property.
+		Every line contains at least one <a>flex item</a>,
+		unless the flex container itself is completely empty.
 
 	<div class=example>
-		<p>
-			This example shows four buttons that do not fit horizontally.
+		This example shows four buttons that do not fit horizontally.
 
-		<pre>&lt;style>
-#flex {
-	display: flex;
-	flex-flow: row wrap;
-	width: 300px;
-}
-.item {
-	width: 80px;
-}
-&lt;/style>
+		<pre class="lang-css">
+			#flex {
+				display: flex;
+				flex-flow: row wrap;
+				width: 300px;
+			}
+			.item {
+				width: 80px;
+			}
+		</pre>
+		<pre class="lang-markup">
+			&lt;div id="flex">
+				&lt;div class="item">1&lt;/div>
+				&lt;div class="item">2&lt;/div>
+				&lt;div class="item">3&lt;/div>
+				&lt;div class="item">4&lt;/div>
+			&lt;/div>
+		</pre>
 
-&lt;div id="flex">
-	&lt;div class='item'>1&lt;/div>
-	&lt;div class='item'>2&lt;/div>
-	&lt;div class='item'>3&lt;/div>
-	&lt;div class='item'>4&lt;/div>
-&lt;/div></pre>
-
-		<p>
-			Since the container is 300px wide, only three of the items fit onto a single line.
-			They take up 240px, with 60px left over of remaining space.
-			Because the 'flex-flow' property specifies a <a>multi-line</a> flex container
-			(due to the ''wrap'' keyword appearing in its value),
-			the flex container will create an additional line to contain the last item.
+		Since the container is 300px wide, only three of the items fit onto a single line.
+		They take up 240px, with 60px left over of remaining space.
+		Because the 'flex-flow' property specifies a <a>multi-line</a> flex container
+		(due to the ''wrap'' keyword appearing in its value),
+		the flex container will create an additional line to contain the last item.
 
 		<figure>
 			<img src="images/multiline-no-flex.svg">
-
-			<figcaption>
-				An example rendering of the multi-line flex container.
-			</figcaption>
+			<figcaption>An example rendering of the multi-line flex container.</figcaption>
 		</figure>
 	</div>
 
-	<p>
-		Once content is broken into lines,
-		each line is laid out independently;
-		flexible lengths and the 'justify-content' and 'align-self' properties only consider the items on a single line at a time.
+	Once content is broken into lines,
+	each line is laid out independently;
+	flexible lengths and the 'justify-content' and 'align-self' properties only consider the items on a single line at a time.
 
-	<p>
-		In a <a>multi-line</a> <a>flex container</a> (even one with only a single line),
-		the <a>cross size</a> of each line
-		is the minimum size necessary to contain the <a>flex items</a> on the line
-		(after aligment due to 'align-self'),
-		and the lines are aligned within the flex container with the 'align-content' property.
-		In a <a>single-line</a> <a>flex container</a>,
-		the <a>cross size</a> of the line is the <a>cross size</a> of the flex container,
-		and 'align-content' has no effect.
-		The <a>main size</a> of a line is always the same as the <a>main size</a> of the flex container's content box.
+	In a <a>multi-line</a> <a>flex container</a> (even one with only a single line),
+	the <a>cross size</a> of each line
+	is the minimum size necessary to contain the <a>flex items</a> on the line
+	(after aligment due to 'align-self'),
+	and the lines are aligned within the flex container with the 'align-content' property.
+	In a <a>single-line</a> <a>flex container</a>,
+	the <a>cross size</a> of the line is the <a>cross size</a> of the flex container,
+	and 'align-content' has no effect.
+	The <a>main size</a> of a line is always the same as the <a>main size</a> of the flex container's content box.
 
 	<div class='example'>
-		<p>
-			Here's the same example as the previous,
-			except that the flex items have all been given ''flex: auto''.
-			The first line has 60px of remaining space,
-			and all of the items have the same flexibility,
-			so each of the three items on that line will receives 20px of extra width,
-			ending up 100px wide.
-			The remaining item is on a line of its own
-			and will stretch to the entire width of the line, or 300px.
+		Here's the same example as the previous,
+		except that the flex items have all been given ''flex: auto''.
+		The first line has 60px of remaining space,
+		and all of the items have the same flexibility,
+		so each of the three items on that line will receives 20px of extra width,
+		ending up 100px wide.
+		The remaining item is on a line of its own
+		and will stretch to the entire width of the line, or 300px.
 
 		<figure>
 			<img src="images/multiline-flex.svg">
@@ -1469,12 +1393,11 @@ Flex Lines</h2>
 <h2 id='flexibility'>
 Flexibility</h2>
 
-	<p>
-		The defining aspect of flex layout is the ability to make the <a>flex items</a> “flex”,
-		altering their width/height to fill the available space in the <a>main dimension</a>.
-		This is done with the 'flex' property.
-		A flex container distributes free space to its items proportional to their <a>flex grow factor</a>,
-		or shrinks them to prevent overflow proportional to their <a>flex shrink factor</a>.
+	The defining aspect of flex layout is the ability to make the <a>flex items</a> “flex”,
+	altering their width/height to fill the available space in the <a>main dimension</a>.
+	This is done with the 'flex' property.
+	A flex container distributes free space to its items proportional to their <a>flex grow factor</a>,
+	or shrinks them to prevent overflow proportional to their <a>flex shrink factor</a>.
 
 
 <h3 id='flex-property'>
@@ -1491,94 +1414,91 @@ The 'flex' Shorthand</h3>
 	Canonical order: per grammar
 	</pre>
 
-	<p>
-		The 'flex' property specifies the components of a <dfn>flexible length</dfn>:
-		the <a>flex grow factor</a>
-		and <a>flex shrink factor</a>,
-		and the <a>flex basis</a>.
-		When a box is a <a>flex item</a>,
-		'flex' is consulted <em>instead of</em> the <a>main size property</a>
-		to determine the <a>main size</a> of the box.
-		If a box is not a <a>flex item</a>,
-		'flex' has no effect.
+	The 'flex' property specifies the components of a <dfn>flexible length</dfn>:
+	the <a>flex grow factor</a>
+	and <a>flex shrink factor</a>,
+	and the <a>flex basis</a>.
+	When a box is a <a>flex item</a>,
+	'flex' is consulted <em>instead of</em> the <a>main size property</a>
+	to determine the <a>main size</a> of the box.
+	If a box is not a <a>flex item</a>,
+	'flex' has no effect.
 
 	<dl dfn-type=value dfn-for=flex>
 		<dt><dfn><<'flex-grow'>></dfn>
 		<dd>
-			<p>
-				This <var>&lt;number></var> component sets 'flex-grow' <a href="#flex-components">longhand</a>
-				and specifies the <dfn dfn>flex grow factor</dfn>,
-				which determines how much the <a>flex item</a> will grow
-				relative to the rest of the <a>flex items</a> in the flex container
-				when positive free space is distributed.
-				When omitted, it is set to ''1''.
+			This <<number>> component sets 'flex-grow' <a href="#flex-components">longhand</a>
+			and specifies the <dfn dfn>flex grow factor</dfn>,
+			which determines how much the <a>flex item</a> will grow
+			relative to the rest of the <a>flex items</a> in the flex container
+			when positive free space is distributed.
+			When omitted, it is set to ''1''.
 
 		<dt><dfn><<'flex-shrink'>></dfn>
 		<dd>
-			<p>
-				This <var>&lt;number></var> component sets 'flex-shrink' <a href="#flex-components">longhand</a>
-				and specifies the <dfn dfn>flex shrink factor</dfn>,
-				which determines how much the <a>flex item</a> will shrink
-				relative to the rest of the <a>flex items</a> in the flex container
-				when negative free space is distributed.
-				When omitted, it is set to ''1''.
-				The <a>flex shrink factor</a> is multiplied by the <a>flex basis</a> when distributing negative space.
+			This <<number>> component sets 'flex-shrink' <a href="#flex-components">longhand</a>
+			and specifies the <dfn dfn>flex shrink factor</dfn>,
+			which determines how much the <a>flex item</a> will shrink
+			relative to the rest of the <a>flex items</a> in the flex container
+			when negative free space is distributed.
+			When omitted, it is set to ''1''.
+
+			Note: The <a>flex shrink factor</a> is multiplied by the <a>flex base size</a> when distributing negative space.
+			This distributes negative space in proportion to how much the item is able to shrink,
+			so that e.g. a small item won't shrink to zero before a larger item has been noticeably reduced.
 
 		<dt><dfn><<'flex-basis'>></dfn>
 		<dd>
-			<p>
-				This component takes the same values as the 'width' property
-				(except ''flex-basis/auto'' is treated differently)
-				and an additional ''content'' keyword.
+			This component sets the 'flex-basis' <a href="#flex-components">longhand</a>
+			and specifies the <dfn dfn>flex basis</dfn>:
+			the initial <a>main size</a> of the <a>flex item</a>,
+			before free space is distributed according to the flex factors.
+			It takes the same values as the 'width' property
+			(except ''flex-basis/auto'' is treated differently)
+			and an additional ''content'' keyword.
+			When omitted from the 'flex' shorthand, its specified value is ''0%''.
 
-				It sets the 'flex-basis' <a href="#flex-components">longhand</a>
-				and specifies the <dfn dfn>flex basis</dfn>:
-				the initial <a>main size</a> of the <a>flex item</a>,
-				before free space is distributed according to the flex factors.
-				When omitted from the 'flex' shorthand, its specified value is ''0%''.
-
-				If the specified 'flex-basis' is ''flex-basis/auto'',
-				the used <a>flex basis</a> is the computed value of the flex item’s <a>main size property</a>.
-				If that value is itself ''width/auto'',
-				then the used <a>flex basis</a> is automatically-determined based on its content (i.e. ''content'').
-
-			<figure>
-				<img src='images/rel-vs-abs-flex.svg' width='504' height='240'>
-				<figcaption>
-					A diagram showing the difference between "absolute" flex
-					(starting from a basis of zero)
-					and "relative" flex
-					(starting from a basis of the item's content size).
-					The three items have flex factors of ''1'', ''1'', and ''2'', respectively.
-				</figcaption>
-			</figure>
+			If the specified 'flex-basis' is ''flex-basis/auto'',
+			the used <a>flex basis</a> is the computed value of the flex item’s <a>main size property</a>.
+			If that value is itself ''width/auto'',
+			then the used <a>flex basis</a> is automatically-determined based on its content
+			(i.e. sized as for ''content'').
 
 		<dt><dfn>none</dfn>
 		<dd>
-			<p>The keyword ''none'' expands to ''0 0 auto''.
+			The keyword ''none'' expands to ''0 0 auto''.
 	</dl>
 
-	<p>
-		The initial values of the 'flex' components are equivalent to <a class="css-code" href="#flex-initial">flex: 0 1 auto</a>.
-	<p class="note">
-		Note that the initial values of 'flex-grow' and 'flex-basis'
-		are different from their defaults when omitted in the 'flex' shorthand.
-		This so that the 'flex' shorthand can better accommodate the most <a href="#flex-common">common cases</a>.
+	<figure>
+		<img src='images/rel-vs-abs-flex.svg' width='504' height='240'>
+		<figcaption>
+			A diagram showing the difference between "absolute" flex
+			(starting from a basis of zero)
+			and "relative" flex
+			(starting from a basis of the item's content size).
+			The three items have flex factors of ''1'', ''1'', and ''2'', respectively:
+			notice that the item with a flex factor of ''2'' grows twice as fast as the others.
+		</figcaption>
+	</figure>
 
-	<p>
-		A unitless zero that is not already preceded by two flex factors
-		must be interpreted as a flex factor.
-		To avoid misinterpretation or invalid declarations,
-		authors must specify a zero <<'flex-basis'>> component
-		with a unit or precede it by two flex factors.
+	The initial values of the 'flex' components are equivalent to <a class="css-code" href="#flex-initial">flex: 0 1 auto</a>.
+
+	Note: The initial values of 'flex-grow' and 'flex-basis'
+	are different from their defaults when omitted in the 'flex' shorthand.
+	This so that the 'flex' shorthand can better accommodate the most <a href="#flex-common">common cases</a>.
+
+	A unitless zero that is not already preceded by two flex factors
+	must be interpreted as a flex factor.
+	To avoid misinterpretation or invalid declarations,
+	authors must specify a zero <<'flex-basis'>> component
+	with a unit or precede it by two flex factors.
 
 <h4 id='flex-common'>
 Common Values of 'flex'</h4>
 
-	<p><em>This section is informative.</em>
+	<em>This section is informative.</em>
 
-	<p>
-		The list below summarizes the effects of the most common 'flex' values:
+	The list below summarizes the effects of the most common 'flex' values:
 
 	<dl>
 		<dt id="flex-initial">''flex: initial''
@@ -1618,20 +1538,18 @@ Common Values of 'flex'</h4>
 			their sizes will be proportional to the specified flex factor.
 	</dl>
 
-	<p>
-		By default, flex items won't shrink below their minimum content size
-		(the length of the longest word or fixed-size element).
-		To change this, set the 'min-width' or 'min-height' property.
-		(See <a href="#min-size-auto">Implied Minimum Size of Flex Items</a>.)
+	By default, flex items won't shrink below their minimum content size
+	(the length of the longest word or fixed-size element).
+	To change this, set the 'min-width' or 'min-height' property.
+	(See [[#min-size-auto]].)
 
 <h3 id='flex-components'>
 Components of Flexibility</h3>
 
-	<p>
-		Individual components of flexibility can be controlled by independent longhand properties.
+	Individual components of flexibility can be controlled by independent longhand properties.
 
-	Note: Authors are encouraged to control flexibility using the 'flex' shorthand
-	rather than with component properties,
+	Advisement: Authors are encouraged to control flexibility using the 'flex' shorthand
+	rather than with its longhand properties directly,
 	as the shorthand correctly resets any unspecified components
 	to accommodate <a href="#flex-common">common uses</a>.
 
@@ -1649,15 +1567,14 @@ The 'flex-grow' property</h4>
 	Animatable: yes
 	</pre>
 
-	Note: Authors are encouraged to control flexibility using the 'flex' shorthand
-	rather than with component properties,
+	Advisement: Authors are encouraged to control flexibility using the 'flex' shorthand
+	rather than with 'flex-grow' directly,
 	as the shorthand correctly resets any unspecified components
 	to accommodate <a href="#flex-common">common uses</a>.
 
-	<p>
-		The 'flex-grow' property sets the <a>flex grow factor</a>
-		to the provided <dfn value for=flex-grow><<number>></dfn>.
-		Negative numbers are invalid.
+	The 'flex-grow' property sets the <a>flex grow factor</a>
+	to the provided <dfn value for=flex-grow><<number>></dfn>.
+	Negative numbers are invalid.
 
 <h4 id='flex-shrink-property'>
 The 'flex-shrink' property</h4>
@@ -1673,15 +1590,14 @@ The 'flex-shrink' property</h4>
 	Animatable: yes
 	</pre>
 
-	Note: Authors are encouraged to control flexibility using the 'flex' shorthand
-	rather than with component properties,
+	Advisement: Authors are encouraged to control flexibility using the 'flex' shorthand
+	rather than with 'flex-shrink' directly,
 	as the shorthand correctly resets any unspecified components
 	to accommodate <a href="#flex-common">common uses</a>.
 
-	<p>
-		The 'flex-shrink' property sets the <a>flex shrink factor</a>
-		to the provided <dfn value for=flex-shrink><<number>></dfn>.
-		Negative numbers are invalid.
+	The 'flex-shrink' property sets the <a>flex shrink factor</a>
+	to the provided <dfn value for=flex-shrink><<number>></dfn>.
+	Negative numbers are invalid.
 
 <h4 id='flex-basis-property'>
 The 'flex-basis' property</h4>
@@ -1698,60 +1614,60 @@ The 'flex-basis' property</h4>
 	Animatable: as 'width'
 	</pre>
 
-	Note: Authors are encouraged to control flexibility using the 'flex' shorthand
-	rather than with component properties,
+	Advisement: Authors are encouraged to control flexibility using the 'flex' shorthand
+	rather than with 'flex-basis' directly,
 	as the shorthand correctly resets any unspecified components
 	to accommodate <a href="#flex-common">common uses</a>.
 
-	<p>
-		The 'flex-basis' property sets the <a>flex basis</a>.
-		It accepts the same values as the 'width' and 'height' property, plus ''content''.
+	The 'flex-basis' property sets the <a>flex basis</a>.
+	It accepts the same values as the 'width' and 'height' property, plus ''content''.
 
 	<dl value for=flex-basis>
 		<dt><dfn>auto</dfn>
 		<dd>When specified on a <a>flex item</a>, the ''flex-basis/auto'' keyword
-			retrieves the value of the <a>main size property</a> as the used <a>flex basis</a>.
+			retrieves the value of the <a>main size property</a> as the used 'flex-basis'.
 			If that value is also ''auto'', then the used value is ''flex-basis/content''.
 
 		<dt><dfn>content</dfn>
 		<dd>Indicates automatic sizing, based on the <a>flex item</a>’s content.
 
+			Note: Note that this value was not present in the initial release of Flexible Box Layout,
+			and thus some older implementations will not support it.
+			The equivalent effect can be had by using ''flex/auto''
+			together with a main size ('width' or 'height') of ''width/auto''.
+
 		<dt><<'width'>>
-		<dd>
-		For all other values,
-		<a>flex basis</a> is resolved the same way as 'width' in horizontal writing modes [[!CSS21]]:
-		percentage values of 'flex-basis' are resolved against
-		the flex item's containing block, i.e. its flex container,
-		and if that containing block's size is <a>indefinite</a>,
-		the result is the same as a <a>main size</a> of <a value for=width>auto</a>.
-		Similarly, 'flex-basis' determines the size of the content box,
-		unless otherwise specified
-		such as by 'box-sizing' [[CSS3UI]].
+		<dd>For all other values,
+			'flex-basis' is resolved the same way as 'width' in horizontal writing modes [[!CSS21]]:
+			percentage values of 'flex-basis' are resolved against
+			the flex item's containing block, i.e. its flex container,
+			and if that containing block's size is <a>indefinite</a>,
+			the result is the same as a <a>main size</a> of <a value for=width>auto</a>.
+			Similarly, 'flex-basis' determines the size of the content box,
+			unless otherwise specified
+			such as by 'box-sizing' [[CSS3UI]].
 	</dl>
 
 <h2 id='alignment'>
 Alignment</h2>
 
-	<p>
-		After a flex container's contents have finished their flexing
-		and the dimensions of all flex items are finalized,
-		they can then be aligned within the flex container.
+	After a flex container's contents have finished their flexing
+	and the dimensions of all flex items are finalized,
+	they can then be aligned within the flex container.
 
-	<p>
-		The 'margin' properties can be used to align items in a manner similar to, but more powerful than, what margins can do in block layout.
-		<a>Flex items</a> also respect the alignment properties from <a href="http://www.w3.org/TR/css3-align/">CSS Box Alignment</a>,
-		which allow easy keyword-based alignment of items in both the <a>main axis</a> and <a>cross axis</a>.
-		These properties make many common types of alignment trivial,
-		including some things that were very difficult in CSS 2.1,
-		like horizontal and vertical centering.
+	The 'margin' properties can be used to align items in a manner similar to, but more powerful than, what margins can do in block layout.
+	<a>Flex items</a> also respect the alignment properties from <a href="http://www.w3.org/TR/css3-align/">CSS Box Alignment</a>,
+	which allow easy keyword-based alignment of items in both the <a>main axis</a> and <a>cross axis</a>.
+	These properties make many common types of alignment trivial,
+	including some things that were very difficult in CSS 2.1,
+	like horizontal and vertical centering.
 
-	<p class='note'>
-		While the alignment properties are defined in <a href="http://www.w3.org/TR/css3-align/">CSS Box Alignment</a>,
-		Flexible Box Layout reproduces the definitions of the relevant ones here
-		so as to not create a normative dependency that may slow down advancement of the spec.
-		These properties apply only to flex layout
-		until <a href="http://www.w3.org/TR/css3-align/">CSS Box Alignment Level 3</a> is finished
-		and defines their effect for other layout modes.
+	Note: While the alignment properties are defined in <a href="http://www.w3.org/TR/css3-align/">CSS Box Alignment</a>,
+	Flexible Box Layout reproduces the definitions of the relevant ones here
+	so as to not create a normative dependency that may slow down advancement of the spec.
+	These properties apply only to flex layout
+	until <a href="http://www.w3.org/TR/css3-align/">CSS Box Alignment Level 3</a> is finished
+	and defines their effect for other layout modes.
 
 <!--
 ██     ██    ███    ████████   ██████   ████ ██    ██  ██████
@@ -1766,36 +1682,25 @@ Alignment</h2>
 <h3 id='auto-margins'>
 Aligning with <a value for=margin>auto</a> margins</h3>
 
-	<p>
-		<em>This section is non-normative.
-			The normative definition of how margins affect flex items is in the <a href="#layout-algorithm">Flex Layout Algorithm</a> section.</em>
+	<em>This section is non-normative.
+		The normative definition of how margins affect flex items is in the <a href="#layout-algorithm">Flex Layout Algorithm</a> section.</em>
 
-	<p>
-		Auto margins on flex items have an effect very similar to auto margins in block flow:
+	Auto margins on flex items have an effect very similar to auto margins in block flow:
 
-	<ul>
-		<li>
-			During calculations of flex bases and flexible lengths, auto margins are treated as ''0''.
+	* During calculations of flex bases and flexible lengths, auto margins are treated as ''0''.
+	* Prior to alignment via 'justify-content' and 'align-self',
+		any positive free space is distributed to auto margins in that dimension.
+	* Overflowing boxes ignore their auto margins and overflow in the <a>end</a> direction.
 
-		<li>
-			Prior to alignment via 'justify-content' and 'align-self',
-			any positive free space is distributed to auto margins in that dimension.
-
-		<li>
-			Overflowing boxes ignore their auto margins and overflow in the <a>end</a> direction.
-	</ul>
-
-	<p class='note'>
-		Note that, if free space is distributed to auto margins,
-		the alignment properties will have no effect in that dimension
-		because the margins will have stolen all the free space
-		left over after flexing.
+	Note: Note that, if free space is distributed to auto margins,
+	the alignment properties will have no effect in that dimension
+	because the margins will have stolen all the free space
+	left over after flexing.
 
 	<div class='example'>
-		<p>
-			One use of <a value for=margin>auto</a> margins in the main axis is to separate flex items into distinct "groups".
-			The following example shows how to use this to reproduce a common UI pattern -
-			a single bar of actions with some aligned on the left and others aligned on the right.
+		One use of ''margin/auto'' margins in the main axis is to separate flex items into distinct "groups".
+		The following example shows how to use this to reproduce a common UI pattern -
+		a single bar of actions with some aligned on the left and others aligned on the right.
 
 		<figure>
 			<figcaption>
@@ -1809,34 +1714,34 @@ Aligning with <a value for=margin>auto</a> margins</h3>
 			</ul>
 		</figure>
 
-		<pre>
-&lt;style>
-nav > ul {
-	display: flex;
-}
-nav > ul > li {
-	min-width: min-content;
-	/* Prevent items from getting too small for their content. */
-}
-nav > ul > #login {
-	margin-left: auto;
-}
-&lt;/style>
-&lt;nav>
-	&lt;ul>
-		&lt;li>&lt;a href=/about>About&lt;/a>
-		&lt;li>&lt;a href=/projects>Projects&lt;/a>
-		&lt;li>&lt;a href=/interact>Interact&lt;/a>
-		&lt;li id='login'>&lt;a href=/login>Login&lt;/a>
-	&lt;/ul>
-&lt;/nav></pre>
+		<pre class="lang-css">
+			nav > ul {
+				display: flex;
+			}
+			nav > ul > li {
+				min-width: min-content;
+				/* Prevent items from getting too small for their content. */
+			}
+			nav > ul > #login {
+				margin-left: auto;
+			}
+		</pre>
+		<pre class="lang-markup">
+			&lt;nav>
+				&lt;ul>
+					&lt;li>&lt;a href=/about>About&lt;/a>
+					&lt;li>&lt;a href=/projects>Projects&lt;/a>
+					&lt;li>&lt;a href=/interact>Interact&lt;/a>
+					&lt;li id="login">&lt;a href=/login>Login&lt;/a>
+				&lt;/ul>
+			&lt;/nav>
+		</pre>
 	</div>
 
 	<div class='example'>
-		<p>
-			The figure below illustrates the difference in cross-axis alignment in overflow situations between
-			using <a href="#auto-margins"><span class=css>auto</span> margins</a>
-			and using the <a href='#align-items-property'>alignment properties</a>.
+		The figure below illustrates the difference in cross-axis alignment in overflow situations between
+		using <a href="#auto-margins"><css>auto</css> margins</a>
+		and using the <a property lt="align-items">alignment properties</a>.
 
 		<figure>
 			<div style="display:table; margin: 0 auto 1em;">
@@ -1890,13 +1795,12 @@ Axis Alignment: the 'justify-content' property</h3>
 	Media: visual
 	</pre>
 
-	<p>
-		The 'justify-content' property aligns <a>flex items</a> along the <a>main axis</a> of the current line of the flex container.
-		This is done <em title=''>after</em> any flexible lengths and any <a href="#auto-margins">auto margins</a> have been resolved.
-		Typically it helps distribute extra free space leftover when either
-		all the <a>flex items</a> on a line are inflexible,
-		or are flexible but have reached their maximum size.
-		It also exerts some control over the alignment of items when they overflow the line.
+	The 'justify-content' property aligns <a>flex items</a> along the <a>main axis</a> of the current line of the flex container.
+	This is done <em>after</em> any flexible lengths and any <a href="#auto-margins">auto margins</a> have been resolved.
+	Typically it helps distribute extra free space leftover when either
+	all the <a>flex items</a> on a line are inflexible,
+	or are flexible but have reached their maximum size.
+	It also exerts some control over the alignment of items when they overflow the line.
 
 	<dl dfn-type=value dfn-for=justify-content>
 		<dt><dfn>flex-start</dfn>
@@ -1918,7 +1822,7 @@ Axis Alignment: the 'justify-content' property</h3>
 			<a>Flex items</a> are packed toward the center of the line.
 			The <a>flex items</a> on the line are placed flush with each other
 			and aligned in the center of the line,
-			with equal amounts of empty space between the <a>main-start</a> edge of the line and the first item on the line
+			with equal amounts of space between the <a>main-start</a> edge of the line and the first item on the line
 			and between the <a>main-end</a> edge of the line and the last item on the line.
 			(If the leftover free-space is negative,
 			the <a>flex items</a> will overflow equally in both directions.)
@@ -1988,26 +1892,23 @@ Cross-axis Alignment: the 'align-items' and 'align-self' properties</h3>
 	Media: visual
 	</pre>
 
-	<p>
-		<a>Flex items</a> can be aligned in the <a>cross axis</a> of the current line of the flex container,
-		similar to 'justify-content' but in the perpendicular direction.
-		'align-items' sets the default alignment for all of the flex container's <a title="flex items">items</a>,
-		including anonymous <a>flex items</a>.
-		'align-self' allows this default alignment to be overridden for individual <a>flex items</a>.
-		(For anonymous flex items,
-		'align-self' always matches the value of 'align-items' on their associated flex container.)
+	<a>Flex items</a> can be aligned in the <a>cross axis</a> of the current line of the flex container,
+	similar to 'justify-content' but in the perpendicular direction.
+	'align-items' sets the default alignment for all of the flex container's <a lt="flex items">items</a>,
+	including anonymous <a>flex items</a>.
+	'align-self' allows this default alignment to be overridden for individual <a>flex items</a>.
+	(For anonymous flex items,
+	'align-self' always matches the value of 'align-items' on their associated flex container.)
 
-	<p>
-		If either of the <a>flex item's</a> cross-axis margins are <a value for=margin>auto</a>,
-		'align-self' has no effect.
+	If either of the <a>flex item's</a> cross-axis margins are <a value for=margin>auto</a>,
+	'align-self' has no effect.
 
-	<p>
-		A value of <dfn value for=align-self>auto</dfn> for 'align-self'
-		computes to the value of 'align-items' on the element’s parent,
-		or ''align-self/stretch'' if the element has no parent.
-		The alignments are defined as:
+	A value of <dfn value for=align-self>auto</dfn> for 'align-self'
+	computes to the value of 'align-items' on the element’s parent,
+	or ''align-self/stretch'' if the element has no parent.
+	The alignments are defined as:
 
-	<dl dfn-type=value dfn-for="align-items align-self">
+	<dl dfn-type=value dfn-for="align-items, align-self">
 		<dt><dfn>flex-start</dfn>
 		<dd>
 			The <a>cross-start</a> margin edge of the <a>flex item</a>
@@ -2026,17 +1927,15 @@ Cross-axis Alignment: the 'align-items' and 'align-self' properties</h3>
 
 		<dt><dfn>baseline</dfn>
 		<dd>
-			<p>
-				If the <a>flex item</a>’s inline axis is the same as the <a>cross axis</a>,
-				this value is identical to <a value for=align-self>flex-start</a>.
+			If the <a>flex item</a>’s inline axis is the same as the <a>cross axis</a>,
+			this value is identical to <a value for=align-self>flex-start</a>.
 
-			<p>
-				Otherwise,
-				it <dfn dfn id='baseline-participation'>participates in baseline alignment</dfn>:
-				all participating <a>flex items</a> on the line
-				are aligned such that their baselines align,
-				and the item with the largest distance between its baseline and its <a>cross-start</a> margin edge
-				is placed flush against the <a>cross-start</a> edge of the line.
+			Otherwise,
+			it <dfn dfn id='baseline-participation'>participates in baseline alignment</dfn>:
+			all participating <a>flex items</a> on the line
+			are aligned such that their baselines align,
+			and the item with the largest distance between its baseline and its <a>cross-start</a> margin edge
+			is placed flush against the <a>cross-start</a> edge of the line.
 
 
 		<dt><dfn>stretch</dfn>
@@ -2083,12 +1982,11 @@ Packing Flex Lines: the 'align-content' property</h3>
 	Media: visual
 	</pre>
 
-	<p>
-		The 'align-content' property aligns a flex container's lines within the flex container
-		when there is extra space in the <a>cross-axis</a>,
-		similar to how 'justify-content' aligns individual items within the <a>main-axis</a>.
-		Note, this property has no effect on a <a>single-line</a> <a>flex container</a>.
-		Values have the following meanings:
+	The 'align-content' property aligns a flex container's lines within the flex container
+	when there is extra space in the <a>cross-axis</a>,
+	similar to how 'justify-content' aligns individual items within the <a>main-axis</a>.
+	Note, this property has no effect on a <a>single-line</a> <a>flex container</a>.
+	Values have the following meanings:
 
 	<dl dfn-type=value dfn-for=align-content>
 		<dt><dfn>flex-start</dfn>
@@ -2110,7 +2008,7 @@ Packing Flex Lines: the 'align-content' property</h3>
 			Lines are packed toward the center of the flex container.
 			The lines in the flex container are placed flush with each other
 			and aligned in the center of the flex container,
-			with equal amounts of empty space
+			with equal amounts of space
 			between the <a>cross-start</a> content edge of the flex container
 			and the first line in the flex container,
 			and between the <a>cross-end</a> content edge of the flex container
@@ -2152,11 +2050,10 @@ Packing Flex Lines: the 'align-content' property</h3>
 			increasing their cross size.
 	</dl>
 
-	<p class='note'>
-		Note: Only <a>multi-line</a> <a>flex containers</a>
-		ever have free space in the <a>cross-axis</a> for lines to be aligned in,
-		because in a <a>single-line</a> flex container
-		the sole line automatically stretches to fill the space.
+	Note: Only <a>multi-line</a> <a>flex containers</a>
+	ever have free space in the <a>cross-axis</a> for lines to be aligned in,
+	because in a <a>single-line</a> flex container
+	the sole line automatically stretches to fill the space.
 
 	<div class="figure">
 		<img src="images/align-content-example.svg" width=612 height=508 alt>
@@ -2177,66 +2074,53 @@ Packing Flex Lines: the 'align-content' property</h3>
 <h3 id="flex-baselines">
 Flex Baselines</h3>
 
-	<p>
-		The baselines of a flex container are determined as follows (after reordering with 'order'):
+	The baselines of a flex container are determined as follows (after reordering with 'order'):
 
 	<dl>
 		<dt><dfn export>main-axis baseline</dfn>
 		<dd>
-			<ol>
-				<li>
-					If any of the <a>flex items</a> on the flex container's first line
-					<a href="#baseline-participation">participate in baseline alignment</a>,
-					the flex container's <a>main-axis baseline</a> is the baseline of those <a>flex items</a>.
+			1.If any of the <a>flex items</a> on the flex container's first line
+				<a href="#baseline-participation">participate in baseline alignment</a>,
+				the flex container's <a>main-axis baseline</a> is the baseline of those <a>flex items</a>.
 
-				<li>
-					Otherwise, if the flex container has at least one <a>flex item</a>,
-					and its first <a>flex item</a> has a baseline
-					parallel to the flex container's <a>main axis</a>,
-					the flex container's <a>main-axis baseline</a> is that baseline.
+			2. Otherwise, if the flex container has at least one <a>flex item</a>,
+				and its first <a>flex item</a> has a baseline
+				parallel to the flex container's <a>main axis</a>,
+				the flex container's <a>main-axis baseline</a> is that baseline.
 
-				<li>
-					Otherwise, the flex container's <a>main-axis baseline</a> is <a href="http://www.w3.org/TR/css3-writing-modes/#inline-alignment">synthesized</a>
-					from the first item's content box,
-					or, failing that, from the flex container's content box.
+			3. Otherwise, the flex container's <a>main-axis baseline</a> is <a href="http://www.w3.org/TR/css3-writing-modes/#inline-alignment">synthesized</a>
+				from the first item's content box,
+				or, failing that, from the flex container's content box.
 
-					<!--
-						Logic behind this choice (because it's different than other baseline calculations):
-						If a flexbox has content, the baseline will definitely be inside the flexbox's content box.
-						Thus, using the *flexbox's* content box keeps this fairly consistent -
-						you don't suddenly jump outside the content box when you delete the last bit of content.
-					-->
-			</ol>
+				<!--
+					Logic behind this choice (because it's different than other baseline calculations):
+					If a flexbox has content, the baseline will definitely be inside the flexbox's content box.
+					Thus, using the *flexbox's* content box keeps this fairly consistent -
+					you don't suddenly jump outside the content box when you delete the last bit of content.
+				-->
 
 		<dt><dfn export>cross-axis baseline</dfn>
 		<dd>
-			<ol>
-				<li>
-					If the flex container has at least one <a>flex item</a>,
-					and its first <a>flex item</a> has a baseline
-					parallel to the flex container's <a>cross axis</a>,
-					the flex container's <a>cross-axis baseline</a> is that baseline.
+			1. If the flex container has at least one <a>flex item</a>,
+				and its first <a>flex item</a> has a baseline
+				parallel to the flex container's <a>cross axis</a>,
+				the flex container's <a>cross-axis baseline</a> is that baseline.
 
-				<li>
-					Otherwise, the flex container's <a>cross-axis baseline</a> is <a href="http://www.w3.org/TR/css3-writing-modes/#inline-alignment">synthesized</a>
-					from the first item's content box,
-					or, failing that, from the flex container's content box.
-			</ol>
+			2. Otherwise, the flex container's <a>cross-axis baseline</a> is <a href="http://www.w3.org/TR/css3-writing-modes/#inline-alignment">synthesized</a>
+				from the first item's content box,
+				or, failing that, from the flex container's content box.
 	</dl>
 
-	<p>
-		When calculating the baseline according to the above rules,
-		if the box contributing a baseline has an 'overflow' value that allows scrolling,
-		the box must be treated as being in its initial scroll position
-		for the purpose of determining its baseline.
+	When calculating the baseline according to the above rules,
+	if the box contributing a baseline has an 'overflow' value that allows scrolling,
+	the box must be treated as being in its initial scroll position
+	for the purpose of determining its baseline.
 
-	<p>
-		When <a href="http://www.w3.org/TR/CSS21/tables.html#height-layout">determining the baseline of a table cell</a>,
-		a flex container provides a baseline just as a line box or table-row does. [[!CSS21]]
+	When <a href="http://www.w3.org/TR/CSS21/tables.html#height-layout">determining the baseline of a table cell</a>,
+	a flex container provides a baseline just as a line box or table-row does. [[!CSS21]]
 
-	<p>
-		See <a href="http://www.w3.org/TR/css3-align/#baseline-rules">Baseline Rules</a>
-		in [[CSS3-ALIGN]] for more information on baseline alignment.
+	See <a href="http://www.w3.org/TR/css3-align/#baseline-rules">Baseline Rules</a>
+	in [[CSS3-ALIGN]] for more information on baseline alignment.
 
 <!--
 ██          ███    ██    ██  ███████  ██     ██ ████████
@@ -2335,7 +2219,7 @@ Line Length Determination</h3>
 					and the flex container is being sized under a min-content or max-content constraint
 					(e.g. when performing <a href="http://www.w3.org/TR/CSS21/tables.html#auto-table-layout">automatic table layout</a> [[!CSS21]]),
 					size the item under that constraint.
-					The <a>flex base size</a> is the item's resulting main size.
+					The <a>flex base size</a> is the item's resulting <a>main size</a>.
 
 				<li>
 					Otherwise,
@@ -2344,11 +2228,16 @@ Line Length Determination</h3>
 					and the flex item's inline axis is parallel to the main axis,
 					lay the item out using
 					<a href="http://www.w3.org/TR/css3-writing-modes/#orthogonal-flows">the rules for a box in an orthogonal flow</a> [[!CSS3-WRITING-MODES]].
-					The <a>flex base size</a> is the item's max-content main size.
+					The <a>flex base size</a> is the item's max-content <a>main size</a>.
+
+					Note: This case occurs, for example,
+					in an English document (horizontal <a>writing mode</a>)
+					containing a column flex container
+					containing a vertical Japanese (vertical <a>writing mode</a>) <a>flex item</a>.
 
 				<li>
 					Otherwise,
-					lay out the item into the <a>available space</a>
+					size the item into the <a>available space</a>
 					using its used <a>flex basis</a> in place of its <a>main size</a>,
 					treating a value of ''content'' as ''width/max-content''.
 					If a <a>cross size</a> is needed to determine the <a>main size</a>
@@ -2356,14 +2245,17 @@ Line Length Determination</h3>
 					and the <a>flex item</a>’s cross size is ''auto'' and not <a>definite</a>,
 					in this calculation use ''width/fit-content'' as the <a>flex item</a>’s <a>cross size</a>.
 					The <a>flex base size</a> is the item's resulting <a>main size</a>.
-
 			</ol>
+
+			When determining the <a>flex base size</a>,
+			the item’s min and max main size properties are ignored
+			(no clamping occurs).
 
 			The <a>hypothetical main size</a> is the item's <a>flex base size</a>
 			clamped according to its min and max main size properties.
 
 		<li id='algo-main-container'>
-			<strong>Determine the main size of the flex container</strong>
+			<strong>Determine the <a>main size</a> of the flex container</strong>
 			using the rules of the formatting context in which it participates.
 			For this computation, <a value for=margin>auto</a> margins on flex items are treated as ''0''.
 	</ol>
@@ -2385,14 +2277,11 @@ Main Size Determination</h3>
 					starting from the first uncollected item,
 					collect consecutive items one by one
 					until the first time that the <em>next</em> collected item
-					would not fit into the flex container's inner main size,
-					or until a forced break is encountered.
+					would not fit into the flex container's inner main size
+					(or until a forced break is encountered,
+					see [[#pagination]]).
 					If the very first uncollected item wouldn't fit,
 					collect just it into the line.
-					A break is forced wherever
-					the CSS2.1 'page-break-before'/'page-break-after' [[CSS21]]
-					or the CSS3 'break-before'/'break-after' [[CSS3-BREAK]] properties
-					specify a fragmentation break.
 
 					<p>
 						For this step,
@@ -2409,7 +2298,7 @@ Main Size Determination</h3>
 
 		<li id='algo-flex'>
 			<strong><a href='#resolve-flexible-lengths'>Resolve the flexible lengths</a></strong> of all the flex items
-			to find their used main size (see section 9.7.).
+			to find their used <a>main size</a> (see section 9.7.).
 	</ol>
 
 <h3 id='cross-sizing'>
@@ -2418,7 +2307,7 @@ Cross Size Determination</h3>
 	<ol class=continue>
 		<li id='algo-cross-item'>
 			<strong>Determine the <dfn>hypothetical cross size</dfn> of each item</strong>
-			by performing layout with the used main size and the available space,
+			by performing layout with the used <a>main size</a> and the available space,
 			treating <a value for=width>auto</a> as ''fit-content''.
 
 		<li id='algo-cross-line'>
@@ -2474,7 +2363,7 @@ Cross Size Determination</h3>
 			<p>
 				In this second layout round,
 				when <a href="#algo-line-break">collecting items into lines</a>,
-				treat the collapsed items as having zero main size.
+				treat the collapsed items as having zero <a>main size</a>.
 				For the rest of the algorithm following that step,
 				ignore the collapsed items entirely
 				(as if they were ''display:none'')
@@ -2503,7 +2392,7 @@ Cross Size Determination</h3>
 			so that percentage-sized children can be resolved.
 
 			<p class='note'>
-				Note that this step does not affect the main size of the flex item,
+				Note that this step does not affect the <a>main size</a> of the flex item,
 				even if it has an intrinsic aspect ratio.
 	</ol>
 
@@ -2584,7 +2473,7 @@ Resolving Flexible Lengths</h3>
 		<li>
 			<strong>Determine the used flex factor</strong>.
 			Sum the outer hypothetical main sizes of all items on the line.
-			If the sum is less than the flex container's inner main size,
+			If the sum is less than the flex container's inner <a>main size</a>,
 			use the flex grow factor for the rest of this algorithm;
 			otherwise, use the flex shrink factor.
 
@@ -2609,7 +2498,7 @@ Resolving Flexible Lengths</h3>
 		<li>
 			<strong>Calculate <dfn>initial free space</dfn>.</strong>
 			Sum the outer sizes of all items on the line,
-			and subtract this from the flex container's inner main size.
+			and subtract this from the flex container's inner <a>main size</a>.
 			For frozen items, use their outer <a>target main size</a>;
 			for other items, use their outer <a>flex base size</a>.
 
@@ -2649,13 +2538,13 @@ Resolving Flexible Lengths</h3>
 						<dt>If using the <a>flex shrink factor</a>
 						<dd>
 							For every unfrozen item on the line,
-							multiply its flex shrink factor by its inner flex base size,
+							multiply its flex shrink factor by its inner <a>flex base size</a>,
 							and note this as its <dfn>scaled flex shrink factor</dfn>.
 							Find the ratio of the item's <a>scaled flex shrink factor</a>
 							to the sum of the <a>scaled flex shrink factors</a> of all unfrozen items on the line.
 							Set the item's <a>target main size</a> to its <a>flex base size</a>
 							minus a fraction of the absolute value of the <a>remaining free space</a> proportional to the ratio.
-							<span class='note'>Note this may result in a negative inner main size;
+							<span class='note'>Note this may result in a negative inner <a>main size</a>;
 							it will be corrected in the next step.</span>
 
 						<dt>Otherwise
@@ -2713,25 +2602,26 @@ Resolving Flexible Lengths</h3>
 Definite and Indefinite Sizes</h3>
 
 	For the purposes of these definitions,
-	a <dfn title="definite|definite size">definite size</dfn> is one that can be determined without measuring content,
+	a <dfn lt="definite|definite size">definite size</dfn> is one that can be determined without measuring content,
 	i.e. is a <<length>>,
 	a size of the initial containing block,
 	or a <<percentage>> that is resolved against a definite size.
-	An <dfn title="indefinite|indefinite size">indefinite size</dfn> is one that is not <a>definite</a>.
+	An <dfn lt="indefinite|indefinite size">indefinite size</dfn> is one that is not <a>definite</a>.
 
 	Flexbox has several additional cases where a length can be considered <a>definite</a>:
 
 	<ol>
 		<li>
-			If a <a>single-line</a> <a>flex container</a> has a definite cross size,
+			If a <a>single-line</a> <a>flex container</a> has a definite <a>cross size</a>,
 			the outer <a>cross size</a> of any <a>stretched</a> <a>flex items</a>
-			is the flex container's inner cross size (clamped to the <a>flex item</a>’s min and max <a>cross size</a>)
+			is the flex container's inner <a>cross size</a> (clamped to the <a>flex item</a>’s min and max <a>cross size</a>)
 			and is considered <a>definite</a>.
 
 		<li>
 			If a percentage is going to be resolved against a <a>flex item’s</a> <a>main size</a>,
 			and the <a>flex item</a> has a <a>definite</a> <a>flex basis</a>,
-			the <a>main size</a> must be treated as <a>definite</a>
+			and the <a>flex container</a> has a <a>definite</a> <a>main size</a>,
+			the <a>flex item’s</a> <a>main size</a> must be treated as <a>definite</a>
 			for the purpose of resolving the percentage,
 			and the percentage must resolve against the <strong>flexed</strong> <a>main size</a> of the <a>flex item</a>
 			(that is, after the layout algorithm below has been completed for the <a>flex item’s</a> <a>flex container</a>,
@@ -2758,7 +2648,7 @@ Intrinsic Sizes</h3>
 	<ol>
 		<li>
 			For each <a>flex item</a>,
-			subtract its <a>flex basis</a> from its <a>max-content contribution</a> size,
+			subtract its <a>flex base size</a> from its <a>max-content contribution</a> size,
 			then divide by its <a>flex grow factor</a>, floored at 1,
 			or by its <a>scaled flex shrink factor</a> (if the result was negative, flooring the <a>flex shrink factor</a> at 1 if necessary).
 			This is the item's <var>max-content flex fraction</var>.
@@ -2770,7 +2660,7 @@ Intrinsic Sizes</h3>
 			Within each line,
 			find the largest <var>max-content flex fraction</var>
 			among all the <a>flex items</a>.
-			Add each item’s <a>flex basis</a>
+			Add each item’s <a>flex base size</a>
 			to the product of its <a>flex grow factor</a>
 			(or <a>scaled flex shrink factor</a>, if the chosen <var>max-content flex fraction</var> was negative)
 			and the chosen <var>max-content flex fraction</var>,
@@ -2790,12 +2680,12 @@ Intrinsic Sizes</h3>
 	of all the <a>flex items</a> in the <a>flex container</a>.
 
 	The <dfn>min-content cross size</dfn> and  <dfn>max-content cross size</dfn> of a flex container
-	are the cross size of the flex container
+	are the <a>cross size</a> of the flex container
 	after performing layout into the given available <a>main-axis</a> space and infinite available <a>cross-axis</a> space.
 
-	The main-size <a title="min-content contribution">min-content</a>/<a>max-content contribution</a> of a <a>flex item</a>
+	The main-size <a lt="min-content contribution">min-content</a>/<a>max-content contribution</a> of a <a>flex item</a>
 	is its outer <a>hypothetical main size</a>
-	when sized under a <a title="min-content constraint">min-content</a>/<a>max-content constraint</a> (respectively).
+	when sized under a <a lt="min-content constraint">min-content</a>/<a>max-content constraint</a> (respectively).
 
 	See [[!CSS3-SIZING]] for a definition of the terms in this section.
 
@@ -2817,7 +2707,7 @@ Fragmenting Flex Layout</h2>
 		between items,
 		between lines of items (in <a>multi-line</a> mode),
 		and inside items.
-		The <a property title="break-before">break-*</a> properties apply to flex containers as normal for block-level or inline-level boxes.
+		The <a property lt="break-before">break-*</a> properties apply to flex containers as normal for block-level or inline-level boxes.
 		This section defines how they apply to flex items
 		and the contents of flex items.
 
@@ -3061,7 +2951,7 @@ Sample Flex Fragmentation Algorithm</h3>
 				<li>
 					If any item,
 					when aligned according to its original 'align-self' value
-					into the combined cross size of all the flex container fragments,
+					into the combined <a>cross size</a> of all the flex container fragments,
 					would fit entirely within a single flex container fragment,
 					it may be shifted into that fragment
 					and aligned appropriately.
@@ -3161,10 +3051,173 @@ Boris Zbarsky.
 
 <h2 class="no-num" id="changes">Changes</h2>
 
+	This section documents the changes since previous publications.
+
+<h3 id="changes-201409">
+Changes since the 25 September 2014 LCWD</h3>
+
+	A <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140925">Disposition of Comments</a> is also available.
+
+<h4 id="change-201409-substantive">
+Substantive Changes and Bugfixes</h4>
+
+	<ul>
+		<li id="change-201409-content">
+			Reverted ''flex-basis: auto'' to its original meaning.
+			Added ''flex-basis: content'' keyword to explicitly specify automatic content-based sizing.
+			(Issue <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140925#issue-10">10</a>)
+
+		<li id="change-201409-align-content-wrapping">
+			Made applicability of 'align-content' depend on wrappability rather than number of resulting flex lines.
+			(Issue <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140925#issue-4">4</a>)
+
+			<blockquote>
+				<p><del>When a flex container has multiple lines,</del>
+				<ins>In a <i>multi-line</i> <i>flex container</i> (even one with only a single line),</ins>
+				the <i>cross size</i> of each line is the minimum size necessary [...]
+				<del>When a flex container (even a <i>multi-line</i> one) has only one line,</del>
+				<ins>In a <i>single-line</i> <i>flex container</i>,</ins>
+ 				the <i>cross size</i> of the line is the <i>cross size</i> of the flex container,
+ 				and 'align-content' has no effect.
+			</blockquote>
+
+			<blockquote>
+				<p class="note">Note, this property has no effect
+				<del>when the flex container has only a single line.</del>
+				<ins>on a <i>single-line</i> <i>flex container</i>.</ins>
+			</blockquote>
+
+			<blockquote>
+				<p class="note">Only <del>flex containers with multiple lines</del>
+				<ins><i>multi-line</i> <i>flex containers</i></ins>
+ 				ever have free space in the <i>cross-axis</i> for lines to be aligned in,
+				because in a <del>flex container with a single line</del>
+				<ins><i>single-line</i> flex container</ins>
+ 				the sole line automatically stretches to fill the space.
+			</blockquote>
+
+			<blockquote>
+				<p>If the flex container <del>has only one <i>flex line</i>
+				(even if it's a <i>multi-line</i> <i>flex container</i>)</del>
+				<ins>is <i>single-line</i></ins>
+ 				and has a <i>definite</i> <i>cross size</i>,
+ 				the <i>cross size</i> of the <i>flex line</i>
+ 				is the <i>flex container</i>'s inner <i>cross size</i>.
+			</blockquote>
+
+			<blockquote>
+				<p>If the flex container <del>has only one flex line
+				(even if it's a multi-line flex container),</del>
+				<ins>is <i>single-line</i>,</ins>
+ 				then clamp the line's cross-size to be within the container's computed min and max cross-size properties.
+			</blockquote>
+
+		<li id="change-201409-algo-breaks">
+			Removed text that asserted forced breaking behavior,
+			replaced with reference to fragmentation section.
+			This resolves a conflict in the spec.
+			(Issue <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140925#issue-18">18</a>)
+
+			<blockquote>
+				<p>collect consecutive items one by one
+				until the first time that the next collected item would not fit into the flex container’s inner main size,
+				<ins>(</ins>or until a forced break is encountered<ins>, see [[#pagination]])</ins>.
+				[...]
+				<del>A break is forced wherever the CSS2.1 'page-break-before'/'page-break-after' [[CSS21]]
+				or the CSS3 'break-before'/'break-after' [[CSS3-BREAK]] properties specify a fragmentation break.</del></p>
+			</blockquote>
+
+		<li id="change-201409-inner-base-size">
+			Change the <a>flex shrink factor</a> to multiply by the  <em>inner</em> (not outer) <a>flex base size</a>.
+			(Issue <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140925#issue-9">9</a>)
+
+			<blockquote>
+				<p>For every unfrozen item on the line,
+				multiply its flex shrink factor by its <del>outer</del> <ins>inner</ins> flex base size,
+     			and note this as its <a>scaled flex shrink factor</a>.
+			</blockquote>
+
+		<li id="change-201409-neither">
+			Add back in missing “n” in “neither”...
+			(Issue <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140925#issue-6">6</a>)
+
+			<blockquote>
+				<p>If the <a>cross size property</a> of the <a>flex item</a> computes to ''width/auto'',
+				and <ins>n</ins>either of the <a>cross-axis</a> margins are ''margin/auto'',
+				the <a>flex item</a> is <a>stretched</a>.
+			</blockquote>
+
+		<li id="change-201409-flexed-definite-container">
+			Specify that the <a>flex container</a>’s <a>main size</a> must also be <a>definite</a>
+			for a flex item’s flexed main size to be <a>definite</a>.
+			(Issue <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140925#issue-20">20</a>)
+
+			<blockquote>
+				<p>[If] ... the <a>flex item</a> has a <a>definite</a> <a>flex basis</a>,
+				<ins>and the <a>flex container</a> has a <a>definite</a> <a>main size</a>,</ins>
+    			the <a>flex item’s</a> <a>main size</a> must be treated as <a>definite</a> ...
+			</blockquote>
+
+		<li id="change-201409-min-auto-specified-size">
+			Remove the requirement that the <a>flex basis</a> be ''content'' for the <a>specified size</a> to be defined.
+			The specified size should always win if it is smaller than the intrinsic size.
+			This is particularly important to maintain author expectations for,
+			e.g. <code>&lt;img src="&hellip;" width=40 height=40 title="100x100 image"&gt;</code>.
+			(Issue <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140925#issue-25">25</a>)
+
+			<blockquote>
+				If the item’s <del>computed 'flex-basis' is ''content''
+				and its</del> computed <a>main size property</a> is <a>definite</a>,
+				then the <var>specified size</var> is that size
+			</blockquote>
+	</ul>
+
+<h4 id="change-201409-clarify">
+Clarifications</h4>
+
+	<ul>
+		<li id="change-201409-unclamped-size">
+			Clarify that <a>flex base size</a> is unclamped.
+			(Issue <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140925#issue-21">21</a>)
+
+			<blockquote>
+				<p><ins>When determining the <a>flex base size</a>,
+				the item’s min and max main size properties are ignored
+				(no clamping occurs).</ins>
+				<p>The <a>hypothetical main size</a> is the item's <a>flex base size</a>
+				clamped according to its min and max main size properties.
+			</blockquote>
+
+		<li id="change-201409-table-wrappers">
+			Restored normative status of note about table wrapper boxes normative;
+			it had been accidentally changed in the previous draft.
+			(Issue <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140925#issue-2">2</a>)
+
+		<li id="change-201409-display-longhands">
+			Removed references to 'display' property longhands,
+			since they will be removed from CSS Display Level 3.
+
+		<li id="change-201409-layout-vs-size">
+			Change wording to not imply an unnecessary layout pass.
+			(Issue <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140925#issue-22">22</a>)
+
+			<blockquote>
+				Otherwise,
+				<del>lay out</del><ins>size</ins> the item into the <a>available space</a>
+				using its used <a>flex basis</a> in place of its <a>main size</a>,
+				treating a value of ''content'' as ''width/max-content''.
+			</blockquote>
+
+		<li id="change-201409-clamped-specified">
+			Renamed “clamped size” to “specified size” in the definition of ''min-width/height: auto''.
+
+		<li>
+			Various trivial fixes.
+	</ul>
+
 <h3 id="changes-201403">
 Changes since the 25 March 2014 LCWD</h3>
 
-	This section documents the changes since previous publications.
 	A <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140325">Disposition of Comments</a> is also available.
 
 <h4 id="change-201403-substantive">
@@ -3193,7 +3246,7 @@ Substantive Changes and Bugfixes</h4>
 			<blockquote>
 				<p>On a <a>flex item</a> whose 'overflow' is not ''overflow/visible'',
 				<ins>the following table gives the minimum size:
-				<a value for="min-width" title="auto"><strong>[see table]</strong></a></ins><br>
+				<a value for="min-width" lt="auto"><strong>[see table]</strong></a></ins><br>
 				<del>this keyword specifies as the minimum size the smaller of:</del></p>
 				<del>
 					<ul>
@@ -3254,7 +3307,7 @@ Substantive Changes and Bugfixes</h4>
 			</blockquote>
 
 		<li id="change-201403-clamp-single-line">
-			Clamp a single line flexbox's line cross size to the container's own min/max,
+			Clamp a single line flexbox's line <a>cross size</a> to the container's own min/max,
 			even when the container's size is indefinite.
 			(Issue <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140325#issue-9">9</a>)
 
@@ -3353,7 +3406,7 @@ Clarifications</h4>
 			for the purposes of special behavior (like definiteness).
 			(Issue <a href="http://dev.w3.org/csswg/css-flexbox-1/issues-lc-20140325#issue-25">25</a>)
 			<blockquote>
-				<p>If the cross size property of the flex item computes to auto,
+				<p>If the <a>cross size</a> property of the flex item computes to auto,
 				<ins>and either of the cross-axis margins are auto, the flex item is stretched. Its</ins>
 				<del>its</del> used value &hellip;
 			</blockquote>
@@ -3432,9 +3485,9 @@ Substantive Changes and Bugfixes</h4>
 				<ins>
 					<p>
 						As a special case for handling stretched <a>flex items</a>,
-						if a <a>single-line</a> <a>flex container</a> has a definite cross size,
+						if a <a>single-line</a> <a>flex container</a> has a definite <a>cross size</a>,
 						the outer <a>cross size</a> of any <a>flex items</a> with ''align-self: stretch''
-						is the flex container's inner cross size
+						is the flex container's inner <a>cross size</a>
 						(clamped to the <a>flex item</a>’s min and max <a>cross size</a>)
 						and is considered <a>definite</a>.</p>
 				</ins>
@@ -3445,7 +3498,7 @@ Substantive Changes and Bugfixes</h4>
 			<blockquote>
 				<ins>
 					<p>If the flex item has ''align-self: stretch'', redo layout for its contents,
-					treating this used size as its definite cross size
+					treating this used size as its definite <a>cross size</a>
 					so that percentage-sized children can be resolved.
 
  					<p class="note">Note that this step does not affect the main size of the flex item,
@@ -3473,7 +3526,7 @@ Substantive Changes and Bugfixes</h4>
 			<blockquote>
 				<p><ins>If a <a>cross size</a> is needed to determine the <a>main size</a>
 					(e.g. when the <a>flex item</a>’s <a>main size</a> is in its block axis)
-					and the <a>flex item</a>’s cross size is ''auto'' and not <a>definite</a>,
+					and the <a>flex item</a>’s <a>cross size</a> is ''auto'' and not <a>definite</a>,
 					in this calculation use ''height/fit-content'' as the <a>flex item</a>’s <a>cross size</a>.</ins>
 			</blockquote>
 		<li id="change-2012-intrinsic-sizes">
@@ -3506,14 +3559,14 @@ Substantive Changes and Bugfixes</h4>
 
 					<p>
 						The <a>min-content cross size</a> and  <a>max-content cross size</a> of a flex container
-						are the cross size of the flex container
+						are the <a>cross size</a> of the flex container
 						after performing layout into the given available <a>main-axis</a> space
 						and infinite available <a>cross-axis</a> space.
 
 					<p>
-						The main-size <a title="min-content contribution">min-content</a>/<a>max-content contribution</a> of a <a>flex item</a>
+						The main-size <a lt="min-content contribution">min-content</a>/<a>max-content contribution</a> of a <a>flex item</a>
 						is its outer <a>hypothetical main size</a>
-						when sized under a <a title="min-content constraint">min-content</a>/<a>max-content constraint</a> (respectively).
+						when sized under a <a lt="min-content constraint">min-content</a>/<a>max-content constraint</a> (respectively).
 
 					<p>
 						See [[!CSS3-SIZING]] for a definition of the terms in this section.</p>
@@ -3701,15 +3754,16 @@ Clarifications</h4>
 			Clarified that table anonymous box generation occurs
 			in place of computed value conversion for internal table elements.
 		<li id="clarify-2012-display-blockification">
-			Clarified interaction of flex item determination with 'display-inside' / 'display-outside'
+			Clarified interaction of flex item determination with <css>display-inside</css> / <css>display-outside</css>
 			(the new longhands of 'display' defined in the <a href="http://www.w3.org/TR/css-display/">CSS Display Module Level 3</a>).
 			<blockquote>
-				<ins><p>If the specified 'display-outside' of an in-flow child of an element that generates a <a>flex container</a>
+				<ins><p>If the specified <css>display-outside</css> of an in-flow child of an element that generates a <a>flex container</a>
 					is ''inline-level'',
 					it computes to ''block-level''.
 					(This effectively converts any inline 'display' values to their block equivalents.)</p>
 				</ins>
 			</blockquote>
+			Note: This change was <a href="#change-201409-display-longhands">reverted</a>.
 		<li id="clarify-2012-overflow-flex-containers">
 			Clarified that 'overflow' applies to flex containers.
 		<li id="clarify-2012-first-line-letter">

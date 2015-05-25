@@ -10,7 +10,7 @@ Editor: Tab Atkins Jr., Google, http://xanthir.com/contact/
 Editor: Elika J Etemad, Invited Expert, http://fantasai.inkedblade.net/contact
 Abstract: This specification defines various scoping/encapsulation mechanisms for CSS, including scoped styles and the ''@scope'' rule, Shadow DOM selectors, and page/region-based styling.
 Ignored Terms: content, shadowroot, scoped
-Link Defaults: selectors (dfn) child combinator, html5 (element) style
+Link Defaults: selectors (dfn) child combinator, html (element) style
 Issue Tracking: Bugzilla https://www.w3.org/Bugs/Public/buglist.cgi?component=Scoping&list_id=47685&product=CSS&resolution=---
 </pre>
 
@@ -41,9 +41,9 @@ Scoping Mechanisms</h3>
 	“Scoping” consists of three somewhat independent concepts,
 	which are in practice generally used together:
 
-	* A declaration can be scoped to <a>scoping root</a>,
+	* A declaration can be scoped to a <a>scoping root</a>,
 		which <a href="http://dev.w3.org/csswg/css-cascade/#cascade-scope">affects its cascading behavior</a>. [[!CSS3CASCADE]]
-		(Alternately, a style rule can be scoped to <a>scoping root</a>,
+		(Alternately, a style rule can be scoped to a <a>scoping root</a>,
 		which scopes all of the declarations it contains to that <a>scoping root</a>.)
 
 	* A selector can be either <a>scope-contained</a> or <a>scope-filtered</a> to a <a>scoping root</a>,
@@ -230,7 +230,7 @@ Shadow Encapsulation</h2>
 	An <a>insertion point</a> must not generate any boxes.
 	Instead, its <a>distributed nodes</a> generate boxes as normal,
 	as if they all replaced the <a>insertion point</a> in-place.
-	<span class='note'>(Akin to the behavior of ''display-outside: contents''.)</span>
+	<span class='note'>(Akin to the behavior of 'display-outside: contents'.)</span>
 
 <h3 id='selectors-data-model'>
 Shadow DOM Selection Model</h3>
@@ -250,6 +250,17 @@ Shadow DOM Selection Model</h3>
 	and their descendants,
 	ordered by a pre-order traversal.
 
+	A selector is <dfn>in the context of a shadow tree</dfn>
+	if it is in a stylesheet attached to the shadow tree
+	(that is, present in the <code>ShadowRoot.styleSheets</code> list),
+	or it is used in an API that is <dfn>rooted in a shadow tree</dfn>.
+
+	<div class='issue'>
+		Need to get DOM to hook this term.
+		<code>querySelector()</code>/etc are <a>rooted in a shadow tree</a>
+		if they're called on a ShadowRoot or an element in a shadow tree.
+	</div>
+
 <h4 id='host-element-in-tree'>
 Host Elements in a Shadow Tree</h4>
 
@@ -264,12 +275,9 @@ Host Elements in a Shadow Tree</h4>
 	each <a>shadow tree</a> sees <em>itself</em> as the contents of the <a>host element</a>,
 	not the other <a>shadow trees</a>.
 
-	The <a>host element</a> is not selectable by <strong>any means</strong>
-	except for the '':host'' and '':host-context()'' pseudo-classes.
-	That is, in this context the <a>shadow host</a>
-	has no tagname, ID, classes, or attributes,
-	and the only additional information is has is that the '':host'' pseudo-class matches it.
-	In particular, the <a>host element</a> isn't matched by the ''*'' selector either.
+	When considered within its own <a>shadow trees</a>,
+	the <a>host element</a> is <a>featureless</a>.
+	Only the '':host'', '':host()'', and '':host-context()'' pseudo-classes are allowed to match it.
 
 	<details class='why'>
 		<summary>Why is the shadow host so weird?</summary>
@@ -308,17 +316,17 @@ Shadow DOM Selectors</h3>
 Selecting Into the Light: the '':host'', '':host()'', and '':host-context()'' pseudo-classes</h4>
 
 	The <dfn selector>:host</dfn> pseudo-class,
-	when evaluated in the context of a <a>shadow tree</a>,
+	when evaluated <a>in the context of a shadow tree</a>,
 	matches the <a>shadow tree's</a> <a>host element</a>.
 	In any other context,
 	it matches nothing.
 
-	The <dfn selector id="selectordef-host-function" title=':host()'>:host()</dfn> function pseudo-class
+	The <dfn selector id="selectordef-host-function" lt=':host()'>:host()</dfn> function pseudo-class
 	has the syntax:
 
 	<pre>:host( <<compound-selector>> )</pre>
 
-	When evaluated in the context of a <a>shadow tree</a>,
+	When evaluated <a>in the context of a shadow tree</a>,
 	it matches the <a>shadow tree's</a> <a>host element</a>
 	if the <a>host element</a>,
 	in its normal context,
@@ -366,7 +374,7 @@ Selecting Into the Light: the '':host'', '':host()'', and '':host-context()'' ps
 
 	<pre>:host-context( <<compound-selector>> )</pre>
 
-	When evaluated in the context of a <a>shadow tree</a>,
+	When evaluated <a>in the context of a shadow tree</a>,
 	the '':host-context()'' pseudo-class matches the <a>host element</a>,
 	if the <a>host element</a> or one of its ancestors matches the provided <<compound-selector>>.
 	For the purpose of this pseudo-class,
@@ -389,7 +397,7 @@ Selecting Into the Dark: the ''::shadow'' pseudo-element</h4>
 
 	If an element has at least one <a>shadow tree</a>,
 	the <dfn>::shadow</dfn> pseudo-element matches the <a>shadow roots</a> themselves.
-	In HTML, the <a>shadow root</a> is represented by <a interface>ShadowRoot</a> objects.
+	In HTML, the <a>shadow root</a> is represented by {{ShadowRoot}} objects.
 
 	The ''::shadow'' pseudo-element must not generate boxes,
 	unless specified otherwise in another specification.
@@ -642,7 +650,7 @@ Region-based Styling: the ''::region'' pseudo-element</h3>
 
 	When the ::region pseudo-element is appended to a
 	<a href="http://www.w3.org/TR/css3-selectors/#selector-syntax">selector</a>
-	that matches one or more <span title="CSS Region">CSS Regions</span>,
+	that matches one or more CSS Regions,
 	this creates a 'flow fragment' selector.
 	The flow fragment selector specifies
 	which range of elements in the flow

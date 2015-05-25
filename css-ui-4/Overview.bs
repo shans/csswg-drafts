@@ -1,0 +1,778 @@
+<h1>CSS Basic User Interface Module Level 4</h1>
+
+<pre class='metadata'>
+ED: http://dev.w3.org/csswg/css-ui-4/
+Previous Version: http://www.w3.org/TR/css3-ui/
+Shortname: css-ui
+Level: 4
+Group: csswg
+!Issue Tracking: https://wiki.csswg.org/spec/css4-ui#css4-ui-issues-list
+Status: ED
+Editor: Florian Rivoal, Invited Expert, florian@rivoal.net, http://florian.rivoal.net
+Ignored Terms: box-sizing, resize, text-overflow, caret-color, nav-up, nav-down, nav-left, nav-right
+Link Defaults: css-position-3 (property) position
+Link Defaults: css21 (property) float
+Link Defaults: css21 (property) clear
+Link Defaults: selectors-4 (selector) :checked
+Link Defaults: selectors-4 (selector) :enabled
+Link Defaults: selectors-4 (selector) :disabled
+Abstract: This is a delta specification over CSS-UI Level 3.
+          Once the level 3 specification is final,
+          its content will be integrated into this specification,
+          which will then replace it.
+          Until then, CSS-UI Level 4 only contains additions and extensions to level 3.
+</pre>
+
+<h2 id="intro">Introduction</h2>
+
+	Issue: Add final level 3 content
+
+<h2 id="interaction">Module Interactions</h2>
+
+	Issue: Add final level 3 content
+
+<h2 id="box-model">Box Model addition</h2>
+
+<h3 id="box-sizing">'box-sizing' property</h3>
+
+	Issue: Add final level 3 content
+
+<h2 id="outline-props">Outline properties</h2>
+
+	Issue: Add final level 3 content
+
+<h3 id="outline">'outline' property</h3>
+
+	Issue: Add final level 3 content
+
+<h3 id="outline-width">'outline-width' property</h3>
+
+	Issue: Add final level 3 content
+
+<h3 id="outline-style">'outline-style' property</h3>
+
+	Issue: Add final level 3 content
+
+<h3 id="outline-color">'outline-color' property</h3>
+
+	Issue: Add final level 3 content
+
+<h2 id="resizing-and-overflow">Resizing &amp; Overflow</h2>
+
+	Issue: Add final level 3 content
+
+<h3 id="resize">'resize' property</h3>
+
+	Issue: Add final level 3 content
+
+<h3 id="text-overflow"> Overflow Ellipsis: the 'text-overflow' property</h3>
+
+	Issue: Add final level 3 content
+
+<h2 id="pointing-keyboard">Pointing Devices and Keyboards</h2>
+
+<h3 id="pointer-interaction">Pointer interaction</h3>
+
+<h4 id="cursor">'cursor' property</h4>
+
+	Issue: Add final level 3 content
+
+	Issue: Amend the definition of ''cursor/auto''
+	to show ''cursor/pointer'' rather than ''cursor/text''
+	over text when 'user-select' is ''user-select/none''.
+
+<h3 id="insertion-caret">Insertion caret</h3>
+
+<h4 id="caret-color">Coloring the insertion caret: 'caret-color'</h4>
+
+	Issue: Add final level 3 content
+
+	Issue: Amend the definition of ''caret-color/auto'' to highlight
+	the fact that when 'caret-shape' is ''caret-shape/block'',
+	ensuring good visibility and contrast means not using
+	currentColor.
+
+<h4 id="caret-blink-time">Blinking speed of the insertion caret: 'caret-blink-time'</h4>
+
+<pre class='propdef'>
+Name: caret-blink-time
+Value: auto | <<time>>{1,2}
+initial: auto
+Applies to: elements that accept input
+Inherited: yes
+Percentages: N/A
+Media: interactive
+Computed value: Same as specified value, except if only 1 <<time>> is specified, in which case the computed value has 2 instances of <<time>>, both with the same value as the one which was specified.
+Animatable: no
+</pre>
+
+On most platforms and in most UAs,
+the text insertion caret blinks.
+This property allows the author
+to control the speed at which it blinks,
+or to turn off blinking entirely.
+
+Issue: Do we actually need fine control over the timing,
+or would "caret-blink: auto | no-blink" be enough?
+
+When the computed value is ''caret-blink-time/auto'',
+the UA determines the speed at which the cursor blinks,
+if at all. It should follow platform conventions and settings.
+
+If two <<time>> values are specified,
+the caret blinks.
+The first value indicates how long the caret stays on,
+and the second value how long the caret stays off.
+If the second value is ommitted,
+it defaults to the same as the first one.
+Both values must be zero or more.
+
+Note: See <a href="http://www.w3.org/TR/WCAG20/#seizure">Guideline 2.3: Seizures: Do not design content in a way that is known to cause seizures</a> [[WCAG20]].
+
+If the second value is 0,
+or if both values are 0,
+the caret does not blink and is always on.
+
+Note: It is recommended to stop the caret from blinking using ''caret-blink-time: 0''
+when applying custom animations using [[CSS3-ANIMATIONS]],
+to prevent the blinking and the animation to interfere.
+
+If the first value is 0 and the second is not,
+the caret is always off,
+making it effectively invisible.
+
+<div class=example>
+	The following rule gives a caret that stays on for 1 second,
+	and off for half a second.
+	<pre><code class="lang-css">
+input { caret-blink-time: 1s 500ms; }
+	</code></pre>
+</div>
+
+<div class=example>
+	A user who is disturbed by or has adverse reactions to blinking or flashing visuals
+	may want to make all carets static and non-blinking,
+	regardless of platform defaults or author settings.
+	This can be accomplished by with the folliwing rule in the user stylesheet.
+
+	<pre><code class="lang-css">
+/* prevent the caret from blinking/flashing */
+:read-write { caret-blink-time: 0 !important; }
+
+/* prevent changes of caret-color, including animations */
+:read-write { caret-color:auto !important; }
+	</code></pre>
+</div>
+
+UAs that do not have an editable user stylesheet
+should provide a setting to disable
+<a href="http://www.w3.org/TR/WCAG20/#blinksdef">blinking</a>,
+<a href="http://www.w3.org/TR/WCAG20/#flash-def">flashing</a>
+and animated carets.
+UAs that do have an editable user stylesheet may want to provide this setting as well.
+See [[WCAG]] <a href="http://www.w3.org/TR/WCAG20/#time-limits-pause">Guideline 2.2</a>
+and <a href="http://www.w3.org/TR/WCAG20/#seizure">Guideline 2.3</a>
+for details.
+
+<div class=example>
+	Normally, the caret blinks between on and off.
+	This makes it alternate between 2 colors.
+	<pre><code class="lang-css">
+textarea {
+        caret-blink-time: 0;
+        caret-color: blue;
+        animation: caret-alternate 2s step-end infinite;
+}
+@keyframes caret-alternate {
+	50% { caret-color: red; }
+}
+	</code></pre>
+
+	The simulated rendering below illustrates how this would look.
+	<style>
+@-webkit-keyframes caret-alternate { 50% { border-color: red; } }
+@keyframes caret-alternate { 50% { border-color: red; } }
+	</style>
+	<div style="border:inset; background: white; width: 10em;">
+		Text area
+		with color-alternating caret<span style="border-right: 2px solid blue;animation: caret-alternate 2s step-end infinite;-webkit-animation: caret-alternate 2s step-end infinite;"></span>
+	</div>
+</div>
+
+
+<h4 id="caret-shape">Shape of the insertion caret: 'caret-shape'</h4>
+
+<pre class='propdef'>
+Name: caret-shape
+Value: ''auto'' | ''bar'' | ''block'' | ''underscore''
+initial: auto
+Applies to: elements that accept input
+Inherited: yes
+Percentages: N/A
+Media: interactive
+Computed value: Same as specified value
+Animatable: no
+</pre>
+
+This property allows authors to specify
+the desired shape of the text insertion caret.
+
+Within the context of this definition, <dfn>character</dfn> is
+to be understood as <em>extended grapheme cluster</em>,
+as defined in [[!UAX29]], and <dfn>visible character</dfn>
+means a character with a non-zero advance measure.
+
+<dl dfn-type=value dfn-for=caret-shape>
+	<dt><dfn>auto</dfn>
+	<dd>The UA determine the shape of the caret.
+	It should match platform conventions,
+	and may be adjusted based on context.
+	For example, if a UA switches between insert mode and overtype mode when the
+	user presses the <em>insert</em> key on their keyboard,
+	it may show a ''caret-shape/bar'' caret in insert mode,
+	and a ''caret-shape/block'' caret in overtype mode.
+	<dt><dfn>bar</dfn>
+	<dd>The UA must render the text insertion caret
+	as a thin bar placed at the insertion point.
+	This means it is between, before, or after characters, not over them.
+	It should be perpendicular to the inline progression direction,
+	although UAs may render it slanted when inserting italic or oblique text.
+	<dt><dfn>block</dfn>
+	<dd>The UA must render the text insertion caret
+	as a rectangle overlapping the next visible character following the insertion point.
+	If there is no visible character after the insertion point,
+	the UA must render the caret after the last visible character.
+	UAs may render it as a slanted rectangle when inserting italic or oblique text.
+	<dt><dfn>underscore</dfn>
+	<dd>The UA must render the text insertion caret
+	as a thin line <a>under</a> (as defined in [[!CSS-WRITING-MODES-3]]
+	the next visible character following the insertion point.
+	If there is no visible character after the insertion point,
+	the UA must render the caret after the last visible character.
+</dl>
+
+The width of the ''caret-shape/block'' and ''caret-shape/underscore'' carets
+should be the advance measure of the next visible character after the insertion point,
+or ''1ch'' if there is no next visible character
+or if this information is impractical to determine.
+
+When determining the orientation and appearance of the caret,
+UAs must take into account the <a>writing mode</a> [[!CSS-WRITING-MODES-3]]
+and must apply transformations [[!CSS-TRANSFORMS-1]].
+If the edited text is laid out out on a path,
+for instance by using the SVG <{textPath}> element,
+UAs should also account for this.
+
+The stacking position of the caret is left undefined, within the following constraints:
+<ul>
+	<li>The caret must not be obscured by the background of the element
+	<li>UAs must render ''caret-shape/block'' carets so that the
+	character it overlaps with is not obscured by the caret
+</ul>
+
+<div class=example>
+	This illustrates the typical appearance of the various caret shapes.
+	In each of the sample renderings below,
+	the insertion point is between the letters u and m.
+
+	<style>
+@-webkit-keyframes caret-bar { 50% { outline-color: transparent; } }
+@-webkit-keyframes caret-block { 50% { background: transparent; } }
+@-webkit-keyframes caret-underscore { 50% { border-color: transparent; } }
+@keyframes caret-bar { 50% { outline-color: transparent; } }
+@keyframes caret-block { 50% { background: transparent; } }
+@keyframes caret-underscore { 50% { border-color: transparent; } }
+#caret-shape-example {
+	min-width: 25em;
+}
+#caret-shape-example,
+#caret-shape-example td,
+#caret-shape-example th {
+	border: solid 1px;
+}
+#caret-shape-example td+td {
+	background:white;
+}
+	</style>
+	<table id="caret-shape-example">
+		<tr><th>'caret-shape'<th>Sample rendering
+		<tr><td>''bar''<td>Lorem ipsu<span style="outline: 1px solid black;animation: caret-bar 2s step-end infinite;-webkit-animation: caret-bar 2s step-end infinite;">&#8203;</span>m
+		<tr><td>''block''<td>Lorem ipsu<span style="background: #bbb; -webkit-animation: caret-block 2s step-end infinite;animation: caret-block 2s step-end infinite;">m</span>
+		<tr><td>''underscore''<td>Lorem ispu<span style="border-bottom: 2px solid black; -webkit-animation: caret-underscore 2s step-end infinite; animation: caret-underscore 2s step-end infinite;">m</span>
+	</table>
+</div>
+
+
+<div class=example>
+	''caret-shape/underscore'' or ''caret-shape/block'' carets are commonly used
+	in terminals and command lines,
+	as in this example.
+	<pre><code class="lang-css">
+.console {
+	caret-shape: underscore;
+	background: black;
+	color: white;
+	font-family: monospace;
+	padding: 1ex;
+}
+	</code></pre>
+
+	<style>
+@-webkit-keyframes terminal-caret { 50% { border-color: transparent; } }
+@keyframes terminal-caret { 50% { border-color: transparent; } }
+	</style>
+	<pre style="background: black; color: white; font-family: monospace; padding: 1ex">
+	user@host:css-ui-4 $ ls -a
+	. .. Overview.bs Overview.html
+	user@host:css-ui-4 $ <span style="border-bottom: 2px solid white;animation: terminal-caret 2s step-end infinite;-webkit-animation: terminal-caret 2s step-end infinite;">&nbsp;</span>
+	</pre>
+</div>
+
+<h4 id="caret">Insertion caret shorthand: 'caret'</h4>
+
+<pre class='propdef'>
+Name: caret
+Value: <<'caret-color'>> || <<'caret-blink-time'>> || <<'caret-shape'>>
+initial: auto
+Applies to: elements that accept input
+Inherited: yes
+Percentages: N/A
+Media: interactive
+Computed value: See individual properties
+Animatable: See individual properties
+</pre>
+
+This property is a shorthand for setting
+'caret-color', 'caret-blink-time' and 'caret-shape' in one declaration.
+Omitted values are set to their initial values.
+
+<div class=example>
+	This example illustrates using the various caret related properties
+	in combination.
+	They are used here to simulate the appearance of the caret
+	on an old phosphor computer monitor.
+
+	<pre><code class="lang-css">
+#old-screen {
+	caret: block 0s;
+	animation: old-caret 2s infinite;
+	/*styling of the screen omitted for brevity */
+}
+@keyframes old-caret {
+	from, 50% { caret-color: green; }
+	75%, to { caret-color: transparent; }
+}
+	</code></pre>
+	<style>
+#old-screen {
+	border-radius: 1em;
+	padding: 1em;
+	color: green;
+	font-family: monospace;
+	background: repeating-linear-gradient(#030 0px, #030 1px, #020 1px, #020 3px);
+}
+#old-screen span {
+	display:inline-block;
+	caret: block 0s;
+	animation: caret-old 2s  infinite;
+	-webkit-animation: caret-old 2s  infinite;
+
+}
+@keyframes caret-old {
+	from, 50% { background-color: green; }
+	75%, to { background-color: transparent; }
+}
+@-webkit-keyframes caret-old {
+	from, 50% { background-color: green; }
+	75%, to { background-color: transparent; }
+}
+	</style>
+	<div id="old-screen" style="height: 100px">&gt; <span>&nbsp;</span></div>
+</div>
+
+<h3 id="keyboard">Keyboard control</h3>
+
+<h4 id="nav-dir">Directional focus navigation: the 'nav-up', 'nav-right', 'nav-down', 'nav-left' properties</h4>
+
+	Issue: Add final level 3 content
+
+<h4 id="input-method-editor">Obsolete: the ime-mode property</h4>
+
+	Issue: Add final level 3 content
+
+<h2 id="user-interaction">User Interaction</h2>
+
+<h3 id="content-selection">Controlling content selection</h3>
+
+	The 'user-select' property enables authors to specify
+	which elements in the document can be selected by the user and how.
+	This allows for easier interactions when not
+	all elements are equally useful to select,
+	avoiding accidental selections of neighbouring content.
+
+	<pre class='propdef'>
+		Name: user-select
+		Value: auto | text | none | element | all
+		Initial: auto
+		Inherited: no
+		Applies to: all elements
+		Media: interactive
+		Computed value: See below
+	</pre>
+
+	The computed value is the specified value,
+	except:
+	<ol>
+		<li>on <a>editable element</a>s
+		where the computed value is always ''user-select/element''
+		regardless of the specified value
+		<li>when the specified value is ''user-select/auto'',
+		which computes one of the other values as defined below
+	</ol>
+
+	For the purpose of this specification,
+	an <dfn>editable element</dfn> is either
+	an <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#editing-host">editing host</a>
+	or a <a href="http://www.w3.org/TR/html/forms.html#mutability">mutable</a> form control with textual content,
+	such as <{textarea}>.
+
+
+	<dl dfn-type=value dfn-for=user-select>
+		<dt><dfn>auto</dfn>
+		<dd>The computed value of ''user-select/auto'' is determined as follows:
+		<ul>
+			<li>If the element is an <a>editable element</a>,
+			the computed value is ''element''
+			<li>Otherwise, if the element is not absolutely positioned
+			and the computed value of 'user-select' on the parent of this element is ''all'',
+			the computed value is ''all''
+			<li>Otherwise, if the element is not absolutely positioned
+			and the computed value of 'user-select' on the parent of this element is ''user-select/none'',
+			the computed value is ''user-select/none''
+			<li>Otherwise, the computed value is ''text''
+		</ul>
+
+		Note: This unusual combination of a non inherited property with an initial value of ''user-select/auto''
+		whose computed value depends on the parent element
+		makes it possible to create what is effectively selective inheritance.
+		This was initially proposed by Microsoft in IE to introduce a behavior similar to inheritance
+		except that the ''element'' value does not inherit.
+		This also enables the behavior introduced by Mozilla in Firefox where absolutely positioned
+		children do not inherit from their parent.
+
+		<dt><dfn>text</dfn>
+		<dd>The element imposes no constraint on the selection.
+
+		Issue: Shouldn't we call this "normal" instead? The selection
+		is not restricted to textual elements, and may contain tables, images...
+		The webkit documentation claims their implementation of text only selects text,
+		while auto selects anything,
+		but sine webkit computes ''user-select/auto'' into ''text'',
+		this does not match reality.
+
+		<dt><dfn>none</dfn>
+		<dd>
+		The UA must not allow selections to be started in this element.
+
+		A selection started outside of this element must not end in this element.
+		If the user attempts to create such a selection,
+		the UA must instead end the selection range at the element boundary.
+
+		Issue: As of the time of writing, experimental implementations do not all behave like this.
+		Firefox does.
+		Chrome and Safari almost do: for a selection started after the element
+		and trying to go backwards into the element
+		they behave as specified here,
+		but for a selection started before the element
+		and trying to go into the element
+		they behave as if the element has ''all'' and select it entirely.
+		IE does not restrict selections started outside of the element
+		from going into it at all.
+		Another difference is that in Chrome and Safari,
+		if the user attempts to start a selection inside a ''user-select: none'',
+		and to end the selection out of it,
+		a selection will be created from the boundary of the element
+		to the user-designated end-point.
+		Firefox and Internet explorer behave as prescribed in this specification
+		and do not create a selection at all.
+
+		However, if this element has descendants on which the computed value of 'user-select' is not ''user-select/none'',
+		selections that start and end within these descendants are allowed.
+
+		The UA must allow selections to extend across this element.
+		In this case, UAs which support multiple ranges per selection
+		may exclude this element from the selection.
+		If the element has descendants on which 'user-select' does not compute to ''user-select/none'',
+		these descendants must be included in a selection extending across the element.
+
+		As 'user-select' is a UI convenience mechanism,
+		not a copy protection mechanism,
+		the UA may provide an alternative way for the user
+		to explicitly select the text even when 'user-select' is ''user-select/none''.
+
+		Note: ''user-select/none'' is not a copy protection mechanism,
+		and using it as such is ineffective:
+		User Agents are allowed to provide ways to bypass it,
+		it will have no effect on legacy User Agents that do not support it,
+		and the user can disable it through the user style sheet or equivalent mechanisms
+		on UAs that do anyway.
+		Instead, ''user-select/none'' is meant to
+		make it easier for the user to select the content they want,
+		by letting the author disable selection on UI elements
+		that are not useful to select.
+
+		<dt><dfn>element</dfn>
+		<dd>UAs must not allow a selection which is started in this element
+		to be extended outside of this element.
+
+		A selection started outside of this element must not end in this element.
+		If the user attempts to create such a selection,
+		the UA must instead end the selection range at the element boundary.
+
+		The UA must allow selections to extend across this element,
+		and such selections must include the content of the element.
+
+		Issue: At the time of writing, browsers behave differently from eachother
+		about selections started outside and selections going across the element.
+		The behavior can be observed even on browsers that do not explicitly support ''element''
+		by trying to select into / across a <{textarea}> or a contenteditable element.
+
+		Issue: Not sure the name ''user-select:element'' is particularly clear
+		about what this means.
+		How about something like "contain" or "inside" instead?
+
+		<dt><dfn>all</dfn>
+		<dd>The content of the element must be selected atomically:
+		If a selection would contain part of the element,
+		then the selection must contain the entire element including all its descendants.
+		If the element is selected
+		and the computed value of 'user-select' on its parent is ''all'',
+		then the parent must be included in the selection, recursively.
+
+		If this element has descendants on which the computed value of 'user-select' is not ''all''
+		and if a selection is entirely contained in these descendants,
+		then the selection is not extended to include this whole element.
+	</dl>
+
+	Note: Selections can include more than just text and extend over images, tables, videos, etc.
+	The behavior when copying and pasting a such selections is out of scope for this specification.
+
+	The following additions are made to the UA stylesheet for HTML:
+	<pre><code class="lang-css">
+	button, meter, progress, select { user-select: none; }
+	</code></pre>
+
+	Issue: the list above is incomplete, and needs to include
+	at least the various button-like variants of <{input}>.
+
+<h2 id="form-styling">Form Control Styling</h2>
+
+<h3 id="appearance-switching">Switching appearance</h3>
+
+While the way most elements in a document look can be fully controlled by CSS,
+form controls are typically rendered by UAs using native UI controls of the host operating system,
+which can neither be replicated nor styled using CSS.
+
+This specification introduces the 'appearance' property
+to provide some control over this behavior.
+In particular, using ''appearance: none'' allows authors
+to suppress the native style of form controls,
+so that CSS can be used to fully restyle them.
+
+<pre class="propdef">
+Name: appearance
+Value: ''auto'' | ''none'' | ''button''
+Initial: auto
+Applies To: all elements
+Inherited: no
+Computed value: As specified
+Media: all
+</pre>
+
+Issue: Should ''appearance/auto'' compute to ''appearance/none'' on regular elements?
+I would say no:
+to be consistent, we should then have ''appearance/auto'' compute to ''button'' on buttons, etc.
+If we did that,
+every time we introduced a new value,
+we would change what ''appearance/auto'' computes to on some elements,
+which doesn't sounds desirable.
+
+Note: This specification intentionally refrains from making the appearance
+of all possible form controls and sub-controls available as values,
+as had previously been attempted by earlier proposals for this property
+and by several UA vendors in experimental implementations.
+Experience has shown that such a list would be very long and not practical to maintain,
+and UAs would need to add non-standard values
+to account for the behavior of non-standard pseudo-elements
+sometimes used to implement form controls.
+Moreover, many values of such an enumeration only make sense
+on a single element or pseudo-element,
+and are never used outside of the UA stylesheet.
+Instead, this specification will only provide
+''appearance/auto'', ''appearance/none'', and
+values which are useful in an author or user stylesheet
+and for which interoperability can be achieved.
+UAs cannot therefore use the 'appearance' property
+in the UA stylesheet to give each control is native look and feel,
+and must use ''appearance:auto'' instead.
+
+Issue: IE supports -webkit-appearance, and also includes the textfield value.
+Presumably this was done due to compatibility problems,
+so we may want to include it as well.
+
+<dl dfn-type=value dfn-for=appearance>
+	<dt><dfn>auto</dfn>
+	<dd>UAs may render form controls using native controls of the host operating system
+	or with a look and feel not otherwise expressible in CSS.
+
+	Elements other than form controls must be rendered as if ''appearance/none'' had been specified.
+	<dt><dfn>none</dfn>
+	<dd> The element is rendered following the usual rules of CSS.
+	Replaced elements other than form controls are not affected by this,
+	and remain replaced elements.
+	From controls are <em>not</em> made to look like native controls of the host operating system.
+	See below for details.
+
+	Issue: Shouldn't this be called "normal" instead?
+	''appearance/none'' makes it sound like the targeted element will disappear.
+	<dt><dfn>button</dfn>
+	<dd>The element is rendered with the look and feel of a push button,
+	similar to the rendering of the HTML <{button}> element.
+
+	Issue: There are strong concerns as to whether this property should have any value
+	other than ''appearance/auto'' and  ''appearance/none''.
+	The ''appearance/button'' value may be necessary due to backward compatibility concerns,
+	but if it is not, there is a strong possibility that it will be dropped.
+</dl>
+
+On form control elements where the computed value is ''appearance/auto''
+and on other elements where the computed value is neither ''appearance/auto'' nor ''appearance/none'',
+UAs may disregard some CSS properties
+to ensure that the intended appearance is preserved,
+or because these property may not be meaningful for the chosen appearance.
+However, the following properties must not be disregarded:
+<ul>
+	<li>'appearance'
+	<li>'display'
+	<li>'visibility'
+	<li>'position'
+	<li>'top'
+	<li>'right'
+	<li>'bottom'
+	<li>'left'
+	<li>'float'
+	<li>'clear'
+</ul>
+
+Issue: Are there more properties should include in this list?
+Should we remove some?
+Should whitelist the properties that are ok to ignore instead of
+blacklisting those that are not?
+Either way, UAs do ignore some properties when rendering form controls,
+so this specification needs to say something about this.
+
+All decorative visual aspects of a form control which are not caused by a CSS style rule
+must be suppressed when the appearance is changed using 'appearance',
+even if the UA's internal representation for this element
+was composed of multiple elements or pseudo elements combined together.
+For example, <{select}> is often rendered with an arrow on the right side
+indicating that the list will be expanded if the element is clicked,
+If the computed value of 'appearance' is ''appearance/none'', this
+must disappear.
+
+However, the UA must preserve aspects of the form control
+which are necessary to operate the control with its original semantics.
+This does not include aspects of a control which are merely needed to observe the state the control is in,
+only those that are needed for the user to be able to modify the state of the control.
+The UA may however give them a different look and feel
+as long as it remains possible to operate the control.
+For example,
+the slider of an <code class="lang-markup">&lt;input type=range></code> is preserved
+(or replaced by an equivalent mechanism)
+even if 'appearance' is ''appearance/none''
+as it would otherwise not be possible to change the value of the range with the mouse or touchscreen.
+On the other hand,
+the check mark in an <code class="lang-markup">&lt;input type=checkbox checked></code>
+must be suppressed,
+as it merely indicates the state the element is in,
+which can be styled in different ways using the '':checked'' selector.
+
+Issue: UAs are inconsistent about the preceding two paragraphs.
+What is specified here attempts to give some logic
+to what is preserved and what is not,
+based on the use-cases for 'appearance'.
+
+UAs should include in their User Agent stylesheet style rules
+to give form controls a recognizable shape when 'appearance' is ''appearance/none''.
+
+Note: Authors may therefore need to override these UA style rules to get the styling
+they intended, possibly by using ''all: unset''.
+
+Issue: This usage of the 'all' property would remove focus indicators
+created by the 'outline' property,
+which seems undesirable.
+Using ''all: default'' would not solve it, as it would fail to remove
+the UA styles as intended.
+How can we mitigate this?
+
+The behavior and semantics of elements remain defined by the host language,
+and are not influenced by this property.
+For example, regardless of the computed value of 'appearance':
+<ul>
+	<li>Elements which can be in different states keep this ability,
+	and the relevant pseudo-classes match as usual.
+	<li>If a <{select}> element is activated,
+	the UI to choose one of the associated <{option}> elements is shown
+	(although it may look different).
+	<li>Event handlers attached to the element trigger as usual.
+</ul>
+Conversely, changing the appearance of an element must not cause it
+to acquire the semantics, pseudo classes, event handlers, etc
+that are typical of the element whose appearance it acquires.
+For example, neither '':enabled'' nor '':disabled'' match on
+a <{div}> styled with ''appearance: button''.
+The ability for an element to be focused
+is also not changed by the 'appearance' property.
+
+<div class=example>
+	An author wanting to customize the look and feel of check boxes in HTML could use the following:
+	<pre><code class="lang-css">
+input[type=checkbox] {
+	appearance: none;
+	all: unset;
+	width: 1em;
+	height: 1em;
+	display: inline-block;
+	background: red;
+}
+input[type=checkbox]:checked {
+	border-radius: 50%;
+	background: green;
+}
+	</code></pre>
+
+	<code class="lang-markup">&lt;input type="checkbox"></code> would be rendered as
+	<span style="display: inline-block; width: 1em; height: 1em; background: red;"></span>,
+	while <code class="lang-markup">&lt;input type="checkbox" checked></code> would be rendered as
+	<span style="display: inline-block; width: 1em; height: 1em; background: green; border-radius: 50%;"></span>,
+	and activating (for example by clicking) the element would toggle the state as usual.
+</div>
+
+<hr title="Separator from footer">
+
+
+<h2 class="no-num" id="acknowledgments">Appendix A. Acknowledgments</h2>
+
+This appendix is <em>informative</em>.
+
+	Issue: Add final level 3 content
+
+<h2 class="no-num" id="changes">Appendix B. Changes</h2>
+
+This appendix is <em>informative</em>.
+
+	Issue: List changes sinces Level 3
+
+<h2 class="no-num" id="default-style-sheet">Appendix C. Default style sheet additions for HTML</h2>
+
+	Issue: Add final level 3 content

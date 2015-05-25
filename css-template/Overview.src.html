@@ -86,40 +86,30 @@ template.
 
 <p>CSS is a simple, declarative language for creating style sheets that
 specify the rendering of HTML and other structured documents. This
-Note contains experimental ideas for layout templates and alternative
+Note contains experimental ideas for <em>layout templates</em> and alternative
 layout models in CSS.
 
-<p>At the moment, this
-module defines a typographic grid for CSS. It has
-features to set up a grid template and to flow content into it.
+<p>At the moment, it defines a <em>typographic grid</em> for
+CSS. It has features to set up a grid-based template, to style the
+<em>slots</em> of the template and to flow content into them.
 
-<p>The 'grid' property sets up a matrix of rows and
-columns and designates empty areas and areas for content (called
-“slots”). The
-'flow' property specifies into which slot an element flows. A grid
-template is like a table in that the various slots are aligned in rows
-and columns and can automatically adapt to each other's size, and it is
-like absolute positioning in that elements can be put in arbitrary
-slots so that the visual order becomes independent of the document
-order.
+<p>A grid template can be seen as a cross between table layout
+(align blocks of text automatically in two-dimensions) and absolute
+positioning (position elements in arbitrary order), but it also has
+unique
+features of its own.
 
-<p>The <span>'::slot()' pseudo-element</span> allows to style the
-slots (backgrounds, borders, etc.)
+<p>Grid templates can also be associated with pages in paged media
+(via '@page'), to create <em>page templates.</em>
 
-<p>Grid templates can also be associated with pages in
-paged media, to create page templates.
+<p>Slots can form <em>chains,</em> to create non-rectangular
+regions. A chain of slots is like a series of small pages: content is
+broken at possible page breaks and distributed over the slots.
 
-<p>Slots can form “chains” to create
-non-rectangular regions. A chain of slots is like a series of pages or
-columns: content is distributed over the slots by breaking it at
-possible break points (see the 'break-*' properties from
-[[CSS3-BREAK]]).
-
-<p>The '@region'
-rule [[!CSS3-REGIONS]] allows to select
-(parts of) elements based on whether they fall in a certain slot or
-not, and thus style content differently in different slots
-(<em>region-based styling</em>).
+<p><em>Region-based styling</em> allows content to be styled not only
+based on its position in the document tree, but also based on the slot
+it finds itself in. This is achieved by allowing slot names to appear
+in selectors.
 
 <!--=================================================================-->
 
@@ -170,13 +160,15 @@ colors, etc., of the text and other objects. The two are not completely
 separate, of course, because indenting or coloring a text influences
 the perceived grid as well. Nevertheless, when one separates the parts
 of a style that should change when the window gets bigger from the
-parts that stay the same, one often finds that the grid changes (room
-for a sidebar, extra navigation bar, big margins, larger images…),
+parts that stay the same, one often finds that the grid changes
+(different number of columns and rows, different order for the blocks
+of content, less or more open space between those blocks, etc.),
 while fonts, colors, indents, numbering styles, and many other things
 don't have to change, until the size of the window becomes extreme.
 
 <p>The properties in this specification associate a layout grid with
-an element. Rather than rendering all descendants of an element in a
+an element (or with a page, see below). Rather than rendering all
+descendants of an element in a
 single flow, they give an element multiple flows, called
 <span>slots,</span> placed on an invisible grid by means of a
 <span>grid template.</span> The descendants are given a 'flow'
@@ -370,20 +362,20 @@ contain this:
 <p>By default, the table is as wide as needed to fit its contents. To
 make sure it is as wide as its containing block, we need to add
 
-<pre>.group {display: table; width: 100%}</pre>
+<pre>.group {display: table; <i>width: 100%</i>}</pre>
 
 <p>That is not needed for the grid template, but, on the other hand,
 if we want the template to fit its contents, we would need to say so:
 
-<pre>.group {grid: "a b c"; width: fit-content}</pre>
+<pre>.group {grid: "a b c"; <i>width: fit-content</i>}</pre>
 
 <p>(See [[!CSS3BOX]] for the definition of the 'width' property.) The
 columns of the template are by default all the same size. The columns
-of the table satisfy certain constraints, but the exact size is not
-defined. We can make them all the same by adding a rule (see
+of the table satisfy certain constraints, but their sizes may
+differ. We can make them all the same by adding a rule (see
 [[!CSS3TBL]]):
 
-<pre>.group {display: table; width: 100%; table-layout: fixed}</pre>
+<pre>.group {display: table; width: 100%; <i>table-layout: fixed</i>}</pre>
 
 <div class=figure>
 <p><img alt="[Three equal cells]" longdesc=table2.desc src=table2.png>
@@ -393,11 +385,11 @@ defined. We can make them all the same by adding a rule (see
 
 <p>In both styles, we can set a column to a certain size:
 
-<pre>div.menu {width: 3em}</pre>
+<pre>div:nth-child(3) {<i>width: 3em</i>}</pre>
 
 <p>resp.,
 
-<pre>.group {grid: * * 3em  "a b c"}</pre>
+<pre>.group {grid: <i>* * 3em</i>  "a b c"}</pre>
 
 <div class=figure>
 <p><img alt="[Two equal cells, third is 3em wide]"
@@ -424,24 +416,24 @@ model can borders be collapsed, which makes setting borders easier in
 the table model:
 
 <pre>
-.group {display: table; border-collapse: collapse}
-.group > div {border: solid}
+.group {display: table; <i>border-collapse: collapse</i>}
+.group > div {<i>border: solid</i>}
 </pre>
 
 <p>resp.,
 
 <pre>
-.group > div {border: solid; border-left: none}
-.group > div:first-child {border-left: solid}
+.group > div {<i>border: solid; border-left: none</i>}
+.group > div:first-child {<i>border-left: solid</i>}
 </pre>
 
 <p>In the template model, the order of the elements is explicit, and
 thus it is possible to reverse the order of the columns:
 
 <pre>
-.group > div {flow: c}
+.group > div {flow: <i>c</i>}
 .group > div + div {flow: b}
-.group > div + div + div {flow: a}
+.group > div + div + div {flow: <i>a</i>}
 </pre>
 
 <div class=figure>
@@ -454,10 +446,14 @@ first element in the third slot.
 </div>
 
 <p>In the table model, the order of the rows and columns is given by
-the document source and thus can't be changed.
+the document source and thus cannot be changed.
 </div>
 
 <div class=example>
+<p>[Editorial note: Remove this example if the 'content' property will
+<em>not</em> be allowed on elements, as it is currently expected to
+be.]
+
 <p>This example shows a way to move notes to the end of a section.
 “Notes” in this example refers to elements in HTML with a class of
 “note”. A fragment of HTML such as
@@ -582,12 +578,12 @@ scope of this example. In paged media, we could attach the grid
 template to a page instead of an element and let the text continue on
 the next page; we could also make slot c into a multi-column element
 so that the text forms additional columns to the right of current
-image (see [[CSS3GCPM]] for some ideas), or we could allow a scrollbar
+image (see [[CSS3GCPM]] for some ideas), or there could be a scrollbar
 on slot c.
 </div>
 
 <div class=example>
-<p>This example shows two [three] ways to align the contents of a
+<p>This example shows three ways to align the contents of a
 fixed-height paragraph to the bottom of the box:
 
 <dl>
@@ -596,10 +592,10 @@ fixed-height paragraph to the bottom of the box:
 <dt>Method 2 <dd>
 <pre>P {height: 20em; grid: "*"}
 P::slot(*) {vertical-align: bottom}</pre>
-<dt>[Method 3] <dd class=issue>[If <span
-class=index>vertical-align</span> is generalized to
-apply to all blocks, rather than only to table cells, margin boxes and
-slots:]
+<dt>Method 3 <dd>
+[Editorial note: Remove method 3 if <span
+class=index>vertical-align</span> will <em>not</em> be generalized to
+apply to all blocks.]
 <pre>P {height: 20em; vertical-align: bottom}</pre>
 </dl>
 
@@ -658,6 +654,28 @@ onward” or maybe a pseudo-element selector for the text between
 elements. Or a new property to specify different ways to handle the
 anonymous text inside a grid element. For the moment, there is no such
 thing. Suggestions are welcome.
+
+<p>If, on the other hand, we <em>don't</em> want spaces between the
+SPANs, then the question becomes how to get rid of the spaces between
+the SPANs in the first row. There are several ways of doing that. One
+way is to explicitly flow the three first SPANs to slot “a”:
+
+<pre>span {flow: a}</pre>
+
+<p>The SPANs are thus taken out of the P, causing the P's spaces to
+end up next to each other at the start of flow “a” and collapse
+away. Another, maybe more intuitive way is to set the spaces to zero
+width in the P, and then back to normal in the SPANs (see
+'word-spacing' in [[CSS3TEXT]]):
+
+<pre>
+p {word-spacing: -100%}
+span {word-spacing: normal}
+</pre>
+
+<p>[Editorial note: Remove this last method if percentage values on
+'word-spacing' will not be allowed. They currently (March 2015) have
+Working Draft status.]
 </div>
 
 <div class=example>
@@ -708,9 +726,9 @@ the concept of <dfn>stacking context.</dfn>
 <dfn>interactive</dfn> vs <dfn>non-interactive</dfn> media.
 
 <li><cite>CSS values and Units module</cite> [[!CSS3VAL]] &ndash; <a
-href="/TR/css3-values#strings">
+href="http://www.w3.org/TR/css3-values#strings">
 <dfn><var>&lt;string&gt;</var></dfn></a> and <a
-href="/TR/css3-values#length-value">
+href="http://www.w3.org/TR/css3-values#length-value">
 <dfn><var>&lt;length&gt;</var></dfn></a>.
 
 <li><cite>CSS box module</cite> [[!CSS3BOX]] &ndash; properties
@@ -765,6 +783,10 @@ term <dfn>grid container</dfn> and the properties
 <dfn>grid-auto-flow</dfn>, <dfn>grid-auto-columns</dfn> and
 <dfn>grid-auto-rows</dfn>. (Note: A grid container is an element with
 a 'display' of ''grid'' or ''grid-inline''.)
+
+<li><cite>CSS Cascading and Inheritance Level 3</cite>
+[[!CSS3CASCADE]] &ndash; keywords <dfn>inherit,</dfn>
+<dfn>initial</dfn> and <dfn>unset.</dfn>
 </ul>
 
 <p class=issue>Add to the above all the properties that are allowed on
@@ -776,6 +798,9 @@ CSS3 modules:
 
 <ul>
 <li><cite>Selectors</cite> [[SELECT]]
+
+<li><cite>CSS Text Module Level 3</cite> [[CSS3TEXT]] &ndash; the
+<dfn>word-spacing</dfn> property
 </ul>
 
 <p>See <a
@@ -798,10 +823,8 @@ in this specification.</p>
 
 <p>In addition to the property-specific values listed in their
 definitions, all properties defined in this specification also accept
-the <a
-href="http://www.w3.org/TR/CSS21/cascade.html#value-def-inherit"
->inherit</a> keyword as their property value. For readability it has
-not been repeated explicitly.
+the ''inherit'', ''initial'', and ''unset'' keywords as their
+property value.
 
 <!--=================================================================-->
 
@@ -1097,8 +1120,7 @@ An explicit width for that column. Negative values are illegal.
 <dt><var>&lt;fraction&gt;</var>
 <dd>
 (A non-negative number followed by ''fr''.) A fraction of the
-remaining space, see <a href="#fraction-values-fr" >Fraction
-values</a> below.
+remaining space. '1fr' means the same as '*'
 
 <dt>*
 <dd>
@@ -1183,8 +1205,7 @@ An explicit height for that row. Negative values are illegal.
 <dt><var>&lt;fraction&gt;</var>
 <dd>
 (A non-negative number followed by ''fr''.) A fraction of the
-remaining space, see <a href="#fraction-values-fr" >Fraction
-values</a> below.
+remaining space. '1fr' means the same as '*'
 
 <dt>* (asterisk)
 <dd>
@@ -1777,7 +1798,7 @@ inline-block or a child of a block with vertical writing mode.
 
 <p>An extra step may be necessary in paged media if a page break
 occurs inside a template (only in the case of an <em>element-based
-template,</em> see <a href="#element-based-page-break" >below</a>). If
+template</em> see <a href="#page-break" >below</a>). If
 the template, after computing the width and height, is too big to fit
 on the current page, and if a suitable break point exists, the part of
 the template after that break point is put on the next page. The width
@@ -2247,9 +2268,9 @@ href="http://www.terrainformatica.com/w3/flex-layout/flex-layout.htm"
 >the documentation by Andrew Fedoniouk and Ivan Goroun.</a>
 E.g., <code>&lt;ul style="grid: '2 1'">&lt;li>one &lt;li>two
 &lt;/ul></code> puts “two” on the left and “one” on the right.
-It is thus also a shortcut for some applications
-of <a href="http://www.w3.org/TR/css3-flexbox/#flex-order"
->'flex-order'.</a>
+It is thus also a shortcut for some applications Flexbox's
+of <a href="http://www.w3.org/TR/css3-flexbox/#order-property"
+>'order' property.</a>
 
 <!--=================================================================-->
 
@@ -2287,7 +2308,8 @@ are available: ''::slot()'' and ''::blank()''.
 <h3 id=slot-pseudo>The ''::slot()'' pseudo-element</h3>
 
 <p>The slots of a <em>grid element</em> can be individually addressed
-with the <dfn>''slot()'' pseudo-element.</dfn>
+with the <dfn title="slot!!pseudo-element" >''slot()''
+pseudo-element.</dfn>
 
 <div class=example>
 <p>For example, the following sets the background and vertical
@@ -2394,7 +2416,8 @@ with elements inside the slot.
 '':empty'' pseudo-class in [[SELECT]]. But ''::slot(a):empty'' and
 '':slot(a):blank' are invalid syntax…
 
-<p>The <dfn>'blank()' pseudo-element</dfn> selects named slots that
+<p>The <dfn title="blank!!pseudo-element" >'blank()'
+pseudo-element</dfn> selects named slots that
 have no
 content flowed into them. ''::slot(a)'' and ''::blank(a)'' select the
 same slot, but the latter matches only if the slot has no content
@@ -2561,7 +2584,8 @@ be orange.
 
 <p>In CSS level 2, pseudo-elements could only occur at the end of a
 selector. Thus an attempt to select 'P::first-line EM' fails. That
-restriction does not apply to the <span class=index>'::slot()'
+restriction does not apply to the <span class=index id=s1
+title="slot!!pseudo-element" >'::slot()'
 pseudo-element,</span> as shown in the example above.
 
 <p>To resolve which style rules apply to an element or part of an
@@ -3012,7 +3036,8 @@ the definition of the 'content' property on slots.
 </div>
 
 <p>The syntax of a page-based template is the same as that of an
-element-based one, but the declaration appears in an '@page' rule.
+<span title="element-based template" >element-based one,</span> but
+the declaration appears in an '@page' rule.
 
 <p>In a page-based template, the height and width are typically known
 (defined by the output media and the margin boxes, see [[CSS3PAGE]]).
@@ -3405,7 +3430,7 @@ terminology of
 
 <!--=================================================================-->
 
-<h2 id=history>History</h2>
+<h2 id=history>History and discussion</h2>
 
 <p>The following sections contain some of the use cases and design
 decision that led to this module and influenced its evolution.
@@ -3569,8 +3594,56 @@ letters, you don't need spaces between them either, which makes big
 templates easier to read.
 
 <p>This specification defines that a template consists of
-(space-separated) identifiers, but all the examples use single-letter
+(space-separated) identifiers, but many examples use single-letter
 identifiers.
+
+<!--=================================================================-->
+
+<h4 id="quoted-names">Quote marks to delimit rows or slot names</h4>
+
+<p>The current syntax for 'grid' (and 'grid-template-areas') groups
+the slots into rows with quote marks:
+
+<pre>
+grid: "a b c"
+      "d * e"
+</pre>
+
+<p>Or with some explicit column widths and row heights added:
+
+<pre>
+grid: 10em * 10em
+      "a   b   c" 7em
+      "d   *   e" *
+</pre>
+
+<p>Instead of using quote marks, other means could be used to delimit
+the rows, e.g., commas:
+
+<pre>
+grid: 10em * 10em
+       a   b   c  7em,
+       d   @   e  *
+</pre>
+
+<p>Because the ''*'' would then be ambiguous (it could either be a
+length or a slot name), it has been replaced here by ''@'' (see <a
+href="#star-or-at-sign">“Indicating the default slot”</a>).
+
+<p>When quotes are not needed to delimit rows, they can be used to
+delimit slot names, which then no longer have to be restricted to
+identifiers. Like the quotes around font family names, the quotes
+around slot names are optional, unless the slot names would be
+ambiguous without them:
+
+<pre>
+div {grid: a  "middle top"  c,
+           d       @        " -=- "}
+p {flow: c}                 /* quotes optional */
+p.intro {flow: middle top}  /* quotes optional */
+img.one {flow: "d"}         /* quotes optional */
+img.two {flow: " -=- "}     /* quotes required */
+</pre>
 
 <!--=================================================================-->
 
@@ -3579,15 +3652,17 @@ identifiers.
 <p>Grids can be defined on elements such as table cells, blocks,
 inline blocks or list items, but not on elements such as tables or,
 inline elements. That can be expressed in the syntax by adding the
-grid to the 'display' property: 'display: inline-block "abc" "abd"' is
-valid, but 'display: inline "abc" "abd"' would not be. Or it can be
+grid to the 'display' property: 'display: inline-block "a b c" "a b
+d"' would be valid, but 'display: inline "a b c" "a b d"' would not
+be. Or it can be
 expressed by an implicit dependency between properties: 'display:
 inline-block; grid: "a b c" "a b d"' has a grid, but 'display: inline;
 grid: "a b c" "a b d"' ignores the grid. (In this case it is actually the
 computed value of 'display' that applies, so, e.g., if the element
 floats, it would be a block and thus have a grid.)
 
-<p>The Multicol specification uses the latter model: 'columns' is a
+<p>The Multicol specification [[CSS3COL]] uses the latter model:
+'columns' is a
 separate property and only applies if the element is a <em>block
 container.</em> Given that precedent, it seemed reasonable to do the
 same here.
@@ -3628,7 +3703,7 @@ repeat the slot names (which cannot animate).
 
 <p>For those reasons, this specification defines the 'grid' property
 as a shorthand, at the cost for authors of having to learn four new
-properties instead of one (or zero, if the grid had been added to <a
+properties instead of one (or even zero, if the grid were added to <a
 href="#display" >display (see above).</a>
 
 <!--=================================================================-->
@@ -3665,7 +3740,7 @@ grid-template-columns: * * * *</pre>
 'background-size'. However, unlike for backgrounds, where a size
 without an image makes no sense, in this case a size without a slot
 name <em>can</em> make sense: it can represent empty space ('.') of
-the given size.
+that size.
 
 <p>What is more likely: that people consciously specify empty rows and
 columns without putting dots in the template (to save typing or to
@@ -3681,13 +3756,12 @@ the maximum of the three properties.
 
 <p><a href="http://www.w3.org/Style/CSS/Tracker/issues/127"
 >ISSUE-127:</a> It is very common for the columns of a grid to have
-all the same width. That is because the slots in a grid, although of
-different widths themselves, typically are multiples of some
+all the same width. Or, if they do not, to at least be small multiples of a
 fundamental measure. And thus equal columns is the default in the
 current syntax. And if it needs to be specified explicitly which
 columns have the same width (e.g., because there are also other
-columns in the grid) then the symbol for it is short: '*'. This is
-ideal for slots whose widths are small multiples of the fundamental
+columns in the grid) then the symbol for it is short: '*'. This also
+works very well for slots whose widths are small multiples of the fundamental
 measure. E.g., the widths of slots a, b and c in the following grid
 relate to each other as 1:3:2:
 
@@ -3709,8 +3783,8 @@ impractical to write in this way.
 
 <p>Assuming another notation is needed, it could be made by prefixing
 a number (e.g., '7* 10*') or, to make the notation look more like a
-dimension, by creating a special unit ''fr'' ('e.g., '3.5fr 5fr',
-which is the same as 7 + 10 stars).
+dimension, by means of a special unit ''fr'' (“fraction”). E.g.,
+'3.5fr 5fr' would be the same as 7 + 10 stars).
 
 <p>If ''fr'' is added, it could either be in addition to '*' or instead
 of '*'. In the former case, '*' = '1fr'.
@@ -3786,8 +3860,8 @@ property with the list of sizes that is repeated for all added rows
 and columns.
 
 <p>It would probably be difficult to specify that any number of
-columns of size A can be added, but that the last column must have
-size B&hellip;
+columns of size <var>A</var> can be added, but that the last column
+must have size <var>B</var>&hellip;
 
 <p>The current specification specifies that extra rows and columns are
 added when needed for absolute positioning ('grid-area'). It is
@@ -3813,31 +3887,6 @@ can be used instead.
 
 <!--=================================================================-->
 
-<h4 id=chained>Chained slots</h4>
-
-<p>Many layouts found in magazines can be handled with multi-columns
-[[CSS3COL]] (possibly extended with ideas in GCPM [[CSS3GCPM]]) or with
-multi-column elements inside a grid, but some more complicated designs
-appear to require chained slots (and some would be easier to specify
-that way than with columns).
-
-<pre>
-grid: "A A E"
-      "A A E"
-      "B B E"
-      "C D E";
-chains: B C D E
-</pre>
-
-<p>Also, when grids are applied to pages (see <a href="#page-grid"
->“Page grids”</a> below), it is essential that slots are connected to
-slots on the next or some subsequent page, so that the overflow can
-find a place.
-
-<p>But this could be a feature for level 4.
-
-<!--=================================================================-->
-
 <h4 id=page-grid>Page grids</h4>
 
 <p>Typically in magazines, each page has a slightly different layout
@@ -3846,7 +3895,9 @@ usually between 3 and 6. It is difficult to specify the grids of all
 pages as a single long grid on the BODY element; and indeed impossible
 if you don't know how many pages use each kind of layout.
 
-<p>Applying grids to '@page' is an alternative. It has a few issues:
+<p>Applying grids to '@page' is an alternative. That is what is <a
+href="#page-templates" >specified in this module,</a> but it has a few
+issues:
 
 <ul>
 <li>We need named paged ('@page news {&hellip;}'), a way for an
@@ -3861,8 +3912,6 @@ own footnote area.
 <li>How are slots on different pages connected? Probably by having the
 same name.
 </ul>
-
-<p>This is probably for level 4.
 
 <!--=================================================================-->
 
@@ -4030,12 +4079,14 @@ explicitly by the designer by means of media queries and selectors.
 
 <!--=================================================================-->
 
-<h4>Indicating the default slot ('*' vs '@')</h4>
+<h4 id="star-or-at-sign">Indicating the default slot ('*' vs '@')</h4>
 
 <p>The symbol '*' seems a good choice, as the concept of default is
 somewhat similar to the concept of wildcard. The '*' is also used to
 set the size of rows and columns, but the context is probably enough
-to avoid confusion.
+to avoid confusion. (But see <a href="#quoted-names" >“Quote marks to
+delimit rows or slot names”</a> for a syntax where '@' would be
+better.)
 
 <!--=================================================================-->
 
@@ -4083,11 +4134,6 @@ of them, to set the four sides).
 <p>Yet another way is to extend 'top', 'left', etc., with unitless
 values (meaning the n'th grid column or row) and letters (meaning the
 appropriate edge of the slot of that name).
-
-<p>This specification adds a 'grid-area' property, which overrides
-'top', 'right', etc. When it is used, it also indicates that the
-element takes part in the size calculations of the rows and columns it
-is put on top of.
 
 <!--=================================================================-->
 
@@ -4151,7 +4197,7 @@ flexible names.)
 because of the syntax, partly because of the indirection, which comes
 on top of the inherent indirection that CSS already requires (the
 style rules are in a style sheet, not on the elements they apply to)
-and the indirection of specifying a position indirectly by referring
+and the indirection of specifying a position by referring
 to an abstract grid.
 
 <p>Also, the number of usages of 'grid-area' (for a given grid) is
@@ -4204,6 +4250,10 @@ abbreviations, e.g.:
 
 <p>or
 
+<pre>grid-template-columns: * (1em *){5}</pre>
+
+<p>or
+
 <pre>grid-template-columns: * 5//1em *//</pre>
 
 <p>This makes the syntax harder to learn and read, though. So it needs
@@ -4234,9 +4284,8 @@ the name, it would, of course, be horizontal alignment if the slot's
 writing mode was vertical.)
 
 <p>There could also be a property that applies exclusively to grids
-(grid-slot-align?), just like Flexbox proposes an alignment property
-that applies exclusively to flex items ('flex-item-align'). But why
-should users learn a new property when 'vertical-align' fits so well?
+(grid-slot-align?), or the Flexbox property 'align-content' can be
+re-used.
 
 <p>Looking beyond tables, flex boxes and grids, there is also a need
 for vertical alignment of content in normal blocks (when those blocks
@@ -4250,11 +4299,17 @@ in tables). Or 'vertical-align' itself could be generalized to apply
 to all <em>block container</em> boxes (although the meaning would be
 ambiguous on ''inline-block'').
 
-<p>Given how little progress has been made on this generally
-applicable property, the present specification just reuses
-'vertical-align'. If a differently named property is developed after
-the grid template module becomes a REC, then whatever interaction it
-has with 'vertical-align' would apply to slots, too.
+<p>And instead of aligning all the slot's content together as a single
+block by means of 'vertical-align', it may also be necessary to spread
+the contents out, e.g., aligning the first paragraph on the baseline
+of the row, but the last paragraph against the bottom of the slot. The
+Box Module [[CSS3BOX]] proposes elastic margins for that
+(''margin-top: fill''). Elastic line heights may also be possible.
+
+<p>The present specification just reuses 'vertical-align'. If a
+differently named property is developed, or other ways to distribute
+and align contents, then whatever interaction they have with
+'vertical-align' in tables would apply to slots, too.
 
 <!--=================================================================-->
 
@@ -4263,8 +4318,8 @@ has with 'vertical-align' would apply to slots, too.
 <p>Elements can be centered in, or aligned to a side of, their parent
 with ''auto'' margins. But this doesn't always work: for many
 combinations of 'width' and 'direction', the auto margins are
-ignored. There may thus be a new property ('block-align: center'?) or
-value ('margin: any'?) in the future for correct alignment and
+ignored. There may thus be a new property ('justify-content: center'?) or
+value ('margin: fill'?) in the future for correct alignment and
 centering.
 
 <p>Or should there be an alignment property that only applies to grid
@@ -4284,14 +4339,14 @@ do anything? Or are they simply 0?
 
 <h4>Page floats</h4>
 
-<p>[[CSS3GCPM]] defines “page floats” (which are slightly misnamed,
+<p>[[CSS-PAGE-FLOATS]] defines “page floats” (which are slightly misnamed,
 because they cause floats to float not just to the top or bottom of a
 page, but also to the top or bottom of a column in certain
 contexts). What do they do in slots?
 
 <p>This specification treats a slot similar to a column, e.g.,
 ''float: top'' means the top of the slot, not of the page. Similarly,
-if slots are <a href="#chained" >chained,</a> then the float modifiers
+if slots are chained, then the float modifiers ('float-defer-page')
 select the next slot, not the next page.
 
 <!--=================================================================-->
@@ -4330,32 +4385,6 @@ column, same row”).
 
 <h4>The names of the properties</h4>
 
-<p>This draft currently has 'grid' = 'grid-template-areas' + 'grid-template-rows' +
-'grid-template-columns' for creating a grid template; a 'grid-area' property
-for absolute positioning; and 'flow' for flowing content into slots.
-
-<p>[[CSS3-GRID-LAYOUT]] proposes grid-template + grid-definition-row +
-grid-definition-columns for creating a grid template, but no
-shorthand; and grid-area = grid-template-row + grid-column, where grid-template-row =
-grid-before + grid-after and grid-column = grid-start + grid-end.
-There are also grid-auto-columns and grid-auto-rows properties for the
-sizes of automatically added columns and rows.
-
-<p>The first set clearly concentrates on making it easy to create
-templates, with short property names and a shorthand that allows
-compact, one-line declarations. The expectation is that most content
-will be positioned with 'flow', another short property name, and that
-the absolute positioning with 'grid-area' is rare. 'grid-area' can
-still become a shorthand later, but reserving short names seems
-unnecessary in this model.
-
-<p>The second set takes the opposite approach. Authors have a large
-choice of properties to absolutely position an element on top of a
-grid, with three shorthand properties and four individual
-properties. In contrast, creating a template is verbose, because there
-is no shorthand and the property names are long. They have to be long
-to avoid confusion with the short names used for positioning.
-
 <p>Where this draft has 'flow' for flowing content into a region, the
 Regions draft [[CSS3-REGIONS]] (version of August 2012) proposes
 'flow-into'. It's more descriptive, but longer.
@@ -4370,46 +4399,35 @@ Regions draft [[CSS3-REGIONS]] (version of August 2012) proposes
 <h2 id=changes>Changes</h2>
 
 <p>Summary of major changes since the <a
-href="/TR/2011/WD-css3-layout-20111129/" >29 November 2011 draft:</a>
+href="http://www.w3.org/TR/2011/WD-css3-layout-20111129/" >29 November
+2011 draft:</a>
 
 <ul>
-<li>Following the model of [[CSS3-FLEXBOX]], there is now a new value
-''grid'' for 'display' that turns a grid element and its children into
-block boxes. Such children are positioned with 'grid-area' and 'flow'
-does not apply.
-
-<li>A new ''grid'' value on 'position' switches elements between
-positioned ('grid-area' applies) and flowed ('flow' applies).
-
-<li>Short rows in a template aren't automatically padded with '.', but
-make the template illegal. <!-- WG decision 11 Apr 2012 -->
-
 <li>Added a <a href="#accessibility" >note about accessibility.</a>
 
 <li>Instead of directly on 'display', the grid template is now
 specified with a new property, 'grid', to be consistent with 'columns'
 in the multi-column specification [[CSS3COL]], and also to allow the
 grid to be a shorthand for more primitive properties: 'grid-template-areas',
-'grid-template-rows' and 'grid-template-columns', which makes animations easier to
-specify.
+'grid-template-rows' and 'grid-template-columns'.
+
+<li>Similarly, the flow that an element goes into is now specified
+with a separate 'flow' property, rather than the 'position' property,
+which retains its character as specifying the kind of positioning,
+rather than the position itself.
 
 <li>Replaced @ by * to indicate the default slot. The asterisk looks
 better and may also be easier to remember, because of its association
 with the notion of “wild card.”
 
-<li>Added dimensions with the ''fr'' unit as an alternative to * on
-row and column sizes (and an issue about whether these units are
-useful enough).
+<li>Slot names are not restricted to single letters, but may be
+identifiers.
 
-<li>Removed the ''gr'' unit as a means to absolutely position elements
-on a grid and instead added a special property, 'grid-area'.
+<li>Removed the ''fr'' unit as a means to absolutely position elements
+on a grid.
 
-<li>Absolutely positioned elements, if positioned relative to a grid,
-are now taken into account when calculating the size of the grid.
-
-<li>Because of the above, it is now possible to automatically add rows
-and columns to a grid element if elements are absolutely positioned
-relative to grid lines beyond those declared in the grid template.
+<li>Added a different kind of ''fr'' unit as an alternative to * on
+row and column sizes, borrowed from [[CSS3-GRID-LAYOUT]].
 
 <li>The 'content' property is now allowed on slots analogously to how
 it is allowed on ''before'' and ''after'' pseudo-elements and on
@@ -4436,6 +4454,14 @@ modes.
 
 <li>Added the <em>blank() pseudo-element</em> to be able to select and
 style slots that, for whatever reason, have nothing flowed into them.
+
+<li>Added a placeholder section for a stack-of-cards layout model.
+
+<li>Added an (incomplete) <a href="#region-based" >section on
+region-based styling.</a>
+
+<li>Expanded the History section with discussions of alternative
+syntaxes, models and names.
 </ul>
 
 <!--=================================================================-->
@@ -4443,7 +4469,8 @@ style slots that, for whatever reason, have nothing flowed into them.
 <h2 class="no-num" id="acknowledgments">Acknowledgments</h2>
 
 <p>The first ideas for describing a template in CSS date from 1996 and
-are described in <a href="/TR/NOTE-layout" ><cite>Frame-based layout
+are described in <a href="http://www.w3.org/TR/NOTE-layout"
+><cite>Frame-based layout
 via Style Sheets</cite></a> by Bert Bos, Dave Raggett and Håkon Wium
 Lie. The idea was revived in 2005 on the request of W3C's Device
 Independence Working Group and benefited especially from discussions
@@ -4453,12 +4480,13 @@ with Rhys Lewis and Rotan Hanrahan from that group.
 layout by <a
 href="https://lists.w3.org/Archives/Member/w3c-css-wg/2002JulSep/0077.html" >
 Dave Raggett [member-only link]</a> and an early write-up of the
-features of <a href="http://www.mozilla.org/projects/xul/xul.html" >
+features of <a
+href="https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XUL" >
 XUL</a> by <a
 href="https://lists.w3.org/Archives/Member/w3c-css-wg/2002JanMar/0432.html" >
 Ian Hickson [member-only link].</a>
 
-<p><a href="http://transcendingcss.com/support/" >Andy
+<p><a href="http://stuffandnonsense.co.uk/about" >Andy
 Clarke,</a> <a href="http://sushiandrobots.com/about" >Jina Bolton</a>
 and <a href="http://lawver.net/" >Kevin Lawver</a> provided use cases,
 examples and requirements. The analysis in the <a href="#history"
@@ -4466,8 +4494,8 @@ examples and requirements. The analysis in the <a href="#history"
 Zilles.
 
 <p>César Acebal built the
-first <a href="http://transcendingcss.com/support/almcss.zip" >
-prototype,</a> see [[ACEBAL2012]]. Andrew Fedoniouk
+first 
+prototype, see [[ACEBAL2012]]. Andrew Fedoniouk
 built <a
 href="http://lists.w3.org/Archives/Public/www-style/2009Mar/0278.html"
 >the second.</a>

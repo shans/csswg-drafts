@@ -1,4 +1,5 @@
 <h1>CSS Basic User Interface Module Level 3 (CSS3 UI)</h1>
+<style>#awesome-table td {padding:5px}</style>
 
 <pre class='metadata'>
 ED: http://dev.w3.org/csswg/css-ui/
@@ -7,11 +8,11 @@ Previous Version: http://www.w3.org/TR/2012/WD-css3-ui-20120117/
 Shortname: css-ui
 Level: 3
 Group: csswg
-!Issue Tracking: http://wiki.csswg.org/spec/css3-ui
+!Issue Tracking: <a href="https://wiki.csswg.org/spec/css3-ui">https://wiki.csswg.org/spec/css3-ui</a>
 Status: ED
 Editor: Tantek &Ccedil;elik, Mozilla http://www.mozilla.org, tantek@cs.stanford.edu, http://tantek.com
-
-Abstract: This specification describes user interface related selectors,
+Editor: Florian Rivoal, Invited Expert, florian@rivoal.net, http://florian.rivoal.net
+Abstract: This specification describes user interface related
           properties and values that are proposed for CSS level&nbsp;3
           to style HTML and XML (including XHTML).
           It includes and extends user interface related features from the selectors,
@@ -21,14 +22,20 @@ Abstract: This specification describes user interface related selectors,
 Deadline: 2012-02-14
 Link Defaults: css-color-3 (property) color
 Link Defaults: selectors-4 (selector) :indeterminate
+Link Defaults: css21 (property) min-width
+Link Defaults: css21 (property) min-height
+Link Defaults: css21 (property) max-width
+Link Defaults: css21 (property) max-height
+Link Defaults: css-writing-modes-3 (dfn) start
+Link Defaults: css-writing-modes-3 (dfn) end
 Ignored Terms: outline-top
 Ignored Terms: outline-left
-At Risk: ::value ::choices pseudo-elements
+Ignored Terms: ime-mode
 At Risk: 'box-sizing' property value: padding-box
 At Risk: 'caret-color' property
-At Risk: 'ime-mode' property
-At Risk: 'text-overflow' property value: &lt;string&gt;
+At Risk: 'text-overflow' property value: <<string>>
 At Risk: 'text-overflow' property 2-value syntax and definition
+At Risk: constraints on 'outline-offset' property negative values
 </pre>
 
 <!--
@@ -36,13 +43,7 @@ At risk due to only one implementation:
 
 <li>box-sizing: padding-box - only FF supports in prefixed version
 
-<li>ime-mode: new - not sure about IE5+ vs FF3+ interop
-
 Not at risk:
-<li>CSS2.1:  		:hover :active :focus
-<li>Selectors:		:enabled :disabled :checked
-<li>:indeterminate implemented by FF3.6, IE9, Opera 10.6, Saf3
-
 <li>box-sizing implemented by IE5/Mac, Opera
 	-moz-box-sizing implemented by Mozilla
 
@@ -70,24 +71,18 @@ implemented by Opera/Presto desktop with "shift+arrow", and Blink, as well as Sa
 
 -->
 
-<hr title="Separator for header">
-
 
 <h2 id="intro">Introduction</h2>
 
-This module describes selectors and CSS properties which enable authors
-to style user interface related states, element fragments, properties
-and values.
+This module describes CSS properties which enable authors
+to style user interface related properties and values.
 
 <a href="http://www.w3.org/TR/REC-CSS1#anchor-pseudo-classes">Section 2.1 of CSS1</a> [[CSS1]]
 and <a href="http://www.w3.org/TR/CSS2/ui.html">Chapter 18 of CSS2</a> [[CSS2]]
-introduced several user interface related pseudo-classes, properties and values.
-<a href="http://www.w3.org/TR/css3-selectors/#UIstates">Section 6.6.4 of Selectors</a> [[!SELECT]] also describes several additional user interface related pseudo-classes (and one pseudo-element). <a href="http://www.w3.org/TR/2000/WD-css3-userint-20000216">User Interface for CSS3 (16 February 2000)</a> introduced several new user interface related features.
+introduced several user interface related properties and values.
+<a href="http://www.w3.org/TR/2000/WD-css3-userint-20000216">User Interface for CSS3 (16 February 2000)</a> introduced several new user interface related features.
 
-This Working Draft incorporates and extends them to provide the ability, through CSS,
-to style elements based upon additional user interface states,
-to style fragments of user interface elements, and to alter the
-dynamic presentation of elements in ways previously only available through specific HTML elements and attributes.
+This Working Draft incorporates, extends, and supersedes them.
 
 <h3 id="purpose">Purpose</h3>
 
@@ -100,61 +95,20 @@ dynamic presentation related features in HTML.
 user interfaces which make use of a directional navigation model.
 </ul>
 
+
 <h2 id="interaction">Module Interactions</h2>
 
 This document defines new features not present in earlier specifications.
 In addition, it replaces and supersedes the following:
 
 <ul>
-<li><a href="http://www.w3.org/TR/CSS21/ui.html#cursor-props">Section 18.1</a> 
-and 
-<a href="http://www.w3.org/TR/CSS21/ui.html#dynamic-outlines">section 18.4</a>
+<li><a href="http://www.w3.org/TR/CSS21/ui.html#cursor-props">Section 18.1</a>,
+<a href="http://www.w3.org/TR/CSS21/ui.html#dynamic-outlines">section 18.4</a>,
+and Information on the stacking of outlines defined in
+<a href="http://www.w3.org/TR/CSS21/zindex.html">Appendix E</a>
 of Cascading Style Sheets, level 2, revision 1 [[CSS21]]
 <li><a href="http://www.w3.org/TR/2000/WD-css3-userint-20000216">User Interface for CSS3 (16 February 2000)</a> [[CSSUI]]
 </ul>
-
-<h2 id="selectors">User Interface Selectors</h2>
-
-<h3 id="pseudo-elements">User interface element fragments: pseudo-elements</h3>
-
-This specification introduces two new pseudo-elements
-to provide access to additional user interface element fragments.
-<ul>
-  <li>::value
-  <li>::choices
-</ul>
-
-Note: The ::value and ::choices
-pseudo-elements are at risk.
-
-<h4 id="pseudo-value">::value</h4>
-
-A form element may contain both a label for its data value,
-and the data value itself.
-For such elements, the ::value pseudo-element
-selects the representation of just the data value itself,
-in order to style its appearance.
-
-The ''::value'' pseudo-element is similar to an inline-level element,
-but with certain restrictions.
-The following properties apply to ''::value''
-pseudo-element: font properties, color property, background properties,
-'word-spacing', 'letter-spacing', 'text-decoration', 'vertical-align',
-'text-transform', 'line-height'.  UAs may apply other properties as well.
-
-
-<h4 id="pseudo-choices">::choices</h4>
-
-Similarly, a form element which represents a list of options
-may contain both a label for the list,
-and the list of choices itself.
-For such elements,
-the ''::choices'' pseudo-element selects
-the representation of just the list of choices themselves,
-in order to style their appearance.
-
-A list of radio buttons can also be selected with the ''::choices'' pseudo-element,
-and the currently chosen radio button can be selected with the ''::value'' pseudo-element.
 
 <h2 id="box-model">Box Model addition</h2>
 
@@ -176,16 +130,16 @@ border-box
 <tr><th>Animatable:</th><td>no</td></tr>
 </tbody></table>
 
-<dl>
-<dt>content-box</dt>
+<dl dfn-type=value dfn-for=box-sizing>
+<dt><dfn>content-box</dfn></dt>
 <dd>This is the behavior of width and height as specified by CSS2.1.
 The specified width and height (and respective min/max properties)
 apply to the width and height respectively of the content box of the element.
 The padding and border of the element are laid out
 and drawn outside the specified width and height.</dd>
-<dt>padding-box</dt>
+<dt><dfn>padding-box</dfn></dt>
 <dd>
-The specified width and height (and respective min/max properties)
+Length and percentages values for width and height (and respective min/max properties)
 on this element determine the padding box of the element.
 That is, any padding specified on the element is laid out
 and drawn inside this specified width and height.
@@ -197,10 +151,11 @@ As the content width and height
 <a href="http://www.w3.org/TR/CSS21/visudet.html#the-width-property">
 cannot be negative</a> ([[!CSS21]], section 10.2),
 this computation is floored at 0.
+Used values, as exposed for instance through {{getComputedStyle()}}, also refer to the padding box.
 </dd>
-<dt>border-box</dt>
-<dd>The specified width and height (and respective min/max properties) on this element
-determine the border box of the element.
+<dt><dfn>border-box</dfn></dt>
+<dd>Length and percentages values for width and height (and respective min/max properties)
+on this element determine the border box of the element.
 That is, any padding or border specified on the element
 is laid out and drawn inside this specified width and height.
 The content width and height are calculated
@@ -210,12 +165,57 @@ and 'height' properties.
 As the content width and height
 <a href="http://www.w3.org/TR/CSS21/visudet.html#the-width-property">cannot be negative</a> ([[!CSS21]], section 10.2),
 this computation is floored at 0.
+Used values, as exposed for instance through {{getComputedStyle()}}, also refer to the border box.
 
 Note: This is the behavior of width and height as commonly implemented
 by legacy HTML user agents for replaced elements and input elements.
 </dd>
 </dl>
 
+Note: In contrast to the length and percentage values,
+the ''width/auto'' value of the 'width' and 'height' properties
+(as well as other keyword values introduced by later specifications,
+unless otherwise specified)
+is not influenced by the 'box-sizing' property,
+and always sets the size of the content box.
+
+The following terms, whose definitions vary based on the computed value of 'box-sizing' are introduced:
+
+<table border="1">
+<tr><th><th>''box-sizing: content-box''<th>''box-sizing: padding-box''<th>''box-sizing: border-box''
+<tr><td><dfn>min inner width</dfn><td>'min-width'<td>max(0, 'min-width' &minus; 'padding-left' &minus; 'padding-right')<td>max(0, 'min-width' &minus; 'padding-left' &minus; 'padding-right' &minus; 'border-left-width' &minus; 'border-right-width')
+<tr><td><dfn>max inner width</dfn><td>'max-width'<td>max(0, 'max-width' &minus; 'padding-left' &minus; 'padding-right')<td>max(0, 'max-width' &minus; 'padding-left' &minus; 'padding-right' &minus; 'border-left-width' &minus; 'border-right-width')
+<tr><td><dfn>min inner height</dfn><td>'min-height'<td>max(0, 'min-height' &minus; 'padding-top' &minus; 'padding-bottom')<td>max(0, 'min-height' &minus; 'padding-top' &minus; 'padding-bottom' &minus; 'border-top-width' &minus; 'border-bottom-width')
+<tr><td><dfn>max inner height</dfn><td>'max-height'<td>max(0, 'max-height' &minus; 'padding-top' &minus; 'padding-bottom')<td>max(0, 'max-height' &minus; 'padding-top' &minus; 'padding-bottom' &minus; 'border-top-width' &minus; 'border-bottom-width')
+</table>
+
+The <a href="http://www.w3.org/TR/CSS21/visudet.html">Visual formatting model details</a> of [[!CSS21]] are written assuming ''box-sizing: content-box''. The following disambiguations are made to clarify the behavior for all values of 'box-sizing':
+
+<ol>
+<li>In <a href="http://www.w3.org/TR/CSS21/visudet.html#blockwidth">10.3.3</a>, the second <q>width</q> in the following phrase is to be interpreted as <a spec="css21">content width</a>: <q>If 'width' is not ''width/auto'' and 'border-left-width' + 'padding-left' + 'width' + [...]</q>
+
+<li>In <a href="http://www.w3.org/TR/CSS21/visudet.html#abs-non-replaced-width">10.3.7</a>, <q>width</q> is to be interpreted as <a spec="css21">content width</a> in the following equation: <q>'left' + 'margin-left' + 'border-left-width' + 'padding-left' + 'width' + [...]</q>
+
+<li>In <a href="http://www.w3.org/TR/CSS21/visudet.html#min-max-widths">10.4</a>, <q>width</q>, <q>height</q>, <q>min-width</q>, <q>max-width</q>, <q>min-height</q> and <q>max-height</q> are respectively to be interpreted as <a spec="css21">content width</a>, <a spec="css21">content height</a>, <a>min inner width</a>, <a>max inner width</a>, <a>min inner height</a> and <a>max inner height</a> in the following phrases:
+  <ol>
+  <li><q>The tentative used width is calculated [...]</q>
+  <li><q>If the tentative used width is greater than 'max-width', the rules above are applied again, but this time using the computed value of 'max-width' as the computed value for 'width'.</q>
+  <li><q>If the resulting width is smaller than 'min-width', the rules above are applied again, but this time using the value of 'min-width' as the computed value for 'width'.</q>
+  <li><q>Select from the table the resolved height and width values for the appropriate constraint violation. Take the max-width and max-height as max(min, max) so that min ≤ max holds true. In this table w and h stand for the results of the width and height computations [...]</q>
+  <li>All instances of these words in the table
+  <li><q>Then apply the rules under "Calculating widths and margins" above, as if 'width' were computed as this value.</q>
+  </ol>
+
+<li>In <a href="http://www.w3.org/TR/CSS21/visudet.html#abs-non-replaced-height">10.6.4</a>, <q>height</q> is to be interpreted as <a spec="css21">content height</a> in the following equation: <q>'top' + 'margin-top' + 'border-top-width' + 'padding-top' + 'height' + [...]</q>
+
+<li>In <a href="http://www.w3.org/TR/CSS21/visudet.html#min-max-heights">10.7</a>, <q>width</q>, <q>height</q>, <q>min-height</q> and <q>max-height</q> are respectively to be interpreted as <a spec="css21">content width</a>, <a spec="css21">content height</a>, <a>min inner height</a> and <a>max inner height</a> in the following phrases:
+  <ol>
+  <li><q>The tentative used height is calculated [...]</q>
+  <li><q>If this tentative height is greater than 'max-height', the rules above are applied again, but this time using the value of 'max-height' as the computed value for 'height'.</q>
+  <li><q>If the resulting height is smaller than 'min-height', the rules above are applied again, but this time using the value of 'min-height' as the computed value for 'height'.</q>
+  <li><q>[...] use the algorithm under Minimum and maximum widths above to find the used width and height. Then apply the rules under "Computing heights and margins" above, using the resulting width and height as if they were the computed values.</q>
+  </ol>
+</ol>
 
 <div class="example"><p style="display:none">Example(s):
 <h4 id="box-sizing-example" class="no-num no-toc">Using box-sizing to evenly share space</h4>
@@ -252,7 +252,7 @@ demonstration of sample CSS and HTML:
 </div>
 </div>
 
-Note: The ''padding-box'' value is at risk.
+Note: The ''box-sizing/padding-box'' value is at risk.
 
 <h2 id="outline-props">Outline properties</h2>
 
@@ -262,14 +262,19 @@ to make them stand out. Outlines differ from borders in the following
 ways:
 
 <ol>
-<li>Outlines do not take up space. 
+<li>Outlines do not take up space.
 <li>Outlines may be non-rectangular.
 <li>UAs often render outlines on elements in the :focus state.
 </ol>
 
 The outline properties control the style of these dynamic outlines.
 
+The stacking of the rendering of these outlines is explicitly left up to implementations to provide a better user experience per platform. This supersedes the stacking of outlines as defined in CSS 2.1.
+
 Keyboard users depend on outline on elements in the :focus state for interaction with the page, thus authors must not make the outline invisible on such elements without making sure an alternative highlighting mechanism is provided.
+
+The rendering of applying transforms to outlines is left explicitly undefined in CSS3-UI.
+
 
 <h3 id="outline">'outline' property</h3>
 
@@ -298,7 +303,7 @@ Keyboard users depend on outline on elements in the :focus state for interaction
 <tr><th>Inherited:</th><td>no</td></tr>
 <tr><th>Percentages:</th><td>N/A</td></tr>
 <tr><th>Media:</th><td>visual</td></tr>
-<tr><th>Computed&nbsp;value:</th><td>absolute length; ''0'' if the outline style is ''none''.</td></tr>
+<tr><th>Computed&nbsp;value:</th><td>absolute length; ''0'' if the outline style is ''outline-width/none''.</td></tr>
 <tr><th>Animatable:</th><td>as <a href="http://dev.w3.org/csswg/css3-transitions/#animtype-length">length</a></td></tr>
 </tbody></table>
 
@@ -326,7 +331,7 @@ Keyboard users depend on outline on elements in the :focus state for interaction
 <tr><th>Inherited:</th><td>no</td></tr>
 <tr><th>Percentages:</th><td>N/A</td></tr>
 <tr><th>Media:</th><td>visual</td></tr>
-<tr><th>Computed&nbsp;value:</th><td>The computed value for ''invert'' is ''invert''. For &lt;color&gt; values, the computed value is as defined for the [[!CSS3COLOR]] 'color' property.</td></tr>
+<tr><th>Computed&nbsp;value:</th><td>The computed value for ''invert'' is ''invert''. For <<color>> values, the computed value is as defined for the [[!CSS3COLOR]] 'color' property.</td></tr>
 <tr><th>Animatable:</th><td>as <a href="http://dev.w3.org/csswg/css3-transitions/#animtype-color">color</a></td></tr>
 </tbody></table>
 
@@ -346,10 +351,10 @@ rather than open on some sides
 (as borders on inline elements are when lines are broken).
 
 The parts of the outline are not required to be rectangular.
-To the extent that the outline follows the border edge, 
-it should follow the border-radius curve.
+To the extent that the outline follows the border edge,
+it should follow the 'border-radius' curve.
 
-The position of the outline may be affected by descendant boxes. 
+The position of the outline may be affected by descendant boxes.
 
 User agents should use an algorithm for determining
 the outline that encloses a region appropriate
@@ -361,20 +366,20 @@ Note: This specification does not define the exact position or shape of the outl
 The 'outline-width' property accepts
 the same values as
           'border-width'
-([[!CSS3BG]], 
+([[!CSS3BG]],
 <a href="http://www.w3.org/TR/css3-background/#the-border-width">Section 4.3</a>).
 
 The 'outline-style' property accepts
 the same values as
           'border-style'
-([[!CSS3BG]], 
-<a href="http://www.w3.org/TR/css3-background/#the-border-style">Section 4.2</a>), 
+([[!CSS3BG]],
+<a href="http://www.w3.org/TR/css3-background/#the-border-style">Section 4.2</a>),
 except that
-''hidden'' is not a legal outline style.
+<span class=css>hidden</span> is not a legal outline style.
 In addition, in CSS3,
 'outline-style'
-accepts the value ''auto''.
-The ''auto'' value permits the user agent
+accepts the value ''outline-style/auto''.
+The ''outline-style/auto'' value permits the user agent
 to render a custom outline style,
 typically a style which is either a user interface default for the platform,
 or perhaps a style that is richer
@@ -384,8 +389,8 @@ that appears to glow.
 As such, this specification does not define how the
 'outline-color'
 is incorporated or used (if at all) when rendering
-''auto'' style outlines.
-User agents may treat ''auto'' as
+''outline-style/auto'' style outlines.
+User agents may treat ''outline-style/auto'' as
 ''solid''.
 
 The 'outline-color' property
@@ -400,7 +405,7 @@ on platforms that do not support color inversion of the pixels on the screen.
 If the UA does not support the ''invert'' value
 then it must reject that value at parse-time, and
 the initial value of the 'outline-color' property
-is the ''currentColor'' [[!CSS3COLOR]] keyword.
+is the ''color/currentColor'' [[!CSS3COLOR]] keyword.
 
 The 'outline' property is a shorthand property,
 and sets all three of 'outline-style',
@@ -451,13 +456,13 @@ However, it is possible to offset the outline and draw it beyond the border edge
 
 <table class="propdef"><tbody>
 <tr><th>Name:</th><td><dfn>outline-offset</dfn></td></tr>
-<tr><th>Value:</th><td>&lt;length&gt;</td></tr>
+<tr><th>Value:</th><td><<length>></td></tr>
 <tr><th>Initial:</th><td>0</td></tr>
 <tr><th>Applies to:</th><td>all elements</td></tr>
 <tr><th>Inherited:</th><td>no</td></tr>
 <tr><th>Percentages:</th><td>N/A</td></tr>
 <tr><th>Media:</th><td>visual</td></tr>
-<tr><th>Computed&nbsp;value:</th><td>&lt;length&gt; value in absolute units (px or physical).</td></tr>
+<tr><th>Computed&nbsp;value:</th><td><<length>> value in absolute units (px or physical).</td></tr>
 <tr><th>Animatable:</th><td>as <a href="http://dev.w3.org/csswg/css3-transitions/#animtype-length">length</a></td></tr>
 </tbody></table>
 
@@ -475,6 +480,20 @@ the following rule can be used:
 :focus,:active  { outline-offset: 2px }
 </code></pre>
 </div>
+
+Negative values must cause the outline
+to shrink into the border box.
+Both the height and the width of outside of the shape
+drawn by the outline must not become smaller
+than twice the computed value of the outline-width property,
+to make sure that an outline can be rendered
+even with large negative values.
+User Agents must apply this constraint
+independently in each dimension.
+If the outline is drawn as multiple disconnected shapes,
+this constraint applies to each shape separately.
+Negative value constraints are an at risk feature due to
+<a href="https://lists.w3.org/Archives/Public/www-style/2014Dec/0033.html">interoperability problems</a>, and thus might be dropped from a must to a should.
 
 
 <h2 id="resizing-and-overflow">Resizing &amp; Overflow</h2>
@@ -520,7 +539,7 @@ to allow the user to adjust only the height of the element.</dd>
 
 Currently it is possible to control the appearance of the scrolling mechanism (if any)
 on an element using the 'overflow' property
-(e.g. '<code class="lang-css">overflow: scroll</code>' vs. '<code class="lang-css">overflow: hidden</code>' etc.).
+(e.g. <code class="lang-css">overflow: scroll</code> vs. <code class="lang-css">overflow: hidden</code> etc.).
 The purpose of the 'resize' property
 is to also allow control over the appearance and function of the resizing mechanism
 (e.g. a resize box or widget) on the element.
@@ -535,44 +554,48 @@ The 'resize' property applies to elements
 whose computed 'overflow' value
 is something other than ''visible''.
 
+The effect of the 'resize' property on generated content is undefined. Implementations should not apply the 'resize' property to generated content.
+
+Note: the 'resize' property may apply to generated content in the future if there is implementation of <a href="http://dev.w3.org/csswg/css-pseudo/#CSSPseudoElement-interface">Interface CSSPseudoElement</a>.
+
 When an element is resized by the user,
-the user agent keeps track of a resize factor
-(which is initially 1.0) for the width and height,
-which it then applies to the computed width and height
-as part of determining the used width and height.
-The element's contents (and surroundings) are reformatted as necessary.
+the user agent sets
+the 'width' and 'height' properties
+to px unit length values of the size indicated by the user,
+in the element’s <a href="http://www.w3.org/TR/css-style-attr/#style-attribute">style attribute</a> DOM,
+replacing existing property declaration(s) if any,
+without ''!important'' if any.
 
-The resize factor introduces a step in width/height calculations and formatting
-as described in <a href="http://www.w3.org/TR/CSS21/visudet.html">chapter 10 of CSS2.1</a>.
-Specifically the following step is inserted between steps 1 and 2
-of the algorithm in <a href="http://www.w3.org/TR/CSS21/visudet.html#min-max-widths">section 10.4</a>
-and <a href="http://www.w3.org/TR/CSS21/visudet.html#min-max-heights">10.7</a> in CSS2.1 [[!CSS21]],
-where [dimension] is 'width' for 10.4 and 'height' for 10.7.
-<blockquote><p style="text-indent:-2em">
-1b. If the resize [dimension] factor is not 1.0,
- then the tentative used [dimension] is multiplied by that factor,
- and the rules above are applied again,
- but this time using the result of that multiplication as the computed value for '[dimension]'.
-</blockquote>
-
-With regard to interactivity and the Document Object Model (DOM),
-the resize factor on an element lasts the lifetime of the element,
-however, if the 'resize' property itself is altered
-(e.g. via pseudo-class change or via DOM manipulation),
-then the resize factor is reset to 1.0.
+If an element is resized in only one dimension,
+only the corresponding property is set, not both.
 
 The precise direction of resizing
 (i.e. altering the top left of the element or altering the bottom right)
-may depend on a number of factors
+may depend on a number of CSS layout factors
 including whether the element is absolutely positioned,
 whether it is positioned using the 'right'
 and 'bottom' properties,
 whether the language of the element is right-to-left etc.
-The precise direction of resizing is left to the UA to properly determine for the platform.
+The UA should consider the direction of resizing 
+(as determined by CSS layout),
+as well as platform conventions and constraints when deciding 
+how to convey the resizing mechanism to the user.
 
-The user agent may restrict the resizing range to something suitable,
-such as between the original formatted size of the element,
-and large enough to encompass all the element's contents.
+The user agent must allow the user to resize the element
+with no other constraints than what is imposed by
+'min-width', 'max-width', 'min-height', and 'max-height'.
+(The "must" is <a href="https://wiki.csswg.org/spec/css3-ui#issue-53">at risk</a>
+since
+<a href="http://lists.w3.org/Archives/Public/www-style/2014Dec/0063.html">only Firefox currently supports this</a>, and may be downgraded to a "should").
+
+Note: There may be situations where user attempts to resize an element
+to appear to be overriden or ignored, e.g. because of ''!important'' cascading declarations that supersede
+that element’s <a href="http://www.w3.org/TR/css-style-attr/#style-attribute">style attribute</a>
+'width' and 'height' properties in the DOM.
+
+Changes to the computed value of an element's 'resize' property
+do not reset changes to the <a href="http://www.w3.org/TR/css-style-attr/#style-attribute">style attribute</a> made due to
+user resizing of that element.
 
 <div class="example"><p style="display:none">Example(s):
 
@@ -636,20 +659,21 @@ its line box edge
 in the inline progression direction of its block container element ("the block")
 that has 'overflow'
 other than ''visible''.
+
 Text can overflow for example when it is prevented from wrapping
-(e.g. due to '<code class="lang-css">white-space: nowrap</code>'
+(e.g. due to <code class="lang-css">white-space: nowrap</code>
 or a single word is too long to fit).
 Values have the following meanings:
 
 <dl data-dfn-for="overflow" class="valuedef">
   <dt><dfn>clip</dfn></dt>
-    <dd>Clip inline content that overflows. Characters may be only partially rendered.</dd>
+    <dd>Clip inline content that overflows its block container element. Characters may be only partially rendered.</dd>
 
   <dt><dfn>ellipsis</dfn></dt>
     <dd>
 Render an ellipsis character (U+2026)
 to represent clipped inline content.
-Implementations may substitute a more language/script-appropriate
+Implementations may substitute a more language, script, or writing-mode appropriate
 ellipsis character,
 or three dots "..." if the ellipsis character is unavailable.
 </dd>
@@ -661,7 +685,7 @@ for bidi purposes.
 </dd>
 </dl>
 
-Note: The &lt;string&gt; value, and the 2-value syntax "{1,2}"
+Note: The <<string>> value, and the 2-value syntax "{1,2}"
 and functionality are all at risk.
 
 The term "character" is used in this property definition
@@ -737,7 +761,7 @@ sample CSS for a div:
 }</code></pre>
 
 sample HTML fragments, renderings, and your browser:
-<table border="1" cellpadding="5" style="color:#000;background:#fff;"><tbody>
+<table style="color:#000;background:#fff" id="awesome-table"><tbody>
 <tr><th>HTML</th><th>sample rendering</th><th>your browser</th></tr>
 <tr>
 <td><pre><code class="lang-markup">&lt;div&gt;
@@ -807,7 +831,7 @@ Fourth, a box with a nested paragraph demonstrating anonymous block boxes equiva
 
 <td>
 <div style="width:3.1em; border:solid .1em black; margin:1em 0; padding:.2em;  font-family:Helvetica,sans-serif; line-height:1.1; overflow:hidden;text-overflow:ellipsis;">NESTED
- <p>PARAGRAPH
+ <p>PARAGRAPH</p>
 WON'T ELLIPSE.</div>
 </td>
 
@@ -819,8 +843,8 @@ WON'T ELLIPSE.</div>
 Note: the side of the line that the ellipsis is placed depends on the 'direction' of the block.
 E.g. an overflow hidden right-to-left
 (<code class="lang-css">direction: rtl</code>)
-block clips inline content on the <a>left</a> side,
-thus would place a text-overflow ellipsis on the <a>left</a>
+block clips inline content on the <a spec=css-writing-modes-3>left</a> side,
+thus would place a text-overflow ellipsis on the <a spec=css-writing-modes-3>left</a>
 to represent that clipped content.
 
 <!-- insert RTL example diagram here to illustrate note. -->
@@ -872,7 +896,7 @@ div.crawlbar {
 sample HTML fragment:
 <pre><code class="lang-markup">
 &lt;div class="crawlbar"&gt;
-CSS is awesome, especially when you can scroll 
+CSS is awesome, especially when you can scroll
 to see extra text instead of just
 having it overlap other text by default.
 &lt;/div&gt;
@@ -880,7 +904,7 @@ having it overlap other text by default.
 
 demonstration of sample CSS and HTML:
 <div style="text-overflow: ellipsis; height: 2em; overflow: scroll; white-space: nowrap; width: 15em; border:1em solid black;">
-CSS is awesome, especially when you can scroll 
+CSS is awesome, especially when you can scroll
 to see extra text instead of just
 having it overlap other text by default.
 </div>
@@ -891,7 +915,7 @@ it is likely that other content may scroll out of view on the other side.
 If that content's block container element is the same
 that's doing the scrolling,
 and the computed value of 'text-overflow' has two values, with
-the first a non-clip value,
+the value applying to the start edge being a non-clip value,
 then implementations must render an ellipsis/string in place of
 the clipped content,
 with the same details as described in the value definition above,
@@ -908,7 +932,7 @@ implementations may adjust their rendering of ellipses/strings
 Same as previous example except with <code>text-overflow: ellipsis ellipsis</code>, demonstrated:
 
 <div style="text-overflow: ellipsis ellipsis; height: 2em; overflow: scroll; white-space: nowrap; width: 15em; border:1em solid black;">
-CSS is awesome, especially when you can scroll 
+CSS is awesome, especially when you can scroll
 to see extra text instead of just
 having it overlap other text by default.
 </div>
@@ -926,7 +950,7 @@ then only the end ellipsis/string should be rendered.
 <table class="propdef"><tbody>
 <tr><th>Name:</th><td><dfn>cursor</dfn></td></tr>
 <tr><th>Value:</th><td>
-[ [&lt;uri&gt; [&lt;x&gt; &lt;y&gt;]?,]* <br>
+[ [<<url>> [&lt;x&gt; &lt;y&gt;]?,]* <br>
 [ auto | default | none |<br>
  context-menu | help | pointer | progress | wait | <br>
  cell | crosshair | text | vertical-text | <br>
@@ -950,21 +974,62 @@ then only the end ellipsis/string should be rendered.
 <!-- got this far reformatting lines -->
 This property specifies the type of cursor to be displayed for the pointing device
 when within the element's border-box.
+
+User agents may ignore the cursor property over native user-agent controls such as scrollbars, resizers, or other native UI widgets e.g. those that may be used inside some user agent specific implementations of form elements.
+
 Values have the following meanings:
 
 image cursors
 <dl>
-<dt>&lt;uri&gt;</dt>
+<dt><<url>></dt>
 <dd>The user agent retrieves the cursor from the resource designated by the URI.
 If the user agent cannot handle the first cursor of a list of cursors,
 it must attempt to handle the second, etc.
 If the user agent cannot handle any user-defined cursor,
 it must use the cursor keyword at the end of the list.
-Conforming User Agents may, instead of &lt;uri&gt;, support &lt;image&gt; which is a superset.
+Conforming User Agents may, instead of <<url>>, support <<image>> which is a superset.
 
-The <a>default object size</a> for cursor images is 
-a UA-defined size that should be based on 
+The UA must support the following image file formats:
+<ul>
+	<li>PNG, as defined in [[!PNG]]
+	<li>SVG, as defined in [[!SVG]], in <a href="http://www.w3.org/TR/svg-integration/#secure-static-mode">secure static mode</a> [[!SVG-INTEGRATION]]
+	<li>any other non-animated image file format that they support
+	for <<image>> in other properties,
+	such as the the 'background-image' property
+</ul>
+
+In addition, the UA should support the following image file formats:
+<ul>
+	<li>SVG, as defined in [[!SVG]], in <a href="http://www.w3.org/TR/svg-integration/#secure-animated-mode">secure animated mode</a> [[!SVG-INTEGRATION]]
+	<li>any other animated image file format that they support
+	for <<image>> in other properties,
+	such as the the 'background-image' property
+</ul>
+
+The UA may also support additional file formats.
+
+Note: At the time of writing this specification (spring 2015),
+the only file formats supported for cursors in common desktop browsers are
+the .ico and .cur file formats, as designed by Microsoft.
+For compatibility with legacy content,
+UAs are encouraged to support these,
+even though the lack of an open specification
+makes it impossible to have a normative requirement
+about these formats.
+Some information on these formats can be found
+<a href="http://en.wikipedia.org/wiki/ICO_%28file_format%29">on wikipedia</a>.
+
+The <a>default object size</a> for cursor images is
+a UA-defined size that should be based on
 the size of a typical cursor on the UA's operating system.
+
+The <a>concrete object size</a> is determined using
+the <a>default sizing algorithm</a>.
+If an operating system is
+<strong>incapable</strong> of rendering a cursor above a given size,
+cursors larger than that size must be shrunk to within
+the OS-supported size bounds,
+while maintaining the cursor image's intrinsic ratio, if any.
 
 The optional &lt;x&gt; and &lt;y&gt; coordinates
 identify the exact position within the image which is the pointer position (i.e., the hotspot).
@@ -972,30 +1037,36 @@ identify the exact position within the image which is the pointer position (i.e.
 <dt>&lt;x&gt;</dt>
 <dt>&lt;y&gt;</dt>
 <dd>
-Each is a &lt;number&gt;.
+Each is a <<number>>.
 The x-coordinate and y-coordinate of the position
 in the cursor's coordinate system (left/top relative)
 which represents the precise position that is being pointed to.
+
+Note: This specification does not define
+how the coordinate systems of the various types of <<image>> are established,
+and defers these definitions to [[!CSS4-IMAGES]].
 
 If the values are unspecified,
 then the intrinsic hotspot defined inside the image resource itself is used.
 If both the values are unspecific and the referenced cursor has no defined hotspot,
 the effect is as if a value of "0 0" were specified.
 
-If the coordinates of the hotspot, 
-as specified either inside the image resource or 
+If the coordinates of the hotspot,
+as specified either inside the image resource or
 by &lt;x&gt; and &lt;y&gt; values,
-fall outside of the cursor image, 
+fall outside of the cursor image,
 they must be clamped (independently) to fit.
 </dd>
 </dl>
 
 general purpose cursors
+
 <dl>
 <dt style="cursor:auto">auto</dt>
 <dd>The UA determines the cursor to display based on the current
-context.
+context, specifically: auto behaves as ''cursor/text'' over text, and ''cursor/default'' otherwise.
 </dd>
+
 <dt style="cursor:default">default</dt>
 <dd>The platform-dependent default cursor. Often rendered as an arrow.
 </dd>
@@ -1120,7 +1191,7 @@ often rendered as a magnifying glass with a "+" or "-" in the center of the glas
 </dd>
 </dl>
 
-The UA may treat unsupported values as ''auto''.
+The UA may treat unsupported values as ''cursor/auto''.
 E.g. on platforms that do not have a concept of a ''context-menu'' cursor,
 the UA may render ''default'' or whatever is appropriate.
 
@@ -1170,20 +1241,23 @@ boxes are generated for it and its cursor is used for the canvas.
 <h4 id="caret-color">Coloring the insertion caret: caret-color</h4>
 <table class="propdef"><tbody>
 <tr><th>Name: </th><td><dfn>caret-color</dfn></td></tr>
-<tr><th>Value: </th><td>auto | &lt;color&gt;</td></tr>
+<tr><th>Value: </th><td>auto | <<color>></td></tr>
 <tr><th>Initial:</th><td>auto</td></tr>
 <tr><th>Applies to:</th><td>elements that accept input</td></tr>
-<tr><th>Inherited:</th><td>no</td></tr>
+<tr><th>Inherited:</th><td>yes</td></tr>
 <tr><th>Percentages:</th><td>N/A</td></tr>
 <tr><th>Media:</th><td>interactive</td></tr>
-<tr><th>Computed&nbsp;value:</th><td>The computed value for ''auto'' is ''currentColor''. For &lt;color&gt; values, the computed value is as defined for the [[!CSS3COLOR]] 'color' property.</td></tr>
-<tr><th>Animatable:</th><td>no</td></tr>
+<tr><th>Computed&nbsp;value:</th><td>The computed value for ''caret-color/auto'' is ''caret-color/auto''. For <<color>> values, the computed value is as defined for the [[!CSS3COLOR]] 'color' property.</td></tr>
+<tr><th>Animatable:</th><td>as <a href="http://dev.w3.org/csswg/css3-transitions/#animtype-color">color</a></td></tr>
 </tbody></table>
 
 <dl>
 <dt>auto</dt>
-<dd>the color of the element.</dd>
-<dt>&lt;color&gt;</dt>
+<dd>User agents should use currentColor.
+User agents may automatically adjust the color of caret
+to ensure good visibility and contrast with the surrounding content,
+possibly based on the currentColor, background, shadows, etc.</dd>
+<dt><<color>></dt>
 <dd>the insertion caret is colored with the specified color.</dd>
 </dl>
 
@@ -1192,7 +1266,7 @@ The caret is a visible indicator of the insertion point in an element where text
 Note: caret shape and blinking is outside the scope of this feature and thus unspecified.
 
 <div class="example">
-Example: a textarea with 
+Example: a textarea with
 <code class="lang-css">caret-color:#00aacc;</code>
 
 <textarea style="caret-color:#00aacc;">
@@ -1233,11 +1307,24 @@ there is no need to refocus the same element.
 
 If no element matches the selector,
 the user agent automatically determines which element to navigate the focus to.
+
+If the focus is navigated to an element
+that was not otherwise focusable,
+it becomes focusable
+only as the result of this directional navigation,
+and the <css>:focus</css> pseudo-class matches the element
+while it is focused as such.
+
+Note: there were other options under consideration for such "not otherwise focusable" elements, including focus to the next otherwise focusable element in the document tree (including descendants of such a not otherwise focusable element). Input on such other options is welcome and explicitly solicited, especially from implementation experiences and author experience using the directional navigation properties in their content.
+
 </dd>
 <dt>&lt;target-name&gt;</dt>
 <dd>
 The &lt;target-name&gt; parameter indicates the target frame for the focus navigation.
-It is a &lt;string&gt; and it cannot start with the underscore "_" character.
+It is a <<string>> and it MUST NOT start with the underscore "_" character.
+Error handling: if it does start with an underscore, "_parent" navigates to the parent frame,
+"_root" is treated as ''root'',
+and other values navigate to a frame by that name if it exists.
 If the specified target frame does not exist,
 the parameter will be treated as the keyword ''current'',
 which means to simply use the frame that the element is in.
@@ -1256,12 +1343,12 @@ For accessibility and user convenience,
 user agents should allow configuration of which keys on a keyboard are used for directional navigation.
 
 <div class="example">
-<h5>Example: positioned buttons</h5>
+<h5 id=example-positioned-buttons>Example: positioned buttons</h5>
 
 Here is an example of buttons positioned in a diamond shape
 whose directional focus navigation is set in such a way
-to navigate the focus clockwise (or counter-clockwise) around the diamond shape 
-when the user chooses to navigate sequentially or directionally.
+to navigate the focus clockwise (or counter-clockwise) around the diamond shape
+when the user chooses to navigate directionally.
 <pre><code class="lang-css">
 button { position:absolute }
 
@@ -1297,9 +1384,9 @@ it is still important to ensure focus navigation behaviors which relate reasonab
 </div>
 
 <div class="example">
-<h5>Example: moving focus to inside a frame</h5>
+<h5 id=example-moving-focus-to-inside-a-frame>Example: moving focus to inside a frame</h5>
 
-Moving the focus to an element in a specific frame requires both the element's id and the frame's name. 
+Moving the focus to an element in a specific frame requires both the element's id and the frame's name.
 
 This example shows how to make navigating left from the button with id "foo" move the focus to the element with id "bar" within the frame named "sidebar".
 
@@ -1309,79 +1396,41 @@ button#foo { nav-left: #bar "sidebar"; }
 </div>
 
 
-<h4 id="input-method-editor">Input method editor: the 'ime-mode' property</h4>
+<h4 id="input-method-editor">Obsolete: the ime-mode property</h4>
 
-<table class="propdef"><tbody>
-<tr><th>Name: </th><td><dfn>ime-mode</dfn></td></tr>
-<tr><th>Value: </th><td>auto | normal | active | inactive | disabled
-</td></tr>
-<tr><th>Initial:</th><td>auto</td></tr>
-<tr><th>Applies to:</th><td>text fields</td></tr>
-<tr><th>Inherited:</th><td>no</td></tr>
-<tr><th>Percentages:</th><td>N/A</td></tr>
-<tr><th>Media:</th><td>interactive</td></tr>
-<tr><th>Computed&nbsp;value:</th><td>as specified</td></tr>
-<tr><th>Animatable:</th><td>no</td></tr>
-</tbody></table>
+"ime-mode" is a property somewhat implemented in some browsers, that is problematic and officially obsoleted by this specification.
 
-The 'ime-mode' CSS property controls the state of the input method editor for text fields.
+There is documentation of
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/ime-mode">non-interoperability of these implementations.
+</a>
 
-<dl>
-<dt>auto</dt>
-<dd>
-No change is made to the current input method editor state. This is the default.
-</dd>
-<dt>normal</dt>
-<dd>
-The IME state should be normal;
-this value can be used in a user style sheet to override the page setting.
-</dd>
-<dt>active</dt>
-<dd>
-The input method editor is initially active;
-text entry is performed using it unless the user specifically dismisses it.
-</dd>
-<dt>inactive</dt>
-<dd>
-The input method editor is initially inactive,
-but the user may activate it if they wish.
-</dd>
-<dt>disabled</dt>
-<dd>
-The input method editor is disabled and may not be activated by the user.
-</dd>
-</dl>
+User agents should not support the <css>ime-mode</css> property.
 
-<div class="example">
-<p>Example: disabling input method support
-<pre><code class="lang-markup">&lt;input type=&quot;text&quot; name=&quot;name&quot; value=&quot;initial value&quot; style=&quot;ime-mode: disabled&quot;&gt;
-</code></pre>
+Authors must not use the ime-mode property.
 
-This example disables input method support for a field;
-this might be necessary for fields that enter data
-into a database that doesn't support extended character sets,
-for example.
-</div>
-
+Users may use the ime-mode property only for repair use-cases where they have to work around bad sites and legacy implementations, e.g. with a user style sheet rule like:
 <div class="example">
 <p>Example: user preference
 <pre><code class="lang-css">input[type=password] {
     ime-mode: auto&nbsp;!important;
 }
 </code></pre>
-
-This example CSS may be placed into a user style sheet file to force password input fields to behave in a default manner.
 </div>
 
-Note: In general, it's not appropriate for a public web site
-to manipulate the IME mode setting.
-This property should be used for web applications and the like.
-Authors should not rely on disabling IME
-to prevent extended characters from passing through a form.
-Even with IME disabled, users can still paste extended characters
-into a form's fields.
+This example CSS may be placed into a user style sheet file to force password input fields to behave in a default manner.
 
-Note: The 'ime-mode' property is at risk.
+This specification deliberately does not attempt to document the functionality of legacy ime-mode implementations nor what they specifically support because it does not make sense to pursue or recommend any such path.
+
+<div class="note">
+Note: there are several [[HTML5]] features which authors should use to provide information to user agents that allow them to provide a better input user experience:
+
+<ul>
+<li>The global <code>lang</code> attribute
+<li>The <code>inputmode</code>, <code>pattern</code>,
+and <code>type</code> attributes of the input element
+</ul>
+</div>
+
 
 <hr title="Separator from footer">
 
@@ -1390,86 +1439,180 @@ Note: The 'ime-mode' property is at risk.
 
 This appendix is <em>informative</em>.
 
+This specification was edited and written for the most part
+by Tantek Çelik from 1999 to the present,
+first while representing Microsoft, then as an invited expert,
+and most recently while representing Mozilla.
+
+Thanks to <span class="h-card">Florian Rivoal</span>, working on this specification on behalf of Bloomberg, for
+his recent work documenting issues from www-style emails,
+proposing resolutions &amp; changes,
+and in particular for researching &amp; writing greatly
+improved details for the 'box-sizing' property.
+
 Thanks to feedback and contributions from
-L. David Baron,
-Bert Bos,
-Matthew Brealey,
-Ada Chan,
-Michael Day,
-Micah Dubinko,
-Elika E.,
-Steve Falkenburg,
-Al Gilman,
-Ian Hickson,
-Bjoern Hoehrmann,
-David Hyatt,
-Richard Ishida,
-Sho Kuwamoto,
-Susan Lesch,
-Peter Linss,
-Brad Pettit,
-Alexander Savenkov,
-Sebastian Schnitzenbaumer,
-Etan Wexler,
-David Woolley
-and Domel.
+<span class="h-card">Rossen Atanassov</span>,
+<span class="h-card">Tab Atkins</span>,
+<span class="h-card">L. David Baron</span>,
+<span class="h-card">Bert Bos</span>,
+<span class="h-card">Matthew Brealey</span>,
+<span class="h-card">Rick Byers</span>,
+<span class="h-card">Ada Chan</span>,
+<span class="h-card">James Craig</span>,
+<span class="h-card">Michael Cooper</span>,
+<span class="h-card">Axel Dahmen</span>,
+<span class="h-card">Michael Day</span>,
+<span class="h-card">Micah Dubinko</span>,
+<span class="h-card">Elika E.</span>,
+<span class="h-card">Steve Falkenburg</span>,
+<span class="h-card">Andrew Fedoniouk</span>,
+<span class="h-card">Al Gilman</span>,
+<span class="h-card">Ian Hickson</span>,
+<span class="h-card">Bjoern Hoehrmann</span>,
+<span class="h-card">Alan Hogan</span>,
+<span class="h-card">David Hyatt</span>,
+<span class="h-card">Richard Ishida</span>,
+<span class="h-card">Sho Kuwamoto</span>,
+<span class="h-card">Yves Lafon</span>,
+<span class="h-card">Stuart Langridge</span>,
+<span class="h-card">Susan Lesch</span>,
+<span class="h-card">Peter Linss</span>,
+<span class="h-card">Kang-Hao Lu</span>,
+<span class="h-card">Masayuki Nakano</span>,
+<span class="h-card">Mats Palmgren</span>,
+<span class="h-card">Brad Pettit</span>,
+<span class="h-card">François Remy</span>,
+<span class="h-card">Andrey Rybka</span>,
+<span class="h-card">Simon Sapin</span>,
+<span class="h-card">Alexander Savenkov</span>,
+<span class="h-card">Sebastian Schnitzenbaumer</span>,
+<span class="h-card">Lea Verou</span>,
+<span class="h-card">Etan Wexler</span>,
+<span class="h-card">David Woolley</span>,
+<span class="h-card">Frank Yan</span>,
+<span class="h-card">Boris Zbarsky</span>,
+and
+<span class="h-card">Domel</span>.
+
 
 <h2 class="no-num" id="changes">Appendix B. Changes</h2>
 
 This appendix is <em>informative</em>.
 
-In general this draft contains numerous
+In general this draft contains
 editorial/grammatical/spelling corrections,
-and several new informative examples.
-This appendix describes minor functional changes from the
-<a href="http://www.w3.org/TR/2004/CR-css3-ui-20040511/"
-   >Candidate Recommendation (CR) of 11 May 2004</a>
-that were made to reflect implementer adoption (or lack thereof)
-in the seven years since.
-In particular, changes since the CR fall into one of
+and a few new informative examples.
+This appendix describes functional changes from the
+<a href="http://www.w3.org/TR/2012/WD-css3-ui-20120117/"
+   >Working Draft (WD) of 17 Jan 2012</a>
+that were made to reflect implementer adoption (or lack thereof), as well as implementer innovations.
+In particular, changes since the previous draft fall into one of
 three categories:
 
 <ul>
 <li>Minor refinements to features based on implementation experience.
  <!-- e.g. cursor applying to border, padding, content areas -->
- 
+
 <li>Dropping features that were not implemented,
 or were insufficiently implemented to exit CR.
  <!-- e.g. System Appearance -->
 <li>Adding a small number of new but already interoperably
 implemented features.
- <!-- e.g. text-overflow, ime-mode -->
- 
+ <!-- e.g. text-overflow -->
 </ul>
 
 <h3 class="no-num" id="changes-list">List of substantial changes</h3>
 
 <ul>
-<li>System Appearance has been dropped,
-including appearance values &amp; property,
-and system fonts / extension of the 'font' property shorthand.
-
-
-<li>The ::selection pseudo-element has been dropped since
-it was dropped from Selectors after testing found
-interoperability problems and further details to explore/define.
-
-
-<li>'box-sizing' property. Added ''padding-box'' value.
-
-<li>'cursor' property. Added detail about applying to the border, padding, and content areas of the element.
-
-<li>'ime-mode' property - new!
-
-<li>'text-overflow' property - new!
-
-<li>2013-nov-28: 'nav-up', 'nav-right', 'nav-down', and 'nav-left' properties removed from the "at risk" list
+<li>'box-sizing' effects on CSS 2.1 width and height computations specified much more explicitly.
+<li>'cursor' image formats normatively required
+<li>'caret-color' is inherited and animatable
+<li>New informative appendix on Considerations for Security and Privacy
 
 </ul>
 
 
+<h2 class="no-num" id="security-privacy-considerations">Appendix C. Considerations for Security and Privacy</h2>
 
-<h2 class="no-num" id="default-style-sheet">Appendix C. Default style sheet additions for HTML</h2>
+This appendix is <em>informative</em>.
+
+The W3C TAG is developing a 
+<a href="https://w3ctag.github.io/security-questionnaire/">Self-Review Questionnaire: Security and Privacy</a> 
+for editors of specifications to informatively answer.
+
+Per the <a href="https://w3ctag.github.io/security-questionnaire/#questions">Questions to Consider</a>
+
+<ol>
+<li>Does this specification deal with personally-identifiable information?
+<p>No.</p>
+</li>
+
+<li>Does this specification deal with high-value data?
+<p>No.</p>
+</li>
+
+<li>Does this specification introduce new state for an origin that persists across browsing sessions?
+<p>No.</p>
+</li>
+
+<li>Does this specification expose persistent, cross-origin state to the web?
+<p>No.</p>
+</li>
+
+<li>Does this specification expose any other data to an origin that it doesn’t currently have access to?
+<p>No.</p>
+</li>
+
+<li>Does this specification enable new script execution/loading mechanisms?
+<p>Yes. The 'cursor' property accepts <<image>> values which may include URLs to be loaded.</p>
+</li>
+
+<li>Does this specification allow an origin access to a user’s location?
+<p>No.</p>
+</li>
+
+<li>Does this specification allow an origin access to sensors on a user’s device?
+<p>Yes. The directional focus navigation properties indirectly allow access to the device's keyboard navigation input mechanism such as arrow keys.</p>
+</li>
+
+<li>Does this specification allow an origin access to aspects of a user’s local computing environment?
+<p>No.</p>
+</li>
+
+<li>Does this specification allow an origin access to other devices?
+<p>No.</p>
+</li>
+
+<li>Does this specification allow an origin some measure of control over a user agent’s native UI?
+<p>Yes. The 'cursor' and 'caret-color' properties enable the page to change the display of the cursor and text insertion caret of the user agent’s native UI. In addition the 'outline-style' property’s ''outline-style/auto'' value (and thus 'outline' shorthand) enable the page to potentially display a native focused element outline presentation around any element.</p>
+</li>
+
+<li>Does this specification expose temporary identifiers to the web?
+<p>No.</p>
+</li>
+
+<li>Does this specification distinguish between behavior in first-party and third-party contexts?
+<p>No.</p>
+</li>
+
+<li>How should this specification work in the context of a user agent’s "incognito" mode?
+<p>No differently.</p>
+</li>
+
+<li>Does this specification persist data to a user’s local device?
+<p>No.</p>
+</li>
+
+<li>Does this specification have a "Security Considerations" and "Privacy Considerations" section?
+<p>Yes.</p>
+</li>
+
+<li>Does this specification allow downgrading default security characteristics? 
+<p>No.</p>
+</li>
+</ol>
+
+<h2 class="no-num" id="default-style-sheet">Appendix D. Default style sheet additions for HTML</h2>
 
 This appendix is <em>informative</em>.
 
@@ -1596,16 +1739,13 @@ frame[noresize] { resize:none }
 </pre>
 
 
-<h2 class="no-num" id="test-suite">Appendix D: Test Suite</h2>
+<h2 class="no-num" id="test-suite">Appendix E: Test Suite</h2>
 
 This appendix is <em>informative</em>.
 
-This specification shall refer to a test suite
+There is a partial test suite
 written according to the <a href="http://www.w3.org/Style/CSS/Test/testsuitedocumentation">CSS Test Suite Documentation</a>
 and following the <a href="http://www.w3.org/Style/CSS/Test/guidelines.html">CSS2.1 Test Case Authoring Guidelines</a>.
 The test suite shall allow user agents to verify their basic conformance to the specification.
 This test suite does not pretend to be exhaustive and does not cover all possible combinations of user interface related features.
 These tests will be made available from the <a href="http://www.w3.org/Style/CSS/Test/">CSS Test Suites</a> home page.
-
-Related issue:
- <a href="http://wiki.csswg.org/spec/css3-ui#issue-1">1</a>.

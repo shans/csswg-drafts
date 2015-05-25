@@ -13,7 +13,7 @@ Previous Version: http://www.w3.org/TR/2013/WD-css-variables-20130312/
 Previous Version: http://www.w3.org/TR/2012/WD-css-variables-20120410/
 Editor: Tab Atkins Jr., Google, http://xanthir.com/contact
 Abstract: This module introduces cascading variables as a new primitive value type that is accepted by all CSS properties, and custom properties for defining them.
-Ignored Terms: --foo, case-insensitive, getpropertyvalue()
+Ignored Terms: case-insensitive, getpropertyvalue()
 Link Defaults: css-color-3 (property) color, cssom-1 (interface) cssstyledeclaration
 </pre>
 
@@ -50,11 +50,11 @@ Introduction</h2>
 Defining Custom Properties: the '--*' family of properties</h2>
 
 	This specification defines an open-ended set of properties called <a>custom properties</a>,
-	which, among other things, are used to define the <a title="substitute a var()">substitution value</a> of ''var()'' functions.
+	which, among other things, are used to define the <a lt="substitute a var()">substitution value</a> of ''var()'' functions.
 
 	<pre class='propdef'>
 	Name: --*
-	Value: <<any-value>>
+	Value: <<declaration-value>>
 	Initial: (nothing, see prose)
 	Applies to: all elements
 	Inherited: yes
@@ -65,7 +65,7 @@ Defining Custom Properties: the '--*' family of properties</h2>
 
 	A <dfn export>custom property</dfn> is any property
 	whose name starts with two dashes (U+002D HYPHEN-MINUS),
-	like ''--foo''.
+	like '--foo'.
 	The <dfn>&lt;custom-property-name></dfn> production corresponds to this:
 	it's defined as any valid <a>identifier</a> that starts with two dashes.
 	<a>Custom properties</a> are solely for use by authors and users;
@@ -102,7 +102,7 @@ Defining Custom Properties: the '--*' family of properties</h2>
 	custom property names are <a>case-sensitive</a>.
 
 	<div class='example'>
-		While both ''--foo'' and ''--FOO'' are valid,
+		While both '--foo' and --FOO are valid,
 		they are distinct properties -
 		using ''var(--foo)'' will refer to the first one,
 		while using ''var(--FOO)'' will refer to the second.
@@ -128,7 +128,7 @@ Defining Custom Properties: the '--*' family of properties</h2>
 Custom Property Value Syntax</h3>
 
 	The allowed syntax for <a>custom properties</a> is extremely permissive.
-	The <dfn>&lt;any-value></dfn> production matches <em>any</em> sequence of one or more tokens,
+	The <<declaration-value>> production matches <em>any</em> sequence of one or more tokens,
 	so long as the sequence does not contain
 	<<bad-string-token>>,
 	<<bad-url-token>>,
@@ -149,7 +149,7 @@ Custom Property Value Syntax</h3>
 	does not prevent ''!important'' from being used,
 	as the ''!important'' is removed before syntax checking happens.
 
-	Note: While <<any-value>> must represent at least one token,
+	Note: While <<declaration-value>> must represent at least one token,
 	that one token may be whitespace.
 	This implies that ''--foo: ;'' is valid,
 	and the corresponding ''var(--foo)'' call would have a single space as its substitution value,
@@ -204,7 +204,7 @@ Custom Property Value Syntax</h3>
 		}
 		</pre>
 
-		declares a <a>custom property</a> named "--header-color" on the root element,
+		declares a <a>custom property</a> named '--header-color' on the root element,
 		and assigns to it the value "#06c".
 		This property is then inherited to the elements in the rest of the document.
 		Its value can be referenced with the ''var()'' function:
@@ -239,6 +239,24 @@ Custom Property Value Syntax</h3>
 		&lt;/div>
 		</pre>
 	</div>
+
+	<div class='example'>
+		A real-world example of <a>custom property</a> usage
+		is easily separating out strings from where they're used,
+		to aid in maintenance of internationalization:
+
+		<pre class='lang-css'>
+		:root,
+		:root:lang(en) {--external-link: "external link";}
+		:root:lang(de) {--external-link: "externer Link";}
+
+		a[href^="http"]::after {content: " (" var(--external-link) ")"}
+		</pre>
+
+		The variable declarations can even be kept in a separate file,
+		to make maintaining the translations simpler.
+	</div>
+
 
 
 <h3 id='cycles'>
@@ -364,7 +382,7 @@ Using Cascading Variables: the ''var()'' notation</h2>
 	The syntax of ''var()'' is:
 
 	<pre class='prod'>
-	<dfn>var()</dfn> = var( <<custom-property-name>> [, <<any-value>> ]? )
+	<dfn>var()</dfn> = var( <<custom-property-name>> [, <<declaration-value>> ]? )
 	</pre>
 
 	The ''var()'' function can be used in place of any part of a value in any property on an element.
@@ -388,7 +406,7 @@ Using Cascading Variables: the ''var()'' notation</h2>
 	and those functions are syntactically valid,
 	the entire property's grammar must be assumed to be valid at parse time.
 	It is only syntax-checked at computed-value time,
-	after ''var()'' functions have been <a title="substitute a var()">substituted</a>.
+	after ''var()'' functions have been <a lt="substitute a var()">substituted</a>.
 
 	To <dfn export>substitute a var()</dfn> in a property's value:
 
@@ -407,7 +425,7 @@ Using Cascading Variables: the ''var()'' notation</h2>
 			Otherwise, if the ''var()'' function has a fallback value as its second argument,
 			replace the ''var()'' function by the fallback value.
 			If there are any ''var()'' references in the fallback,
-			<a title="substitute a var()">substitute</a> them as well.
+			<a lt="substitute a var()">substitute</a> them as well.
 
 		<li>
 			Otherwise,
@@ -485,7 +503,7 @@ Using Cascading Variables: the ''var()'' notation</h2>
 		</pre>
 	</div>
 
-	''var()'' functions are <a title="substitute a var()">substituted</a> at computed-value time.
+	''var()'' functions are <a lt="substitute a var()">substituted</a> at computed-value time.
 	If a declaration,
 	once all ''var()'' functions are substituted in,
 	is invalid,
