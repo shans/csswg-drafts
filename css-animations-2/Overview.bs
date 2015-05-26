@@ -40,7 +40,7 @@ with the additions here into a complete level 2 specification.</p>
 			</ul>
 	</dl>
 
-### Generalized Event Dispatch {#generalized-event-dispatch}
+### Generalized Event Dispatch ### {#generalized-event-dispatch}
 
 Every animation which is not idle can be characterized as being in one of the following three states:
 
@@ -53,17 +53,17 @@ Note that if playbackRate &lt; 0, then the equality parts of the inequalities sw
 Add stuff for when events get fired here!!!
 
 
-#### Non-normative Description of Event Dispatch {#non-normative-description-of-event-dispatch}
+#### Non-normative Description of Event Dispatch #### {#non-normative-description-of-event-dispatch}
 
-## Web Animations Instantiation of CSS Animations {#web-animations-instantiation-of-CSS-animations}
+## Web Animations Instantiation of CSS Animations ## {#web-animations-instantiation-of-CSS-animations}
 
 TODO: Copy prose from integration spec
 
-### Interaction between animation-play-state and Web Animations API {#interaction-between-animation-play-state-and-web-animations-API}
+### Interaction between animation-play-state and Web Animations API ### {#interaction-between-animation-play-state-and-web-animations-API}
 
-## DOM Interfaces {#DOM-interfaces}
+## DOM Interfaces ## {#DOM-interfaces}
 
-### The CSSAnimation interface {#the-CSSAnimation-interface}
+### The CSSAnimation interface ### {#the-CSSAnimation-interface}
 
 <pre class="idl">
 interface CSSAnimation : Animation {
@@ -71,7 +71,7 @@ interface CSSAnimation : Animation {
 };
 </pre>
 
-### The CSSKeyframeEffectReadOnly interface {#the-CSSKeyframeEffectReadOnly-interface}
+### The CSSKeyframeEffectReadOnly interface ### {#the-CSSKeyframeEffectReadOnly-interface}
 
 <pre class="idl">
 interface CSSKeyframeEffectReadOnly : KeyframeEffectReadOnly {
