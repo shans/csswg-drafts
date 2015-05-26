@@ -23,6 +23,31 @@ only the differences from CSS Animations Level 1 [[!CSS3-ANIMATIONS]].
 Once the Level 1 specification is closer to complete, it will be merged
 with the additions here into a complete level 2 specification.</p>
 
+# Keyframes # {#keyframes}
+
+## The 'animation-composite' property ## {#animation-composite}
+
+TBD
+
+<pre class='propdef'>
+Name: animation-composite
+Value: <<single-animation-composite>>#
+Initial: replace
+Applies to: all elements, ::before and ::after pseudo-elements
+Inherited: none
+Animatable: no
+Percentages: N/A
+Media: interactive
+Computed value: As specified
+Canonical order: per grammar
+</pre>
+
+<dfn>&lt;single-animation-composite></dfn> = replace | add | accumulate
+
+The values of 'animation-composite' have the following meanings:
+
+TBD
+
 <h2 id="events">Animation Events</h2>
 
 <h3 id="event-animationevent">Types of <code>AnimationEvent</code></h3>

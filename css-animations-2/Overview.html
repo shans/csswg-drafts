@@ -161,22 +161,26 @@ on screen, on paper, in speech, etc.</div>
   <div data-fill-with="table-of-contents" role="navigation">
    <ul class="toc" role="directory">
     <li><a href="#delta"><span class="secno">1</span> <span class="content">Delta specification</span></a>
-    <li><a href="#events"><span class="secno">2</span> <span class="content">Animation Events</span></a>
+    <li><a href="#keyframes"><span class="secno">2</span> <span class="content">Keyframes</span></a>
      <ul class="toc">
-      <li><a href="#event-animationevent"><span class="secno">2.1</span> <span class="content">Types of <code>AnimationEvent</code></span></a>
-      <li><a href="#generalized-event-dispatch"><span class="secno">2.2</span> <span class="content">Generalized Event Dispatch</span></a>
+      <li><a href="#animation-composite"><span class="secno">2.1</span> <span class="content">The <span class="property">animation-composite</span> property</span></a>
+     </ul>
+    <li><a href="#events"><span class="secno">3</span> <span class="content">Animation Events</span></a>
+     <ul class="toc">
+      <li><a href="#event-animationevent"><span class="secno">3.1</span> <span class="content">Types of <code>AnimationEvent</code></span></a>
+      <li><a href="#generalized-event-dispatch"><span class="secno">3.2</span> <span class="content">Generalized Event Dispatch</span></a>
        <ul class="toc">
-        <li><a href="#non-normative-description-of-event-dispatch"><span class="secno">2.2.1</span> <span class="content">Non-normative Description of Event Dispatch</span></a>
+        <li><a href="#non-normative-description-of-event-dispatch"><span class="secno">3.2.1</span> <span class="content">Non-normative Description of Event Dispatch</span></a>
        </ul>
      </ul>
-    <li><a href="#web-animations-instantiation-of-CSS-animations"><span class="secno">3</span> <span class="content">Web Animations Instantiation of CSS Animations</span></a>
+    <li><a href="#web-animations-instantiation-of-CSS-animations"><span class="secno">4</span> <span class="content">Web Animations Instantiation of CSS Animations</span></a>
      <ul class="toc">
-      <li><a href="#interaction-between-animation-play-state-and-web-animations-API"><span class="secno">3.1</span> <span class="content">Interaction between animation-play-state and Web Animations API</span></a>
+      <li><a href="#interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.1</span> <span class="content">Interaction between animation-play-state and Web Animations API</span></a>
      </ul>
-    <li><a href="#DOM-interfaces"><span class="secno">4</span> <span class="content">DOM Interfaces</span></a>
+    <li><a href="#DOM-interfaces"><span class="secno">5</span> <span class="content">DOM Interfaces</span></a>
      <ul class="toc">
-      <li><a href="#the-CSSAnimation-interface"><span class="secno">4.1</span> <span class="content">The CSSAnimation interface</span></a>
-      <li><a href="#the-CSSKeyframeEffectReadOnly-interface"><span class="secno">4.2</span> <span class="content">The CSSKeyframeEffectReadOnly interface</span></a>
+      <li><a href="#the-CSSAnimation-interface"><span class="secno">5.1</span> <span class="content">The CSSAnimation interface</span></a>
+      <li><a href="#the-CSSKeyframeEffectReadOnly-interface"><span class="secno">5.2</span> <span class="content">The CSSKeyframeEffectReadOnly interface</span></a>
      </ul>
     <li><a href="#conformance"><span class="secno"></span> <span class="content">
 Conformance</span></a>
@@ -201,6 +205,7 @@ Non-experimental implementations</span></a>
      <ul class="toc">
       <li><a href="#normative"><span class="secno"></span> <span class="content">Normative References</span></a>
      </ul>
+    <li><a href="#property-index"><span class="secno"></span> <span class="content">Property Index</span></a>
     <li><a href="#idl-index"><span class="secno"></span> <span class="content">IDL Index</span></a>
    </ul></div>
 
@@ -220,10 +225,62 @@ Once the Level 1 specification is closer to complete, it will be merged
 with the additions here into a complete level 2 specification.</p>
 
 
-   <h2 class="heading settled" data-level="2" id="events"><span class="secno">2. </span><span class="content">Animation Events</span><a class="self-link" href="#events"></a></h2>
+   <h2 class="heading settled" data-level="2" id="keyframes"><span class="secno">2. </span><span class="content">Keyframes</span><a class="self-link" href="#keyframes"></a></h2>
 
 
-   <h3 class="heading settled" data-level="2.1" id="event-animationevent"><span class="secno">2.1. </span><span class="content">Types of <code>AnimationEvent</code></span><a class="self-link" href="#event-animationevent"></a></h3>
+   <h3 class="heading settled" data-level="2.1" id="animation-composite"><span class="secno">2.1. </span><span class="content">The <a class="property" data-link-type="propdesc" href="#propdef-animation-composite">animation-composite</a> property</span><a class="self-link" href="#animation-composite"></a></h3>
+
+
+   <p>TBD</p>
+
+
+   <table class="definition propdef" data-link-for-hint="animation-composite">
+    <tbody>
+     <tr>
+      <th>Name:
+      <td><dfn class="css" data-dfn-type="property" data-export="" id="propdef-animation-composite">animation-composite<a class="self-link" href="#propdef-animation-composite"></a></dfn>
+     <tr class="value">
+      <th>Value:
+      <td class="prod"><a class="production css" data-link-type="type" href="#typedef-single-animation-composite">&lt;single-animation-composite></a><a data-link-type="grammar" href="http://dev.w3.org/csswg/css-values-3/#mult-comma">#</a>
+     <tr>
+      <th>Initial:
+      <td>replace
+     <tr>
+      <th>Applies to:
+      <td>all elements, ::before and ::after pseudo-elements
+     <tr>
+      <th>Inherited:
+      <td>none
+     <tr>
+      <th>Percentages:
+      <td>N/A
+     <tr>
+      <th>Media:
+      <td>interactive
+     <tr>
+      <th>Computed value:
+      <td>As specified
+     <tr>
+      <th>Animatable:
+      <td>no
+     <tr>
+      <th>Canonical order:
+      <td>per grammar</table>
+
+
+   <p><dfn class="css" data-dfn-type="type" data-export="" id="typedef-single-animation-composite">&lt;single-animation-composite><a class="self-link" href="#typedef-single-animation-composite"></a></dfn> = replace | add | accumulate</p>
+
+
+   <p>The values of <a class="property" data-link-type="propdesc" href="#propdef-animation-composite">animation-composite</a> have the following meanings:</p>
+
+
+   <p>TBD</p>
+
+
+   <h2 class="heading settled" data-level="3" id="events"><span class="secno">3. </span><span class="content">Animation Events</span><a class="self-link" href="#events"></a></h2>
+
+
+   <h3 class="heading settled" data-level="3.1" id="event-animationevent"><span class="secno">3.1. </span><span class="content">Types of <code>AnimationEvent</code></span><a class="self-link" href="#event-animationevent"></a></h3>
 
 	
    <p>The <em>additional</em> types of animation events that can occur are:</p>
@@ -253,7 +310,7 @@ with the additions here into a complete level 2 specification.</p>
    </dl>
 
 
-   <h3 class="heading settled" data-level="2.2" id="generalized-event-dispatch"><span class="secno">2.2. </span><span class="content">Generalized Event Dispatch</span><a class="self-link" href="#generalized-event-dispatch"></a></h3>
+   <h3 class="heading settled" data-level="3.2" id="generalized-event-dispatch"><span class="secno">3.2. </span><span class="content">Generalized Event Dispatch</span><a class="self-link" href="#generalized-event-dispatch"></a></h3>
 
 
    <p>Every animation which is not idle can be characterized as being in one of the following three states:</p>
@@ -280,22 +337,22 @@ with the additions here into a complete level 2 specification.</p>
 
 
 
-   <h4 class="heading settled" data-level="2.2.1" id="non-normative-description-of-event-dispatch"><span class="secno">2.2.1. </span><span class="content">Non-normative Description of Event Dispatch</span><a class="self-link" href="#non-normative-description-of-event-dispatch"></a></h4>
+   <h4 class="heading settled" data-level="3.2.1" id="non-normative-description-of-event-dispatch"><span class="secno">3.2.1. </span><span class="content">Non-normative Description of Event Dispatch</span><a class="self-link" href="#non-normative-description-of-event-dispatch"></a></h4>
 
 
-   <h2 class="heading settled" data-level="3" id="web-animations-instantiation-of-CSS-animations"><span class="secno">3. </span><span class="content">Web Animations Instantiation of CSS Animations</span><a class="self-link" href="#web-animations-instantiation-of-CSS-animations"></a></h2>
+   <h2 class="heading settled" data-level="4" id="web-animations-instantiation-of-CSS-animations"><span class="secno">4. </span><span class="content">Web Animations Instantiation of CSS Animations</span><a class="self-link" href="#web-animations-instantiation-of-CSS-animations"></a></h2>
 
 
    <p>TODO: Copy prose from integration spec</p>
 
 
-   <h3 class="heading settled" data-level="3.1" id="interaction-between-animation-play-state-and-web-animations-API"><span class="secno">3.1. </span><span class="content">Interaction between animation-play-state and Web Animations API</span><a class="self-link" href="#interaction-between-animation-play-state-and-web-animations-API"></a></h3>
+   <h3 class="heading settled" data-level="4.1" id="interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.1. </span><span class="content">Interaction between animation-play-state and Web Animations API</span><a class="self-link" href="#interaction-between-animation-play-state-and-web-animations-API"></a></h3>
 
 
-   <h2 class="heading settled" data-level="4" id="DOM-interfaces"><span class="secno">4. </span><span class="content">DOM Interfaces</span><a class="self-link" href="#DOM-interfaces"></a></h2>
+   <h2 class="heading settled" data-level="5" id="DOM-interfaces"><span class="secno">5. </span><span class="content">DOM Interfaces</span><a class="self-link" href="#DOM-interfaces"></a></h2>
 
 
-   <h3 class="heading settled" data-level="4.1" id="the-CSSAnimation-interface"><span class="secno">4.1. </span><span class="content">The CSSAnimation interface</span><a class="self-link" href="#the-CSSAnimation-interface"></a></h3>
+   <h3 class="heading settled" data-level="5.1" id="the-CSSAnimation-interface"><span class="secno">5.1. </span><span class="content">The CSSAnimation interface</span><a class="self-link" href="#the-CSSAnimation-interface"></a></h3>
 
 
    <pre class="idl">interface <dfn class="idl-code" data-dfn-type="interface" data-export="" data-global-name="" id="cssanimation">CSSAnimation<a class="self-link" href="#cssanimation"></a></dfn> : <a data-link-type="idl-name" href="http://w3c.github.io/web-animations/#animation">Animation</a> {
@@ -304,7 +361,7 @@ with the additions here into a complete level 2 specification.</p>
 </pre>
 
 
-   <h3 class="heading settled" data-level="4.2" id="the-CSSKeyframeEffectReadOnly-interface"><span class="secno">4.2. </span><span class="content">The CSSKeyframeEffectReadOnly interface</span><a class="self-link" href="#the-CSSKeyframeEffectReadOnly-interface"></a></h3>
+   <h3 class="heading settled" data-level="5.2" id="the-CSSKeyframeEffectReadOnly-interface"><span class="secno">5.2. </span><span class="content">The CSSKeyframeEffectReadOnly interface</span><a class="self-link" href="#the-CSSKeyframeEffectReadOnly-interface"></a></h3>
 
 
    <pre class="idl">interface <dfn class="idl-code" data-dfn-type="interface" data-export="" data-global-name="" id="csskeyframeeffectreadonly">CSSKeyframeEffectReadOnly<a class="self-link" href="#csskeyframeeffectreadonly"></a></dfn> : <a data-link-type="idl-name" href="http://w3c.github.io/web-animations/#keyframeeffectreadonly">KeyframeEffectReadOnly</a> {
@@ -483,14 +540,16 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
   <h2 class="no-num heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="indexlist">
-   <li>active, <a href="#active">2.2</a>
-   <li>animationcancel, <a href="#dom-animationevent-animationcancel">2.1</a>
-   <li>animationName, <a href="#dom-cssanimation-animationname">4.1</a>
-   <li>CSSAnimation, <a href="#cssanimation">4.1</a>
-   <li>CSSKeyframeEffectReadOnly, <a href="#csskeyframeeffectreadonly">4.2</a>
-   <li>left-inactive, <a href="#left_inactive">2.2</a>
-   <li>right-inactive, <a href="#right_inactive">2.2</a>
-   <li>rule, <a href="#dom-csskeyframeeffectreadonly-rule">4.2</a>
+   <li>active, <a href="#active">3.2</a>
+   <li>animationcancel, <a href="#dom-animationevent-animationcancel">3.1</a>
+   <li>animation-composite, <a href="#propdef-animation-composite">2.1</a>
+   <li>animationName, <a href="#dom-cssanimation-animationname">5.1</a>
+   <li>CSSAnimation, <a href="#cssanimation">5.1</a>
+   <li>CSSKeyframeEffectReadOnly, <a href="#csskeyframeeffectreadonly">5.2</a>
+   <li>left-inactive, <a href="#left_inactive">3.2</a>
+   <li>right-inactive, <a href="#right_inactive">3.2</a>
+   <li>rule, <a href="#dom-csskeyframeeffectreadonly-rule">5.2</a>
+   <li>&lt;single-animation-composite>, <a href="#typedef-single-animation-composite">2.1</a>
   </ul>
   <h3 class="no-num heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="indexlist">
@@ -499,6 +558,10 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
      <li><a href="http://dev.w3.org/csswg/css-animations-1/#csskeyframesrule">CSSKeyframesRule</a>
      <li><a href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-name">animation-name</a>
      <li><a href="http://dev.w3.org/csswg/css-animations-1/#dom-animationevent-animationend">animationend</a>
+    </ul>
+   <li><a data-link-type="biblio" href="#biblio-css-values-3">[css-values-3]</a> defines the following terms:
+    <ul>
+     <li><a href="http://dev.w3.org/csswg/css-values-3/#mult-comma">#</a>
     </ul>
    <li><a data-link-type="biblio" href="#biblio-web-animations">[web-animations]</a> defines the following terms:
     <ul>
@@ -511,6 +574,8 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
   <dl>
    <dt id="biblio-css-animations-1"><a class="self-link" href="#biblio-css-animations-1"></a>[CSS-ANIMATIONS-1]
    <dd>CSS Animations Module Level 1 URL: <a href="http://www.w3.org/TR/css3-animations/">http://www.w3.org/TR/css3-animations/</a>
+   <dt id="biblio-css-values-3"><a class="self-link" href="#biblio-css-values-3"></a>[CSS-VALUES-3]
+   <dd>CSS Values and Units Module Level 3 URL: <a href="http://www.w3.org/TR/css3-values/">http://www.w3.org/TR/css3-values/</a>
    <dt id="biblio-css3-animations"><a class="self-link" href="#biblio-css3-animations"></a>[CSS3-ANIMATIONS]
    <dd>Dean Jackson; et al. <a href="http://www.w3.org/TR/css3-animations/">CSS Animations</a>. 19 February 2013. WD. URL: <a href="http://www.w3.org/TR/css3-animations/">http://www.w3.org/TR/css3-animations/</a>
    <dt id="biblio-rfc2119"><a class="self-link" href="#biblio-rfc2119"></a>[RFC2119]
@@ -518,6 +583,33 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
    <dt id="biblio-web-animations"><a class="self-link" href="#biblio-web-animations"></a>[WEB-ANIMATIONS]
    <dd>Brian Birtles; et al. <a href="http://www.w3.org/TR/web-animations/">Web Animations 1.0</a>. 5 June 2014. WD. URL: <a href="http://www.w3.org/TR/web-animations/">http://www.w3.org/TR/web-animations/</a>
   </dl>
+  <h2 class="no-num heading settled" id="property-index"><span class="content">Property Index</span><a class="self-link" href="#property-index"></a></h2>
+  <table class="proptable data">
+   <thead>
+    <tr>
+     <th scope="col">Name
+     <th scope="col">Value
+     <th scope="col">Initial
+     <th scope="col">Applies to
+     <th scope="col">Inh.
+     <th scope="col">%ages
+     <th scope="col">Media
+     <th scope="col">Animatable
+     <th scope="col">Canonical order
+     <th scope="col">Computed value
+   <tbody>
+    <tr>
+     <th scope="row"><a class="css" data-link-type="property" href="#propdef-animation-composite">animation-composite</a>
+     <td>&lt;single-animation-composite>#
+     <td>replace
+     <td>all elements, ::before and ::after pseudo-elements
+     <td>none
+     <td>N/A
+     <td>interactive
+     <td>no
+     <td>per grammar
+     <td>As specified
+  </table>
   <h2 class="no-num heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
   <pre class="idl">interface <a data-global-name="" href="#cssanimation">CSSAnimation</a> : <a data-link-type="idl-name" href="http://w3c.github.io/web-animations/#animation">Animation</a> {
   readonly attribute DOMString <a data-global-name="CSSAnimation<interface>/animationName<attribute>" data-readonly="" data-type="DOMString " href="#dom-cssanimation-animationname">animationName</a>;
