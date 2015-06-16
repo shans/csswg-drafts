@@ -73,7 +73,7 @@ should do a better job of integrating the two.
 
 Although the 'transition-property' may specify shorthand properties and the
 ''all'' keyword, individual transitions are generated for each longhand
-sub-property that is animatable. The <dfn>normalized transition property
+sub-property that is animatable. The <dfn>expanded transition property
 name</dfn> of a transition is the name of the longhand sub-property for which
 the transition was generated (e.g. 'border-left-width').
 
@@ -118,7 +118,7 @@ are sorted in priority order (lowest to highest) as follows:
     <a>transition generation</a> in ascending order.
 
 1.  Otherwise, sort <var>A</var> and <var>B</var> in ascending order by the
-    Unicode codepoints that make up the <a>normalized transition property
+    Unicode codepoints that make up the <a>expanded transition property
     name</a> of each transition (i.e. without attempting case conversion and
     such that &lsquo;-moz-column-width&rsquo; sorts before
     &lsquo;column-width&rsquo;).
@@ -132,6 +132,9 @@ interface CSSTransition : Animation {
   readonly attribute DOMString transitionProperty;
 };
 </pre>
+
+:   <dfn attribute for=CSSTransition>transitionProperty</dfn>
+::  The <a>expanded transition property name</a> of this transition.
 
 TBD: Define a constructor for this
 
