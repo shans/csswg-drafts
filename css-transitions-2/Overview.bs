@@ -12,6 +12,10 @@ Issue Tracking: Bugzilla bugs for all levels https://www.w3.org/Bugs/Public/bugl
 Abstract: CSS Transitions allows property changes in CSS values to occur smoothly over a specified duration.
 Ignored Terms: translate, rotate, scale
 </pre>
+<pre class="anchors">
+urlPrefix: http://w3c.github.io/web-animations/; type: interface; spec: web-animations
+    text: Animation
+</pre>
 
 <h2 id="delta">Delta specification</h2>
 
@@ -60,3 +64,15 @@ Ignored Terms: translate, rotate, scale
 		a different transition
 		than the color of a shadow.
 	</div>
+
+# DOM Interfaces # {#DOM-interfaces}
+
+## The CSSTransition interface ## {#the-CSSTransition-interface}
+
+<pre class="idl">
+interface CSSTransition : Animation {
+  readonly attribute DOMString transitionProperty;
+};
+</pre>
+
+TBD: Define a constructor for this
