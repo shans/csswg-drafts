@@ -181,7 +181,8 @@ on screen, on paper, in speech, etc.</div>
      </ul>
     <li><a href="#web-animations-instantiation-of-CSS-animations"><span class="secno">4</span> <span class="content">Web Animations Instantiation of CSS Animations</span></a>
      <ul class="toc">
-      <li><a href="#interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.1</span> <span class="content">Interaction between animation-play-state and Web Animations API</span></a>
+      <li><a href="#animation-priority"><span class="secno">4.1</span> <span class="content">Animation priority</span></a>
+      <li><a href="#interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.2</span> <span class="content">Interaction between <span class="property">animation-play-state</span> and Web Animations API</span></a>
      </ul>
     <li><a href="#DOM-interfaces"><span class="secno">5</span> <span class="content">DOM Interfaces</span></a>
      <ul class="toc">
@@ -352,7 +353,81 @@ with the additions here into a complete level 2 specification.</p>
    <p>TODO: Copy prose from integration spec</p>
 
 
-   <h3 class="heading settled" data-level="4.1" id="interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.1. </span><span class="content">Interaction between animation-play-state and Web Animations API</span><a class="self-link" href="#interaction-between-animation-play-state-and-web-animations-API"></a></h3>
+   <h3 class="heading settled" data-level="4.1" id="animation-priority"><span class="secno">4.1. </span><span class="content">Animation priority</span><a class="self-link" href="#animation-priority"></a></h3>
+
+
+   <p>The <a data-link-type="dfn" href="http://www.w3.org/TR/web-animations/#dfn-animation">animations</a> generated from the markup and
+interfaces (e.g. the <code class="idl"><a data-link-type="idl" href="#cssanimation">CSSAnimation</a></code> constructor) defined in this specification
+have an <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation-type">animation type</a> of ‘CSS Animation’.</p>
+
+
+   <p>CSS Animations have a <em>higher</em> priority that CSS Transitions but
+a <em>lower</em> priority than animations without a specific <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation-type">animation
+type</a>.</p>
+
+
+   <p>Within the set of CSS Animations, two animations <var>A</var> and <var>B</var>
+are sorted in priority order (lowest to highest) as follows:</p>
+
+
+   <ol>
+    <li data-md="">
+     <p>Define the <dfn data-dfn-type="dfn" data-noexport="" id="owning-element">owning element<a class="self-link" href="#owning-element"></a></dfn> as the element or pseudo-element to
+which the <a class="property" data-link-type="propdesc" href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-name">animation-name</a> property was applied that generated this CSS
+Animation.
+If the CSS Animation was generated directly by script (e.g. using
+the <code class="idl"><a data-link-type="idl" href="#cssanimation">CSSAnimation</a></code> constructor) then it has no <a data-link-type="dfn" href="#owning-element">owning element</a>.</p>
+     
+
+
+    <li data-md="">
+     <p>If neither <var>A</var> nor <var>B</var> has an <a data-link-type="dfn" href="#owning-element">owning element</a>,
+sort based on <var>A</var> and <var>B</var> such that their <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation-sequence-number">animation sequence numbers</a> are in ascending order.</p>
+     
+
+
+    <li data-md="">
+     <p>Otherwise, if  only one of <var>A</var> or <var>B</var> has an <a data-link-type="dfn" href="#owning-element">owning
+element</a>, let the animation <em>with</em> an <a data-link-type="dfn" href="#owning-element">owning element</a> sort
+first.</p>
+     
+
+
+    <li data-md="">
+     <p>Otherwise, if the <a data-link-type="dfn" href="#owning-element">owning element</a> of <var>A</var> and <var>B</var>
+differs, sort <var>A</var> and <var>B</var> by <a data-link-type="dfn" href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a>
+of their corresponding <a data-link-type="dfn" href="#owning-element">owning elements</a>.
+With regard to pseudo-elements, the sort order is as follows:</p>
+     
+
+
+     <ul>
+      <li data-md="">
+       <p>element</p>
+       
+
+      <li data-md="">
+       <p>::before</p>
+       
+
+      <li data-md="">
+       <p>::after</p>
+       
+
+      <li data-md="">
+       <p>element children</p>
+       
+</ul>
+     
+
+    <li data-md="">
+     <p>Otherwise, sort <var>A</var> and <var>B</var> based on their position in the
+computed value of the <a class="property" data-link-type="propdesc" href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-name">animation-name</a> property of the (common) <a data-link-type="dfn" href="#owning-element">owning
+element</a>.</p>
+     
+</ol>
+
+   <h3 class="heading settled" data-level="4.2" id="interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.2. </span><span class="content">Interaction between <a class="property" data-link-type="propdesc" href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-play-state">animation-play-state</a> and Web Animations API</span><a class="self-link" href="#interaction-between-animation-play-state-and-web-animations-API"></a></h3>
 
 
    <h2 class="heading settled" data-level="5" id="DOM-interfaces"><span class="secno">5. </span><span class="content">DOM Interfaces</span><a class="self-link" href="#DOM-interfaces"></a></h2>
@@ -365,6 +440,9 @@ with the additions here into a complete level 2 specification.</p>
   readonly attribute DOMString <dfn class="idl-code" data-dfn-for="CSSAnimation" data-dfn-type="attribute" data-export="" data-readonly="" data-type="DOMString " id="dom-cssanimation-animationname">animationName<a class="self-link" href="#dom-cssanimation-animationname"></a></dfn>;
 };
 </pre>
+
+
+   <p>TBD: Define a constructor for this that takes a CSSKeyframesRule argument.</p>
 
 
    <h3 class="heading settled" data-level="5.2" id="the-CSSKeyframeEffectReadOnly-interface"><span class="secno">5.2. </span><span class="content">The CSSKeyframeEffectReadOnly interface</span><a class="self-link" href="#the-CSSKeyframeEffectReadOnly-interface"></a></h3>
@@ -553,6 +631,7 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
    <li>CSSAnimation, <a href="#cssanimation">5.1</a>
    <li>CSSKeyframeEffectReadOnly, <a href="#csskeyframeeffectreadonly">5.2</a>
    <li>left-inactive, <a href="#left_inactive">3.2</a>
+   <li>owning element, <a href="#owning-element">4.1</a>
    <li>right-inactive, <a href="#right_inactive">3.2</a>
    <li>rule, <a href="#dom-csskeyframeeffectreadonly-rule">5.2</a>
    <li>&lt;single-animation-composition>, <a href="#typedef-single-animation-composition">2.1</a>
@@ -563,16 +642,27 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
     <ul>
      <li><a href="http://dev.w3.org/csswg/css-animations-1/#csskeyframesrule">CSSKeyframesRule</a>
      <li><a href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-name">animation-name</a>
+     <li><a href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-play-state">animation-play-state</a>
      <li><a href="http://dev.w3.org/csswg/css-animations-1/#dom-animationevent-animationend">animationend</a>
     </ul>
    <li><a data-link-type="biblio" href="#biblio-css-values-3">[css-values-3]</a> defines the following terms:
     <ul>
      <li><a href="http://dev.w3.org/csswg/css-values-3/#mult-comma">#</a>
     </ul>
+   <li><a data-link-type="biblio" href="#biblio-dom-ls">[dom-ls]</a> defines the following terms:
+    <ul>
+     <li><a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a>
+    </ul>
    <li><a data-link-type="biblio" href="#biblio-web-animations">[web-animations]</a> defines the following terms:
     <ul>
      <li><a href="http://w3c.github.io/web-animations/#animation">Animation</a>
      <li><a href="http://w3c.github.io/web-animations/#keyframeeffectreadonly">KeyframeEffectReadOnly</a>
+     <li><a href="http://w3c.github.io/web-animations/#animation-sequence-number">animation sequence number</a>
+     <li><a href="http://w3c.github.io/web-animations/#animation-type">animation type</a>
+    </ul>
+   <li><a data-link-type="biblio" href="#biblio-web-animations-1">[web-animations-1]</a> defines the following terms:
+    <ul>
+     <li><a href="http://www.w3.org/TR/web-animations/#dfn-animation">animation</a>
     </ul>
   </ul>
   <h2 class="no-num heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
@@ -584,10 +674,14 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
    <dd>CSS Values and Units Module Level 3 URL: <a href="http://www.w3.org/TR/css3-values/">http://www.w3.org/TR/css3-values/</a>
    <dt id="biblio-css3-animations"><a class="self-link" href="#biblio-css3-animations"></a>[CSS3-ANIMATIONS]
    <dd>Dean Jackson; et al. <a href="http://www.w3.org/TR/css3-animations/">CSS Animations</a>. 19 February 2013. WD. URL: <a href="http://www.w3.org/TR/css3-animations/">http://www.w3.org/TR/css3-animations/</a>
+   <dt id="biblio-dom-ls"><a class="self-link" href="#biblio-dom-ls"></a>[DOM-LS]
+   <dd>Document Object Model URL: <a href="http://dom.spec.whatwg.org/">http://dom.spec.whatwg.org/</a>
    <dt id="biblio-rfc2119"><a class="self-link" href="#biblio-rfc2119"></a>[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
    <dt id="biblio-web-animations"><a class="self-link" href="#biblio-web-animations"></a>[WEB-ANIMATIONS]
    <dd>Brian Birtles; et al. <a href="http://www.w3.org/TR/web-animations/">Web Animations 1.0</a>. 5 June 2014. WD. URL: <a href="http://www.w3.org/TR/web-animations/">http://www.w3.org/TR/web-animations/</a>
+   <dt id="biblio-web-animations-1"><a class="self-link" href="#biblio-web-animations-1"></a>[WEB-ANIMATIONS-1]
+   <dd>Web Animations Level 1 URL: <a href="http://www.w3.org/TR/web-animations/">http://www.w3.org/TR/web-animations/</a>
   </dl>
   <h2 class="no-num heading settled" id="property-index"><span class="content">Property Index</span><a class="self-link" href="#property-index"></a></h2>
   <table class="proptable data">

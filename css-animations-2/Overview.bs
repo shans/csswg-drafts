@@ -13,8 +13,12 @@ Editor: L. David Baron, Mozilla, dbaron@dbaron.org
 Abstract: This CSS module describes a way for authors to animate the values of CSS properties over time, using keyframes. The behavior of these keyframe animations can be controlled by specifying their duration, number of repeats, and repeating behavior.
 </pre>
 <pre class="anchors">
-urlPrefix: http://w3c.github.io/web-animations/; type: interface; text: Animation; spec: web-animations
-urlPrefix: http://w3c.github.io/web-animations/; type: interface; text: KeyframeEffectReadOnly; spec: web-animations
+urlPrefix: http://w3c.github.io/web-animations/; type: interface; spec: web-animations
+    text: Animation
+    text: KeyframeEffectReadOnly
+urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
+    text: animation type
+    text: animation sequence number
 </pre>
 
 <h2 id="delta">Delta specification</h2>
@@ -85,7 +89,48 @@ Add stuff for when events get fired here!!!
 
 TODO: Copy prose from integration spec
 
-## Interaction between animation-play-state and Web Animations API ## {#interaction-between-animation-play-state-and-web-animations-API}
+## Animation priority ## {#animation-priority}
+
+The <a spec='web-animations'>animations</a> generated from the markup and
+interfaces (e.g. the {{CSSAnimation}} constructor) defined in this specification
+have an <a>animation type</a> of &lsquo;CSS Animation&rsquo;.
+
+CSS Animations have a <em>higher</em> priority that CSS Transitions but
+a <em>lower</em> priority than animations without a specific <a>animation
+type</a>.
+
+Within the set of CSS Animations, two animations <var>A</var> and <var>B</var>
+are sorted in priority order (lowest to highest) as follows:
+
+1.  Define the <dfn>owning element</dfn> as the element or pseudo-element to
+    which the 'animation-name' property was applied that generated this CSS
+    Animation.
+    If the CSS Animation was generated directly by script (e.g. using
+    the {{CSSAnimation}} constructor) then it has no <a>owning element</a>.
+
+1.  If neither <var>A</var> nor <var>B</var> has an <a>owning element</a>,
+    sort based on <var>A</var> and <var>B</var> such that their <a
+    spec='web-animations'>animation sequence numbers</a> are in ascending order.
+
+1.  Otherwise, if  only one of <var>A</var> or <var>B</var> has an <a>owning
+    element</a>, let the animation <em>with</em> an <a>owning element</a> sort
+    first.
+
+1.  Otherwise, if the <a>owning element</a> of <var>A</var> and <var>B</var>
+    differs, sort <var>A</var> and <var>B</var> by <a>tree order</a>
+    of their corresponding <a>owning elements</a>.
+    With regard to pseudo-elements, the sort order is as follows:
+
+    *  element
+    *  ::before
+    *  ::after
+    *  element children
+
+1.  Otherwise, sort <var>A</var> and <var>B</var> based on their position in the
+    computed value of the 'animation-name' property of the (common) <a>owning
+    element</a>.
+
+## Interaction between 'animation-play-state' and Web Animations API ## {#interaction-between-animation-play-state-and-web-animations-API}
 
 # DOM Interfaces # {#DOM-interfaces}
 
@@ -96,6 +141,8 @@ interface CSSAnimation : Animation {
   readonly attribute DOMString animationName;
 };
 </pre>
+
+TBD: Define a constructor for this that takes a CSSKeyframesRule argument.
 
 ## The CSSKeyframeEffectReadOnly interface ## {#the-CSSKeyframeEffectReadOnly-interface}
 
