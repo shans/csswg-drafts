@@ -53,18 +53,18 @@ TBD
 
 <h3 id="event-animationevent">Types of <code>AnimationEvent</code></h3>
 
-	<p>The <em>additional</em> types of animation events that can occur are:</p>
+  <p>The <em>additional</em> types of animation events that can occur are:</p>
 
-	<dl dfn-type=event dfn-for=animationevent>
-		<dt><dfn>animationcancel</dfn>
-		<dd>
-			The <a idl>animationcancel</a> event occurs when the animation stops running in a way that does not fire an <a idl>animationend</a> event, such as a change in the 'animation-name' that removes the animation, or the animating element or one of its ancestors becoming ''display:none''.
-			<ul>
-				<li>Bubbles: Yes</li>
-				<li>Cancelable: No</li>
-				<li>Context Info: animationName, elapsedTime, pseudoElement</li>
-			</ul>
-	</dl>
+  <dl dfn-type=event dfn-for=animationevent>
+    <dt><dfn>animationcancel</dfn>
+    <dd>
+      The <a idl>animationcancel</a> event occurs when the animation stops running in a way that does not fire an <a idl>animationend</a> event, such as a change in the 'animation-name' that removes the animation, or the animating element or one of its ancestors becoming ''display:none''.
+      <ul>
+        <li>Bubbles: Yes</li>
+        <li>Cancelable: No</li>
+        <li>Context Info: animationName, elapsedTime, pseudoElement</li>
+      </ul>
+  </dl>
 
 ## Generalized Event Dispatch ## {#generalized-event-dispatch}
 
