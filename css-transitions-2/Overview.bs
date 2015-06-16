@@ -12,9 +12,15 @@ Issue Tracking: Bugzilla bugs for all levels https://www.w3.org/Bugs/Public/bugl
 Abstract: CSS Transitions allows property changes in CSS values to occur smoothly over a specified duration.
 Ignored Terms: translate, rotate, scale
 </pre>
-<pre class="anchors">
+<pre class=anchors>
 urlPrefix: http://w3c.github.io/web-animations/; type: interface; spec: web-animations
     text: Animation
+urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
+    text: animation sequence number
+    text: animation type
+</pre>
+<pre class=link-defaults>
+spec:css-transitions-1; type:value; text:all
 </pre>
 
 <h2 id="delta">Delta specification</h2>
@@ -49,7 +55,87 @@ urlPrefix: http://w3c.github.io/web-animations/; type: interface; spec: web-anim
 			</ul>
 	</dl>
 
-<h2 id="issues">Issues deferred from previous levels</h2>
+# Starting of transitions # {#starting}
+
+Associated with each top-level browsing context is a <dfn>current transition
+generation</dfn> that is incremented on each <a>style change event</a>.
+
+Each time a new transition is generated, the current value of the (already
+incremented) <a>current transition generation</a> is stored as the
+transition's <dfn>transition generation</dfn>.
+
+# Web Animations Instantiation of CSS Animations # {#web-animations-instantiation-of-CSS-animations}
+
+TBD. Not sure if we really want a separate 'web animations' section or if we
+should do a better job of integrating the two.
+
+## The transition property name ## {#transition-property-name}
+
+Although the 'transition-property' may specify shorthand properties and the
+''all'' keyword, individual transitions are generated for each longhand
+sub-property that is animatable. The <dfn>normalized transition property
+name</dfn> of a transition is the name of the longhand sub-property for which
+the transition was generated (e.g. 'border-left-width').
+
+## Animation priority ## {#animation-priority}
+
+The <a spec='web-animations'>animations</a> generated from the markup and
+interfaces (e.g. the {{CSSTransition}} constructor) defined in this
+specification have an <a>animation type</a> of &lsquo;CSS Transition&rsquo;.
+
+CSS Transitions have a <em>lower</em> priority that CSS Animations and
+animations without a specific <a>animation type</a>.
+
+Within the set of CSS Transitions, two animations <var>A</var> and <var>B</var>
+are sorted in priority order (lowest to highest) as follows:
+
+1.  Define the <dfn>owning element</dfn> as the element or pseudo-element to
+    which the 'transition-property' property was applied that generated this
+    CSS Transition.
+    If the CSS Transition was generated directly by script (e.g. using
+    the {{CSSTransition}} constructor) then it has no <a>owning element</a>.
+
+1.  If neither <var>A</var> nor <var>B</var> has an <a>owning element</a>,
+    sort based on <var>A</var> and <var>B</var> such that their <a
+    spec='web-animations'>animation sequence numbers</a> are in ascending order.
+
+1.  Otherwise, if  only one of <var>A</var> or <var>B</var> has an <a>owning
+    element</a>, let the animation <em>with</em> an <a>owning element</a> sort
+    first.
+
+1.  Otherwise, if the <a>owning element</a> of <var>A</var> and <var>B</var>
+    differs, sort <var>A</var> and <var>B</var> by <a>tree order</a>
+    of their corresponding <a>owning elements</a>.
+    With regard to pseudo-elements, the sort order is as follows:
+
+    *  element
+    *  ::before
+    *  ::after
+    *  element children
+
+1.  Otherwise, if <var>A</var> and <var>B</var> have different <a>transition
+    generation</a> values, sort by their corresponding
+    <a>transition generation</a> in ascending order.
+
+1.  Otherwise, sort <var>A</var> and <var>B</var> in ascending order by the
+    Unicode codepoints that make up the <a>normalized transition property
+    name</a> of each transition (i.e. without attempting case conversion and
+    such that &lsquo;-moz-column-width&rsquo; sorts before
+    &lsquo;column-width&rsquo;).
+
+# DOM Interfaces # {#DOM-interfaces}
+
+## The CSSTransition interface ## {#the-CSSTransition-interface}
+
+<pre class="idl">
+interface CSSTransition : Animation {
+  readonly attribute DOMString transitionProperty;
+};
+</pre>
+
+TBD: Define a constructor for this
+
+# Issues deferred from previous levels # {#deferred-issues}
 
 	<div class="issue">
 		We may ultimately want to support a keypath syntax
@@ -64,15 +150,3 @@ urlPrefix: http://w3c.github.io/web-animations/; type: interface; spec: web-anim
 		a different transition
 		than the color of a shadow.
 	</div>
-
-# DOM Interfaces # {#DOM-interfaces}
-
-## The CSSTransition interface ## {#the-CSSTransition-interface}
-
-<pre class="idl">
-interface CSSTransition : Animation {
-  readonly attribute DOMString transitionProperty;
-};
-</pre>
-
-TBD: Define a constructor for this
