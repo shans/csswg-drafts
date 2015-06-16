@@ -26,13 +26,13 @@ with the additions here into a complete level 2 specification.</p>
 
 # Keyframes # {#keyframes}
 
-## The 'animation-composite' property ## {#animation-composite}
+## The 'animation-composition' property ## {#animation-composition}
 
 TBD
 
 <pre class='propdef'>
-Name: animation-composite
-Value: <<single-animation-composite>>#
+Name: animation-composition
+Value: <<single-animation-composition>>#
 Initial: replace
 Applies to: all elements, ::before and ::after pseudo-elements
 Inherited: none
@@ -43,9 +43,9 @@ Computed value: As specified
 Canonical order: per grammar
 </pre>
 
-<dfn>&lt;single-animation-composite></dfn> = replace | add | accumulate
+<dfn>&lt;single-animation-composition></dfn> = replace | add | accumulate
 
-The values of 'animation-composite' have the following meanings:
+The values of 'animation-composition' have the following meanings:
 
 TBD
 
