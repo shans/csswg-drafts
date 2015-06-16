@@ -288,31 +288,31 @@ with the additions here into a complete level 2 specification.</p>
 
    <h3 class="heading settled" data-level="3.1" id="event-animationevent"><span class="secno">3.1. </span><span class="content">Types of <code>AnimationEvent</code></span><a class="self-link" href="#event-animationevent"></a></h3>
 
-	
+  
    <p>The <em>additional</em> types of animation events that can occur are:</p>
 
-	
+  
    <dl>
-		
+    
     <dt><dfn class="idl-code" data-dfn-for="animationevent" data-dfn-type="event" data-export="" id="dom-animationevent-animationcancel">animationcancel<a class="self-link" href="#dom-animationevent-animationcancel"></a></dfn>
-		
+    
     <dd>
-			The <a data-link-type="idl" href="#dom-animationevent-animationcancel">animationcancel</a> event occurs when the animation stops running in a way that does not fire an <a data-link-type="idl" href="http://dev.w3.org/csswg/css-animations-1/#dom-animationevent-animationend">animationend</a> event, such as a change in the <a class="property" data-link-type="propdesc" href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-name">animation-name</a> that removes the animation, or the animating element or one of its ancestors becoming <span class="css">display:none</span>.
-			
+      The <a data-link-type="idl" href="#dom-animationevent-animationcancel">animationcancel</a> event occurs when the animation stops running in a way that does not fire an <a data-link-type="idl" href="http://dev.w3.org/csswg/css-animations-1/#dom-animationevent-animationend">animationend</a> event, such as a change in the <a class="property" data-link-type="propdesc" href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-name">animation-name</a> that removes the animation, or the animating element or one of its ancestors becoming <span class="css">display:none</span>.
+      
      <ul>
-				
+        
       <li>Bubbles: Yes
       
-				
+        
       <li>Cancelable: No
       
-				
+        
       <li>Context Info: animationName, elapsedTime, pseudoElement
       
-			
+      
      </ul>
      
-	
+  
    </dl>
 
 
