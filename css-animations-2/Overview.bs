@@ -152,4 +152,12 @@ interface CSSKeyframeEffectReadOnly : KeyframeEffectReadOnly {
 };
 </pre>
 
+## Style updates and script changes ## {#style-updates-and-script-changes}
 
+TBD. We need to say that all animation interfaces defined in this specification
+assume style has been updated.  i.e. the following works:
+
+<div><pre class="example lang-javascript">
+elem.style.animation = 'fadeOut 1s';
+elem.getAnimations()[0].pause();
+</pre></div>
