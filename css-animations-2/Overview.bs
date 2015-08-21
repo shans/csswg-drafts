@@ -220,12 +220,31 @@ interface CSSAnimation : Animation {
     programming interface, the {{CSSAnimation()/animationName}} argument
     that was passed to the {{CSSAnimation()}} constructor.
 
-## Style updates and script changes ## {#style-updates-and-script-changes}
+## Requirements on pending style changes ## {#requirements-on-pending-style-changes}
 
-TBD. We need to say that all animation interfaces defined in this specification
-assume style has been updated.  i.e. the following works:
+Various operations may affect the <a lt="computed value">computed values</a> of
+properties on elements. User agents may, as an optimization, defer recomputing
+these values until it becomes necessary.
+However, all operations included in programming interface defined in this
+specification, as well as those operations defined in Web Animations
+[[!WEB-ANIMATIONS]] that may return objects defined by this specification,
+must produce a result consistent with having fully processed any such pending
+changes to computed values.
+
+<div class="note">
+As an example, in the following code fragment, when the specified style of
+<code>elem</code> is initially updated, a user agent may defer recalculating
+the computed value of the 'animation' property.
+
+However, the <code>getAnimations</code> method from the {{Element}} interface
+which is specified by [[!WEB-ANIMATIONS]] can return {{CSSAnimation}} objects as
+defined in this specification, and hence the user agent must calculate the
+updated value <code>elem</code>'s 'animation' property and create
+the requested {{CSSAnimation}} object before returning its result.
 
 <div><pre class="example lang-javascript">
 elem.style.animation = 'fadeOut 1s';
 elem.getAnimations()[0].pause();
 </pre></div>
+
+</div>

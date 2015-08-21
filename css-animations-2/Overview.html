@@ -246,7 +246,7 @@ on screen, on paper, in speech, etc.</div>
     <li><a href="#DOM-interfaces"><span class="secno">5</span> <span class="content">DOM interfaces</span></a>
      <ul class="toc">
       <li><a href="#the-CSSAnimation-interface"><span class="secno">5.1</span> <span class="content">The CSSAnimation interface</span></a>
-      <li><a href="#style-updates-and-script-changes"><span class="secno">5.2</span> <span class="content">Style updates and script changes</span></a>
+      <li><a href="#requirements-on-pending-style-changes"><span class="secno">5.2</span> <span class="content">Requirements on pending style changes</span></a>
      </ul>
     <li><a href="#conformance"><span class="secno"></span> <span class="content">
 Conformance</span></a>
@@ -624,16 +624,37 @@ that was passed to the <code class="idl"><a data-link-type="idl" href="#dom-cssa
      
 </dl>
 
-   <h3 class="heading settled" data-level="5.2" id="style-updates-and-script-changes"><span class="secno">5.2. </span><span class="content">Style updates and script changes</span><a class="self-link" href="#style-updates-and-script-changes"></a></h3>
+   <h3 class="heading settled" data-level="5.2" id="requirements-on-pending-style-changes"><span class="secno">5.2. </span><span class="content">Requirements on pending style changes</span><a class="self-link" href="#requirements-on-pending-style-changes"></a></h3>
 
 
-   <p>TBD. We need to say that all animation interfaces defined in this specification
-assume style has been updated.  i.e. the following works:</p>
+   <p>Various operations may affect the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value">computed values</a> of
+properties on elements. User agents may, as an optimization, defer recomputing
+these values until it becomes necessary.
+However, all operations included in programming interface defined in this
+specification, as well as those operations defined in Web Animations
+<a data-link-type="biblio" href="#biblio-web-animations">[WEB-ANIMATIONS]</a> that may return objects defined by this specification,
+must produce a result consistent with having fully processed any such pending
+changes to computed values.</p>
 
 
-   <div>
-    <pre class="example lang-javascript highlight" id="example-bec75963"><span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">animation</span> <span class="o">=</span> <span class="s1">'fadeOut 1s'</span><span class="p">;</span>
+   <div class="note" role="note">
+As an example, in the following code fragment, when the specified style of
+<code>elem</code> is initially updated, a user agent may defer recalculating
+the computed value of the <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation">animation</a> property.
+
+
+    <p>However, the <code>getAnimations</code> method from the <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#element">Element</a></code> interface
+which is specified by <a data-link-type="biblio" href="#biblio-web-animations">[WEB-ANIMATIONS]</a> can return <code class="idl"><a data-link-type="idl" href="#cssanimation">CSSAnimation</a></code> objects as
+defined in this specification, and hence the user agent must calculate the
+updated value <code>elem</code>’s <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation">animation</a> property and create
+the requested <code class="idl"><a data-link-type="idl" href="#cssanimation">CSSAnimation</a></code> object before returning its result.</p>
+
+
+    <div>
+     <pre class="example lang-javascript highlight" id="example-bec75963"><span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">animation</span> <span class="o">=</span> <span class="s1">'fadeOut 1s'</span><span class="p">;</span>
 <span class="nx">elem</span><span class="p">.</span><span class="nx">getAnimations</span><span class="p">()[</span><span class="mi">0</span><span class="p">].</span><span class="nx">pause</span><span class="p">();</span></pre></div>
+
+</div>
 
 </main>
 
@@ -829,9 +850,14 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
     </ul>
    <li><a data-link-type="biblio" href="#biblio-css-animations-1">[css-animations-1]</a> defines the following terms:
     <ul>
+     <li><a href="https://drafts.csswg.org/css-animations-1/#propdef-animation">animation</a>
      <li><a href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a>
      <li><a href="https://drafts.csswg.org/css-animations-1/#propdef-animation-play-state">animation-play-state</a>
      <li><a href="https://drafts.csswg.org/css-animations-1/#dom-animationevent-animationend">animationend</a>
+    </ul>
+   <li><a data-link-type="biblio" href="#biblio-css-cascade-4">[css-cascade-4]</a> defines the following terms:
+    <ul>
+     <li><a href="https://drafts.csswg.org/css-cascade-4/#computed-value">computed value</a>
     </ul>
    <li><a data-link-type="biblio" href="#biblio-css-values-3">[css-values-3]</a> defines the following terms:
     <ul>
@@ -839,6 +865,7 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
     </ul>
    <li><a data-link-type="biblio" href="#biblio-dom-ls">[dom-ls]</a> defines the following terms:
     <ul>
+     <li><a href="https://dom.spec.whatwg.org/#element">Element</a>
      <li><a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a>
     </ul>
    <li><a data-link-type="biblio" href="#biblio-web-animations">[web-animations]</a> defines the following terms:
@@ -872,6 +899,8 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
    <dd>Cameron McCormack; Boris Zbarsky. <a href="http://www.w3.org/TR/WebIDL-1/">WebIDL Level 1</a>. 4 August 2015. WD. URL: <a href="http://www.w3.org/TR/WebIDL-1/">http://www.w3.org/TR/WebIDL-1/</a>
    <dt id="biblio-css-animations-1"><a class="self-link" href="#biblio-css-animations-1"></a>[CSS-ANIMATIONS-1]
    <dd>CSS Animations Module Level 1 URL: <a href="http://www.w3.org/TR/css3-animations/">http://www.w3.org/TR/css3-animations/</a>
+   <dt id="biblio-css-cascade-4"><a class="self-link" href="#biblio-css-cascade-4"></a>[CSS-CASCADE-4]
+   <dd>Elika Etemad; Tab Atkins Jr.. <a href="http://www.w3.org/TR/css-cascade-4/">CSS Cascading and Inheritance Level 4</a>. 21 April 2015. WD. URL: <a href="http://www.w3.org/TR/css-cascade-4/">http://www.w3.org/TR/css-cascade-4/</a>
    <dt id="biblio-css-values-3"><a class="self-link" href="#biblio-css-values-3"></a>[CSS-VALUES-3]
    <dd>CSS Values and Units Module Level 3 URL: <a href="http://www.w3.org/TR/css3-values/">http://www.w3.org/TR/css3-values/</a>
    <dt id="biblio-css3-animations"><a class="self-link" href="#biblio-css3-animations"></a>[CSS3-ANIMATIONS]
