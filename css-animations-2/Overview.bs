@@ -16,6 +16,7 @@ Abstract: This CSS module describes a way for authors to animate the values of C
 urlPrefix: http://w3c.github.io/web-animations/; type: interface; spec: web-animations
     text: Animation
     text: KeyframeEffectReadOnly
+    text: KeyframeEffect
 urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
     text: animation
     text: animation playback rate
@@ -28,6 +29,8 @@ urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
     text: start delay
     text: target effect
     text: target effect end
+urlPrefix: https://html.spec.whatwg.org/; type: dfn; spec: HTML
+    text: active document
 </pre>
 
 <h2 id="delta">Delta specification</h2>
@@ -36,6 +39,13 @@ urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
 only the differences from CSS Animations Level 1 [[!CSS3-ANIMATIONS]].
 Once the Level 1 specification is closer to complete, it will be merged
 with the additions here into a complete level 2 specification.</p>
+
+# Animations # {#animations}
+
+## Resolving an 'animation-name' ## {#resolving-an-animation-name}
+
+Issue: Something like this: <a
+href="https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html">https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html</a>.
 
 # Keyframes # {#keyframes}
 
@@ -134,8 +144,8 @@ TODO: Copy prose from integration spec
 ## Animation priority ## {#animation-priority}
 
 The <a spec='web-animations'>animations</a> generated from the markup and
-interfaces (e.g. the {{CSSAnimation}} constructor) defined in this specification
-have an <a>animation type</a> of &lsquo;CSS Animation&rsquo;.
+interfaces (e.g. the {{CSSAnimation()}} constructor) defined in this
+specification have an <a>animation type</a> of &lsquo;CSS Animation&rsquo;.
 
 CSS Animations have a <em>higher</em> priority that CSS Transitions but
 a <em>lower</em> priority than animations without a specific <a>animation
@@ -174,25 +184,41 @@ are sorted in priority order (lowest to highest) as follows:
 
 ## Interaction between 'animation-play-state' and Web Animations API ## {#interaction-between-animation-play-state-and-web-animations-API}
 
-# DOM Interfaces # {#DOM-interfaces}
+# DOM interfaces # {#DOM-interfaces}
 
 ## The CSSAnimation interface ## {#the-CSSAnimation-interface}
 
 <pre class="idl">
+[Constructor(DOMString animationName)]
 interface CSSAnimation : Animation {
   readonly attribute DOMString animationName;
 };
 </pre>
 
-TBD: Define a constructor for this that takes a CSSKeyframesRule argument.
+:   <dfn constructor for=CSSAnimation
+      lt="CSSAnimation(animationName)">CSSAnimation (animationName)</dfn>
+::  Creates a new {{CSSAnimation}} object.
 
-## The CSSKeyframeEffectReadOnly interface ## {#the-CSSKeyframeEffectReadOnly-interface}
+    The <a>target effect</a> of the newly-created object is a
+    {{KeyframeEffectReadOnly}} object created using the procedure defined
+    in [[#resolving-an-animation-name]] and using
+    the <a>active document</a> as the context document.
+    The created {{KeyframeEffectReadOnly}} object continues to track changes
+    to keyframes rules so long as it is attached to this object.
 
-<pre class="idl">
-interface CSSKeyframeEffectReadOnly : KeyframeEffectReadOnly {
-  readonly attribute CSSKeyframesRule rule;
-};
-</pre>
+    Issue: It is not clear what the most reasonable behavior is here regarding
+    liveness. Could we make the generated object always track changes?
+    That would suggest a special sub-type of {{KeyframeEffectReadOnly}} that
+    tracks its context document and animationName. Alternatively we could make
+    it a one-shot thing that creates a {{KeyframeEffect}} object.
+
+:   <dfn attribute for=CSSAnimation>animationName</dfn>
+::  The key used to find matching keyframes rules that define <a>target
+    effect</a> at the point when the animation was created.
+    This is the value of the 'animation-name' property that caused this
+    object to be generated or, if this object was generated using the
+    programming interface, the {{CSSAnimation()/animationName}} argument
+    that was passed to the {{CSSAnimation()}} constructor.
 
 ## Style updates and script changes ## {#style-updates-and-script-changes}
 
