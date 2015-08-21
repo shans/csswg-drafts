@@ -242,7 +242,7 @@ on screen, on paper, in speech, etc.</div>
      <ul class="toc">
       <li><a href="#owning-element-section"><span class="secno">4.1</span> <span class="content">Owning element</span></a>
       <li><a href="#animation-composite-order"><span class="secno">4.2</span> <span class="content">Animation composite order</span></a>
-      <li><a href="#interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.3</span> <span class="content">Interaction between <span class="property">animation-play-state</span> and Web Animations API</span></a>
+      <li><a href="#interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.3</span> <span class="content">Interaction between <span class="property">animation-play-state</span> and the Web Animations API</span></a>
      </ul>
     <li><a href="#DOM-interfaces"><span class="secno">5</span> <span class="content">DOM interfaces</span></a>
      <ul class="toc">
@@ -521,9 +521,28 @@ element</a> but the association is broken through an update to the
 computed value of <code>elem</code>’s <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a> property.</p>
 
 
-    <pre class="example lang-javascript highlight" id="example-662949b5"><span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">animation</span> <span class="o">=</span> <span class="s1">'spin 1s'</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">animation</span> <span class="o">=</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">getAnimations</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// |animation|'s owning element is elem</span>
+    <pre class="example lang-javascript highlight" id="example-020f1dd7"><span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">animation</span> <span class="o">=</span> <span class="s1">'spin 1s'</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">animation</span> <span class="o">=</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">getAnimations</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// |animation|'s owning element is elem</span>
 <span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">animation</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span> <span class="c1">// |animation| no longer has an owning element</span></pre>
+
+
+    <p>Note that although the <a data-link-type="dfn" href="#owning-element">owning element</a> is often equal to the <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#target-element">target
+element</a> of an animation’s <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#target-effect">target effect</a>, this is not always the case.
+The following example demonstrates some of the situations where these two
+elements may differ.</p>
+
+
+    <pre class="example lang-javascript highlight" id="example-6a58778b"><span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">animation</span> <span class="o">=</span> <span class="s1">'move 1s'</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">animation</span> <span class="o">=</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">getAnimations</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span>
+<span class="c1">// animation.effect.target == elem == animation’s owning element</span>
+
+<span class="kd">let</span> <span class="nx">mutableEffect</span> <span class="o">=</span> <span class="nx">animation</span><span class="p">.</span><span class="nx">effect</span><span class="p">.</span><span class="nx">clone</span><span class="p">();</span>
+<span class="nx">animation</span><span class="p">.</span><span class="nx">effect</span> <span class="o">=</span> <span class="nx">mutableEffect</span><span class="p">;</span>
+<span class="nx">animation</span><span class="p">.</span><span class="nx">effect</span><span class="p">.</span><span class="nx">target</span> <span class="o">=</span> <span class="nx">elem2</span><span class="p">;</span>
+<span class="c1">// animation.effect.target == elem2 != animation’s owning element</span>
+
+<span class="nx">animation</span><span class="p">.</span><span class="nx">effect</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="c1">// animation.effect.target is undefined != animation’s owning element</span></pre>
 
 </div>
 
@@ -609,7 +628,7 @@ transition out of idle? (Just for animations created using <code class="idl"><a 
 <em>not</em> for generic <code class="idl"><a data-link-type="idl" href="http://w3c.github.io/web-animations/#animation">Animation</a></code> objects.)</p>
 
 
-   <h3 class="heading settled" data-level="4.3" id="interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.3. </span><span class="content">Interaction between <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-play-state">animation-play-state</a> and Web Animations API</span><a class="self-link" href="#interaction-between-animation-play-state-and-web-animations-API"></a></h3>
+   <h3 class="heading settled" data-level="4.3" id="interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.3. </span><span class="content">Interaction between <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-play-state">animation-play-state</a> and the Web Animations API</span><a class="self-link" href="#interaction-between-animation-play-state-and-web-animations-API"></a></h3>
 
 
    <h2 class="heading settled" data-level="5" id="DOM-interfaces"><span class="secno">5. </span><span class="content">DOM interfaces</span><a class="self-link" href="#DOM-interfaces"></a></h2>
@@ -926,6 +945,7 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
      <li><a href="http://w3c.github.io/web-animations/#start-delay">start delay</a>
      <li><a href="http://w3c.github.io/web-animations/#target-effect">target effect</a>
      <li><a href="http://w3c.github.io/web-animations/#target-effect-end">target effect end</a>
+     <li><a href="http://w3c.github.io/web-animations/#target-element">target element</a>
     </ul>
    <li><a data-link-type="biblio" href="#biblio-webidl">[WebIDL]</a> defines the following terms:
     <ul>

@@ -30,6 +30,7 @@ urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
     text: start delay
     text: target effect
     text: target effect end
+    text: target element
 urlPrefix: https://html.spec.whatwg.org/; type: dfn; spec: HTML
     text: active document
 </pre>
@@ -165,8 +166,27 @@ computed value of <code>elem</code>'s 'animation-name' property.
 
 <pre class="example lang-javascript">
 elem.style.animation = 'spin 1s';
-var animation = elem.getAnimations()[0]; // |animation|'s owning element is elem
+let animation = elem.getAnimations()[0]; // |animation|'s owning element is elem
 elem.style.animation = ''; // |animation| no longer has an owning element
+</pre>
+
+Note that although the <a>owning element</a> is often equal to the <a>target
+element</a> of an animation's <a>target effect</a>, this is not always the case.
+The following example demonstrates some of the situations where these two
+elements may differ.
+
+<pre class="example lang-javascript">
+elem.style.animation = 'move 1s';
+let animation = elem.getAnimations()[0];
+// animation.effect.target == elem == animation's owning element
+
+let mutableEffect = animation.effect.clone();
+animation.effect = mutableEffect;
+animation.effect.target = elem2;
+// animation.effect.target == elem2 != animation's owning element
+
+animation.effect = null;
+// animation.effect.target is undefined != animation's owning element
 </pre>
 
 </div>
@@ -222,7 +242,7 @@ Issue: Would it be more consistent to append them at the moment they first
 transition out of idle? (Just for animations created using {{CSSAnimation()}},
 <em>not</em> for generic {{Animation}} objects.)
 
-## Interaction between 'animation-play-state' and Web Animations API ## {#interaction-between-animation-play-state-and-web-animations-API}
+## Interaction between 'animation-play-state' and the Web Animations API ## {#interaction-between-animation-play-state-and-web-animations-API}
 
 # DOM interfaces # {#DOM-interfaces}
 
