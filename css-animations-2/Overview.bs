@@ -24,6 +24,7 @@ urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
     text: animation type
     text: current time
     text: current iteration
+    text: global animation list
     text: idle play state
     text: sampling
     text: start delay
@@ -141,34 +142,50 @@ after the sample as follows:
 
 TODO: Copy prose from integration spec
 
-## Animation priority ## {#animation-priority}
+## Owning element ## {#owning-element-section}
 
-The <a spec='web-animations'>animations</a> generated from the markup and
+The <dfn>owning element</dfn> of a CSS Animation refers to the element or
+pseudo-element to which the 'animation-name' property was applied that generated
+the animation.
+
+If an animation was generated directly by script (e.g. using
+the {{CSSAnimation()}} constructor) then it has no <a>owning element</a>.
+
+If an animation generated using the markup defined in this specification is
+later disassociated from that markup by an update to the computed value of the
+'animation-name' property on the <a>owning element</a>, the animation is
+dissasociated from its <a>owning element</a> (that is, it has no <a>owning
+element</a> from that point forwards).
+
+<div class="note">
+
+In the example below, <code>animation</code> initially has an <a>owning
+element</a> but the association is broken through an update to the
+computed value of <code>elem</code>'s 'animation-name' property.
+
+<pre class="example lang-javascript">
+elem.style.animation = 'spin 1s';
+var animation = elem.getAnimations()[0]; // |animation|'s owning element is elem
+elem.style.animation = ''; // |animation| no longer has an owning element
+</pre>
+
+</div>
+
+## Animation composite order ## {#animation-composite-order}
+
+<a spec='web-animations'>Animations</a> generated from the markup and
 interfaces (e.g. the {{CSSAnimation()}} constructor) defined in this
 specification have an <a>animation type</a> of &lsquo;CSS Animation&rsquo;.
 
-CSS Animations have a <em>higher</em> priority that CSS Transitions but
-a <em>lower</em> priority than animations without a specific <a>animation
-type</a>.
+CSS Animations <em>with</em> an <a>owning element</a> have a <em>later</em>
+composite order than CSS Transitions but an <em>earlier</em> composite order
+than animations without a specific <a>animation type</a>.
 
-Within the set of CSS Animations, two animations <var>A</var> and <var>B</var>
-are sorted in priority order (lowest to highest) as follows:
+Within the set of CSS Animations <em>with</em> an <a>owning element</a>, two
+animations <var>A</var> and <var>B</var> are sorted in composite order (first to
+last) as follows:
 
-1.  Define the <dfn>owning element</dfn> as the element or pseudo-element to
-    which the 'animation-name' property was applied that generated this CSS
-    Animation.
-    If the CSS Animation was generated directly by script (e.g. using
-    the {{CSSAnimation}} constructor) then it has no <a>owning element</a>.
-
-1.  If neither <var>A</var> nor <var>B</var> has an <a>owning element</a>,
-    sort based on <var>A</var> and <var>B</var> such that their <a
-    spec='web-animations'>animation sequence numbers</a> are in ascending order.
-
-1.  Otherwise, if  only one of <var>A</var> or <var>B</var> has an <a>owning
-    element</a>, let the animation <em>with</em> an <a>owning element</a> sort
-    first.
-
-1.  Otherwise, if the <a>owning element</a> of <var>A</var> and <var>B</var>
+1.  If the <a>owning element</a> of <var>A</var> and <var>B</var>
     differs, sort <var>A</var> and <var>B</var> by <a>tree order</a>
     of their corresponding <a>owning elements</a>.
     With regard to pseudo-elements, the sort order is as follows:
@@ -181,6 +198,29 @@ are sorted in priority order (lowest to highest) as follows:
 1.  Otherwise, sort <var>A</var> and <var>B</var> based on their position in the
     computed value of the 'animation-name' property of the (common) <a>owning
     element</a>.
+
+The composite order of CSS Animations <em>without</em> an <a>owning element</a>
+is based on their position in the <a>global animation list</a>.
+
+CSS Animations generated using the markup defined in this specification are
+<em>not</em> added to the <a>global animation list</a> when they are created.
+Instead, these animations are appended to the <a>global animation list</a> at
+the first moment when they transition out of the <a>idle play state</a> after
+being disassociated from their <a>owning element</a>.
+CSS Animations that have been disassociated from their <a>owning element</a>
+but are still <a lt="idle play state">idle</a> do not have a defined
+composite order.
+
+Note: This behavior relies on the fact that disassociating an animation
+from its <a>owning element</a> always causes it to enter (or remain) in the
+<a>idle play state</a>.
+
+CSS Animations created using the {{CSSAnimation()}} constructor are appended
+to the <a>global animation list</a> at the moment they are constructed.
+
+Issue: Would it be more consistent to append them at the moment they first
+transition out of idle? (Just for animations created using {{CSSAnimation()}},
+<em>not</em> for generic {{Animation}} objects.)
 
 ## Interaction between 'animation-play-state' and Web Animations API ## {#interaction-between-animation-play-state-and-web-animations-API}
 

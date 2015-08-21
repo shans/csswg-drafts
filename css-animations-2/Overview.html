@@ -240,8 +240,9 @@ on screen, on paper, in speech, etc.</div>
      </ul>
     <li><a href="#web-animations-instantiation-of-CSS-animations"><span class="secno">4</span> <span class="content">Web Animations Instantiation of CSS Animations</span></a>
      <ul class="toc">
-      <li><a href="#animation-priority"><span class="secno">4.1</span> <span class="content">Animation priority</span></a>
-      <li><a href="#interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.2</span> <span class="content">Interaction between <span class="property">animation-play-state</span> and Web Animations API</span></a>
+      <li><a href="#owning-element-section"><span class="secno">4.1</span> <span class="content">Owning element</span></a>
+      <li><a href="#animation-composite-order"><span class="secno">4.2</span> <span class="content">Animation composite order</span></a>
+      <li><a href="#interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.3</span> <span class="content">Interaction between <span class="property">animation-play-state</span> and Web Animations API</span></a>
      </ul>
     <li><a href="#DOM-interfaces"><span class="secno">5</span> <span class="content">DOM interfaces</span></a>
      <ul class="toc">
@@ -493,48 +494,61 @@ after the sample as follows:</p>
    <p>TODO: Copy prose from integration spec</p>
 
 
-   <h3 class="heading settled" data-level="4.1" id="animation-priority"><span class="secno">4.1. </span><span class="content">Animation priority</span><a class="self-link" href="#animation-priority"></a></h3>
+   <h3 class="heading settled" data-level="4.1" id="owning-element-section"><span class="secno">4.1. </span><span class="content">Owning element</span><a class="self-link" href="#owning-element-section"></a></h3>
 
 
-   <p>The <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation">animations</a> generated from the markup and
+   <p>The <dfn data-dfn-type="dfn" data-noexport="" id="owning-element">owning element<a class="self-link" href="#owning-element"></a></dfn> of a CSS Animation refers to the element or
+pseudo-element to which the <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a> property was applied that generated
+the animation.</p>
+
+
+   <p>If an animation was generated directly by script (e.g. using
+the <code class="idl"><a data-link-type="idl" href="#dom-cssanimation-cssanimation">CSSAnimation()</a></code> constructor) then it has no <a data-link-type="dfn" href="#owning-element">owning element</a>.</p>
+
+
+   <p>If an animation generated using the markup defined in this specification is
+later disassociated from that markup by an update to the computed value of the
+<a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a> property on the <a data-link-type="dfn" href="#owning-element">owning element</a>, the animation is
+dissasociated from its <a data-link-type="dfn" href="#owning-element">owning element</a> (that is, it has no <a data-link-type="dfn" href="#owning-element">owning
+element</a> from that point forwards).</p>
+
+
+   <div class="note" role="note">
+
+
+    <p>In the example below, <code>animation</code> initially has an <a data-link-type="dfn" href="#owning-element">owning
+element</a> but the association is broken through an update to the
+computed value of <code>elem</code>’s <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a> property.</p>
+
+
+    <pre class="example lang-javascript highlight" id="example-662949b5"><span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">animation</span> <span class="o">=</span> <span class="s1">'spin 1s'</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">animation</span> <span class="o">=</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">getAnimations</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// |animation|'s owning element is elem</span>
+<span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">animation</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span> <span class="c1">// |animation| no longer has an owning element</span></pre>
+
+</div>
+
+
+   <h3 class="heading settled" data-level="4.2" id="animation-composite-order"><span class="secno">4.2. </span><span class="content">Animation composite order</span><a class="self-link" href="#animation-composite-order"></a></h3>
+
+
+   <p><a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation">Animations</a> generated from the markup and
 interfaces (e.g. the <code class="idl"><a data-link-type="idl" href="#dom-cssanimation-cssanimation">CSSAnimation()</a></code> constructor) defined in this
 specification have an <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation-type">animation type</a> of ‘CSS Animation’.</p>
 
 
-   <p>CSS Animations have a <em>higher</em> priority that CSS Transitions but
-a <em>lower</em> priority than animations without a specific <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation-type">animation
-type</a>.</p>
+   <p>CSS Animations <em>with</em> an <a data-link-type="dfn" href="#owning-element">owning element</a> have a <em>later</em>
+composite order than CSS Transitions but an <em>earlier</em> composite order
+than animations without a specific <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation-type">animation type</a>.</p>
 
 
-   <p>Within the set of CSS Animations, two animations <var>A</var> and <var>B</var>
-are sorted in priority order (lowest to highest) as follows:</p>
+   <p>Within the set of CSS Animations <em>with</em> an <a data-link-type="dfn" href="#owning-element">owning element</a>, two
+animations <var>A</var> and <var>B</var> are sorted in composite order (first to
+last) as follows:</p>
 
 
    <ol>
     <li data-md="">
-     <p>Define the <dfn data-dfn-type="dfn" data-noexport="" id="owning-element">owning element<a class="self-link" href="#owning-element"></a></dfn> as the element or pseudo-element to
-which the <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a> property was applied that generated this CSS
-Animation.
-If the CSS Animation was generated directly by script (e.g. using
-the <code class="idl"><a data-link-type="idl" href="#cssanimation">CSSAnimation</a></code> constructor) then it has no <a data-link-type="dfn" href="#owning-element">owning element</a>.</p>
-     
-
-
-    <li data-md="">
-     <p>If neither <var>A</var> nor <var>B</var> has an <a data-link-type="dfn" href="#owning-element">owning element</a>,
-sort based on <var>A</var> and <var>B</var> such that their <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation-sequence-number">animation sequence numbers</a> are in ascending order.</p>
-     
-
-
-    <li data-md="">
-     <p>Otherwise, if  only one of <var>A</var> or <var>B</var> has an <a data-link-type="dfn" href="#owning-element">owning
-element</a>, let the animation <em>with</em> an <a data-link-type="dfn" href="#owning-element">owning element</a> sort
-first.</p>
-     
-
-
-    <li data-md="">
-     <p>Otherwise, if the <a data-link-type="dfn" href="#owning-element">owning element</a> of <var>A</var> and <var>B</var>
+     <p>If the <a data-link-type="dfn" href="#owning-element">owning element</a> of <var>A</var> and <var>B</var>
 differs, sort <var>A</var> and <var>B</var> by <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a>
 of their corresponding <a data-link-type="dfn" href="#owning-element">owning elements</a>.
 With regard to pseudo-elements, the sort order is as follows:</p>
@@ -567,7 +581,35 @@ element</a>.</p>
      
 </ol>
 
-   <h3 class="heading settled" data-level="4.2" id="interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.2. </span><span class="content">Interaction between <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-play-state">animation-play-state</a> and Web Animations API</span><a class="self-link" href="#interaction-between-animation-play-state-and-web-animations-API"></a></h3>
+   <p>The composite order of CSS Animations <em>without</em> an <a data-link-type="dfn" href="#owning-element">owning element</a>
+is based on their position in the <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#global-animation-list">global animation list</a>.</p>
+
+
+   <p>CSS Animations generated using the markup defined in this specification are
+<em>not</em> added to the <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#global-animation-list">global animation list</a> when they are created.
+Instead, these animations are appended to the <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#global-animation-list">global animation list</a> at
+the first moment when they transition out of the <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#idle-play-state">idle play state</a> after
+being disassociated from their <a data-link-type="dfn" href="#owning-element">owning element</a>.
+CSS Animations that have been disassociated from their <a data-link-type="dfn" href="#owning-element">owning element</a>
+but are still <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#idle-play-state">idle</a> do not have a defined
+composite order.</p>
+
+
+   <p class="note" role="note">Note: This behavior relies on the fact that disassociating an animation
+from its <a data-link-type="dfn" href="#owning-element">owning element</a> always causes it to enter (or remain) in the
+<a data-link-type="dfn" href="http://w3c.github.io/web-animations/#idle-play-state">idle play state</a>.</p>
+
+
+   <p>CSS Animations created using the <code class="idl"><a data-link-type="idl" href="#dom-cssanimation-cssanimation">CSSAnimation()</a></code> constructor are appended
+to the <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#global-animation-list">global animation list</a> at the moment they are constructed.</p>
+
+
+   <p class="issue" id="issue-cfac1180"><a class="self-link" href="#issue-cfac1180"></a> Would it be more consistent to append them at the moment they first
+transition out of idle? (Just for animations created using <code class="idl"><a data-link-type="idl" href="#dom-cssanimation-cssanimation">CSSAnimation()</a></code>,
+<em>not</em> for generic <code class="idl"><a data-link-type="idl" href="http://w3c.github.io/web-animations/#animation">Animation</a></code> objects.)</p>
+
+
+   <h3 class="heading settled" data-level="4.3" id="interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.3. </span><span class="content">Interaction between <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-play-state">animation-play-state</a> and Web Animations API</span><a class="self-link" href="#interaction-between-animation-play-state-and-web-animations-API"></a></h3>
 
 
    <h2 class="heading settled" data-level="5" id="DOM-interfaces"><span class="secno">5. </span><span class="content">DOM interfaces</span><a class="self-link" href="#DOM-interfaces"></a></h2>
@@ -875,10 +917,10 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
      <li><a href="http://w3c.github.io/web-animations/#keyframeeffectreadonly">KeyframeEffectReadOnly</a>
      <li><a href="http://w3c.github.io/web-animations/#animation">animation</a>
      <li><a href="http://w3c.github.io/web-animations/#animation-playback-rate">animation playback rate</a>
-     <li><a href="http://w3c.github.io/web-animations/#animation-sequence-number">animation sequence number</a>
      <li><a href="http://w3c.github.io/web-animations/#animation-type">animation type</a>
      <li><a href="http://w3c.github.io/web-animations/#current-iteration">current iteration</a>
      <li><a href="http://w3c.github.io/web-animations/#current-time">current time</a>
+     <li><a href="http://w3c.github.io/web-animations/#global-animation-list">global animation list</a>
      <li><a href="http://w3c.github.io/web-animations/#idle-play-state">idle play state</a>
      <li><a href="http://w3c.github.io/web-animations/#sampling">sampling</a>
      <li><a href="http://w3c.github.io/web-animations/#start-delay">start delay</a>
@@ -949,6 +991,9 @@ interface <a href="#cssanimation">CSSAnimation</a> : <a data-link-type="idl-name
   <h2 class="no-num heading settled" id="issues-index"><span class="content">Issues Index</span><a class="self-link" href="#issues-index"></a></h2>
   <div style="counter-reset:issue">
    <div class="issue"> Something like this: <a href="https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html">https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html</a>.<a href="#issue-d5205d6c"> ↵ </a></div>
+   <div class="issue"> Would it be more consistent to append them at the moment they first
+transition out of idle? (Just for animations created using <code class="idl"><a data-link-type="idl" href="#dom-cssanimation-cssanimation">CSSAnimation()</a></code>,
+<em>not</em> for generic <code class="idl"><a data-link-type="idl" href="http://w3c.github.io/web-animations/#animation">Animation</a></code> objects.)<a href="#issue-cfac1180"> ↵ </a></div>
    <div class="issue"> It is not clear what the most reasonable behavior is here regarding
 liveness. Could we make the generated object always track changes?
 That would suggest a special sub-type of <code class="idl"><a data-link-type="idl" href="http://w3c.github.io/web-animations/#keyframeeffectreadonly">KeyframeEffectReadOnly</a></code> that
