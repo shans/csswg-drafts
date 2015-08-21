@@ -17,8 +17,16 @@ urlPrefix: http://w3c.github.io/web-animations/; type: interface; spec: web-anim
     text: Animation
     text: KeyframeEffectReadOnly
 urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
-    text: animation type
+    text: animation playback rate
     text: animation sequence number
+    text: animation type
+    text: current time
+    text: current iteration
+    text: idle play state
+    text: sampling
+    text: start delay
+    text: target effect
+    text: target effect end
 </pre>
 
 <h2 id="delta">Delta specification</h2>
@@ -53,7 +61,7 @@ The values of 'animation-composition' have the following meanings:
 
 TBD
 
-<h2 id="events">Animation Events</h2>
+## Animation events ## {#animation-events}
 
 <h3 id="event-animationevent">Types of <code>AnimationEvent</code></h3>
 
@@ -62,7 +70,10 @@ TBD
   <dl dfn-type=event dfn-for=animationevent>
     <dt><dfn>animationcancel</dfn>
     <dd>
-      The <a idl>animationcancel</a> event occurs when the animation stops running in a way that does not fire an <a idl>animationend</a> event, such as a change in the 'animation-name' that removes the animation, or the animating element or one of its ancestors becoming ''display:none''.
+      The <a idl>animationcancel</a> event occurs when the animation stops
+      running in a way that does not fire an <a idl>animationend</a> event, such
+      as a change in the 'animation-name' that removes the animation, or the
+      animating element or one of its ancestors becoming ''display:none''.
       <ul>
         <li>Bubbles: Yes</li>
         <li>Cancelable: No</li>
@@ -70,17 +81,44 @@ TBD
       </ul>
   </dl>
 
-## Generalized Event Dispatch ## {#generalized-event-dispatch}
+## Event dispatch ## {#event-dispatch}
 
-Every animation which is not idle can be characterized as being in one of the following three states:
+For the purpose of determining which events to dispatch, an animation can
+be considered to be in one of four mutually-exclusive <dfn
+lt="event state">event states</dfn> determined using the following procedure:
 
-* <dfn>left-inactive</dfn> (currentTime &lt; startTime)
-* <dfn>active</dfn> (currentTime &gt;= startTime, currentTime &lt; endTime) - either in the active interval, or in the delay phase
-* <dfn>right-inactive</dfn> (currentTime &gt;= endTime)
+1.  If the animation is <a lt="idle play state">idle</a> or has no <a>target
+    effect</a> it is <dfn>idle</dfn>.
+1.  Otherwise, if the animation has a <a>current time</a> less than the
+    <a>start delay</a> of its <a>target effect</a>, or, if the animation's
+    <a lt="animation playback rate">playback rate</a> is less than zero and
+    it has a <a>current time</a> less than <em>or equal</em> to the
+    <a>start delay</a> of its <a>target effect</a>, it is
+    <dfn>left-active</dfn>.
+1.  Otherwise, if the animation has a <a>current time</a> greater than its
+    <a>target effect end</a>, or, if the animation's
+    <a lt="animation playback rate">playback rate</a> is greater than or equal
+    to zero and it has a <a>current time</a> greater than <em>or equal</em> to
+    its <a>target effect end</a>, it is <dfn>right-active</dfn>.
+1.  Otherwise, it is <dfn>active</dfn>.
 
-Note that if playbackRate &lt; 0, then the equality parts of the inequalities switch around.
+Each time the animation is <a lt="sampling">sampled</a>, the events to
+dispatch are determined by comparing the <a>event state</a> before and
+after the sample as follows:
 
-Add stuff for when events get fired here!!!
+:    not <a>active</a> &rarr; <a>active</a>
+::   animationstart
+:    <a>left-active</a> &rarr; <a>right-active</a>
+:    <a>right-active</a> &rarr; <a>left-active</a>
+::   animationstart, animationend
+:    <a>active</a> &rarr; <a>left-active</a>
+:    <a>active</a> &rarr; <a>right-active</a>
+::   animationend
+:    <a>active</a> &rarr; <a>active</a>
+::   animationiteration <em>if</em> there has been a change to the animation's
+     <a>target effect</a>'s <a>current iteration</a>
+:    not <a>idle</a> &rarr; <a>idle</a>
+::   animationcancel
 
 
 ### Non-normative Description of Event Dispatch ### {#non-normative-description-of-event-dispatch}

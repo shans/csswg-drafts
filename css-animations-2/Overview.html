@@ -65,139 +65,64 @@
   
 
   <meta content="Bikeshed 1.0.0" name="generator">
-  <style>/* http://prismjs.com/download.html?themes=prism&languages=clike */
-/**
- * prism.js default theme for JavaScript, CSS and HTML
- * Based on dabblet (http://dabblet.com)
- * @author Lea Verou
- */
-
-code[class*="language-"],
-pre[class*="language-"] {
-	color: black;
-	text-shadow: 0 1px white;
-	font-family: Consolas, Monaco, 'Andale Mono', monospace;
-	direction: ltr;
-	text-align: left;
-	white-space: pre;
-	word-spacing: normal;
-	word-break: normal;
-	line-height: 1.5;
-
-	-moz-tab-size: 4;
-	-o-tab-size: 4;
-	tab-size: 4;
-
-	-webkit-hyphens: none;
-	-moz-hyphens: none;
-	-ms-hyphens: none;
-	hyphens: none;
-}
-
-pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
-code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
-	text-shadow: none;
-	background: #b3d4fc;
-}
-
-pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
-code[class*="language-"]::selection, code[class*="language-"] ::selection {
-	text-shadow: none;
-	background: #b3d4fc;
-}
-
-@media print {
-	code[class*="language-"],
-	pre[class*="language-"] {
-		text-shadow: none;
-	}
-}
-
-/* Code blocks */
-pre[class*="language-"] {
-	padding: 1em;
-	margin: .5em 0;
-	overflow: auto;
-}
-
-:not(pre) > code[class*="language-"],
-pre[class*="language-"] {
-	background: #f5f2f0;
-}
-
-/* Inline code */
-:not(pre) > code[class*="language-"] {
-	padding: .1em;
-	border-radius: .3em;
-}
-
-.token.comment,
-.token.prolog,
-.token.doctype,
-.token.cdata {
-	color: slategray;
-}
-
-.token.punctuation {
-	color: #999;
-}
-
-.namespace {
-	opacity: .7;
-}
-
-.token.property,
-.token.tag,
-.token.boolean,
-.token.number,
-.token.constant,
-.token.symbol,
-.token.deleted {
-	color: #905;
-}
-
-.token.selector,
-.token.attr-name,
-.token.string,
-.token.char,
-.token.builtin,
-.token.inserted {
-	color: #690;
-}
-
-.token.operator,
-.token.entity,
-.token.url,
-.language-css .token.string,
-.style .token.string {
-	color: #a67f59;
-	background: hsla(0, 0%, 100%, .5);
-}
-
-.token.atrule,
-.token.attr-value,
-.token.keyword {
-	color: #07a;
-}
-
-.token.function {
-	color: #DD4A68;
-}
-
-.token.regex,
-.token.important,
-.token.variable {
-	color: #e90;
-}
-
-.token.important {
-	font-weight: bold;
-}
-
-.token.entity {
-	cursor: help;
-}
-</style>
+  <style>.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #ffffff; }
+.highlight .c { color: #708090 } /* Comment */
+.highlight .k { color: #990055 } /* Keyword */
+.highlight .l { color: #669900 } /* Literal */
+.highlight .n { color: #0077aa } /* Name */
+.highlight .o { color: #999999 } /* Operator */
+.highlight .p { color: #999999 } /* Punctuation */
+.highlight .cm { color: #708090 } /* Comment.Multiline */
+.highlight .cp { color: #708090 } /* Comment.Preproc */
+.highlight .c1 { color: #708090 } /* Comment.Single */
+.highlight .cs { color: #708090 } /* Comment.Special */
+.highlight .kc { color: #990055 } /* Keyword.Constant */
+.highlight .kd { color: #990055 } /* Keyword.Declaration */
+.highlight .kn { color: #990055 } /* Keyword.Namespace */
+.highlight .kp { color: #990055 } /* Keyword.Pseudo */
+.highlight .kr { color: #990055 } /* Keyword.Reserved */
+.highlight .kt { color: #990055 } /* Keyword.Type */
+.highlight .ld { color: #669900 } /* Literal.Date */
+.highlight .m { color: #990055 } /* Literal.Number */
+.highlight .s { color: #669900 } /* Literal.String */
+.highlight .na { color: #0077aa } /* Name.Attribute */
+.highlight .nc { color: #0077aa } /* Name.Class */
+.highlight .no { color: #0077aa } /* Name.Constant */
+.highlight .nd { color: #0077aa } /* Name.Decorator */
+.highlight .ni { color: #0077aa } /* Name.Entity */
+.highlight .ne { color: #0077aa } /* Name.Exception */
+.highlight .nf { color: #0077aa } /* Name.Function */
+.highlight .nl { color: #0077aa } /* Name.Label */
+.highlight .nn { color: #0077aa } /* Name.Namespace */
+.highlight .py { color: #0077aa } /* Name.Property */
+.highlight .nt { color: #0077aa } /* Name.Tag */
+.highlight .nv { color: #0077aa } /* Name.Variable */
+.highlight .ow { color: #999999 } /* Operator.Word */
+.highlight .mb { color: #990055 } /* Literal.Number.Bin */
+.highlight .mf { color: #990055 } /* Literal.Number.Float */
+.highlight .mh { color: #990055 } /* Literal.Number.Hex */
+.highlight .mi { color: #990055 } /* Literal.Number.Integer */
+.highlight .mo { color: #990055 } /* Literal.Number.Oct */
+.highlight .sb { color: #669900 } /* Literal.String.Backtick */
+.highlight .sc { color: #669900 } /* Literal.String.Char */
+.highlight .sd { color: #669900 } /* Literal.String.Doc */
+.highlight .s2 { color: #669900 } /* Literal.String.Double */
+.highlight .se { color: #669900 } /* Literal.String.Escape */
+.highlight .sh { color: #669900 } /* Literal.String.Heredoc */
+.highlight .si { color: #669900 } /* Literal.String.Interpol */
+.highlight .sx { color: #669900 } /* Literal.String.Other */
+.highlight .sr { color: #669900 } /* Literal.String.Regex */
+.highlight .s1 { color: #669900 } /* Literal.String.Single */
+.highlight .ss { color: #669900 } /* Literal.String.Symbol */
+.highlight .vc { color: #0077aa } /* Name.Variable.Class */
+.highlight .vg { color: #0077aa } /* Name.Variable.Global */
+.highlight .vi { color: #0077aa } /* Name.Variable.Instance */
+.highlight .il { color: #990055 } /* Literal.Number.Integer.Long */
+        .highlight { background: hsl(24, 20%, 95%); }
+        pre.highlight { padding: 1em; margin: .5em 0; overflow: auto; }
+        :not(pre).highlight { padding: .1em; border-radius: .3em; }
+        </style>
  </head>
  
 
@@ -213,7 +138,7 @@ pre[class*="language-"] {
    <h1 class="p-name no-ref" id="title">CSS Animations Level 2</h1>
   
    <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft,
-    <time class="dt-updated" datetime="2015-06-18">18 June 2015</time></span></h2>
+    <time class="dt-updated" datetime="2015-08-21">21 August 2015</time></span></h2>
   
    <div data-fill-with="spec-metadata">
     <dl>
@@ -303,25 +228,23 @@ on screen, on paper, in speech, etc.</div>
     <li><a href="#keyframes"><span class="secno">2</span> <span class="content">Keyframes</span></a>
      <ul class="toc">
       <li><a href="#animation-composition"><span class="secno">2.1</span> <span class="content">The <span class="property">animation-composition</span> property</span></a>
-     </ul>
-    <li><a href="#events"><span class="secno">3</span> <span class="content">Animation Events</span></a>
-     <ul class="toc">
-      <li><a href="#event-animationevent"><span class="secno">3.1</span> <span class="content">Types of <code>AnimationEvent</code></span></a>
-      <li><a href="#generalized-event-dispatch"><span class="secno">3.2</span> <span class="content">Generalized Event Dispatch</span></a>
+      <li><a href="#animation-events"><span class="secno">2.2</span> <span class="content">Animation events</span></a>
+      <li><a href="#event-animationevent"><span class="secno">2.3</span> <span class="content">Types of <code>AnimationEvent</code></span></a>
+      <li><a href="#event-dispatch"><span class="secno">2.4</span> <span class="content">Event dispatch</span></a>
        <ul class="toc">
-        <li><a href="#non-normative-description-of-event-dispatch"><span class="secno">3.2.1</span> <span class="content">Non-normative Description of Event Dispatch</span></a>
+        <li><a href="#non-normative-description-of-event-dispatch"><span class="secno">2.4.1</span> <span class="content">Non-normative Description of Event Dispatch</span></a>
        </ul>
      </ul>
-    <li><a href="#web-animations-instantiation-of-CSS-animations"><span class="secno">4</span> <span class="content">Web Animations Instantiation of CSS Animations</span></a>
+    <li><a href="#web-animations-instantiation-of-CSS-animations"><span class="secno">3</span> <span class="content">Web Animations Instantiation of CSS Animations</span></a>
      <ul class="toc">
-      <li><a href="#animation-priority"><span class="secno">4.1</span> <span class="content">Animation priority</span></a>
-      <li><a href="#interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.2</span> <span class="content">Interaction between <span class="property">animation-play-state</span> and Web Animations API</span></a>
+      <li><a href="#animation-priority"><span class="secno">3.1</span> <span class="content">Animation priority</span></a>
+      <li><a href="#interaction-between-animation-play-state-and-web-animations-API"><span class="secno">3.2</span> <span class="content">Interaction between <span class="property">animation-play-state</span> and Web Animations API</span></a>
      </ul>
-    <li><a href="#DOM-interfaces"><span class="secno">5</span> <span class="content">DOM Interfaces</span></a>
+    <li><a href="#DOM-interfaces"><span class="secno">4</span> <span class="content">DOM Interfaces</span></a>
      <ul class="toc">
-      <li><a href="#the-CSSAnimation-interface"><span class="secno">5.1</span> <span class="content">The CSSAnimation interface</span></a>
-      <li><a href="#the-CSSKeyframeEffectReadOnly-interface"><span class="secno">5.2</span> <span class="content">The CSSKeyframeEffectReadOnly interface</span></a>
-      <li><a href="#style-updates-and-script-changes"><span class="secno">5.3</span> <span class="content">Style updates and script changes</span></a>
+      <li><a href="#the-CSSAnimation-interface"><span class="secno">4.1</span> <span class="content">The CSSAnimation interface</span></a>
+      <li><a href="#the-CSSKeyframeEffectReadOnly-interface"><span class="secno">4.2</span> <span class="content">The CSSKeyframeEffectReadOnly interface</span></a>
+      <li><a href="#style-updates-and-script-changes"><span class="secno">4.3</span> <span class="content">Style updates and script changes</span></a>
      </ul>
     <li><a href="#conformance"><span class="secno"></span> <span class="content">
 Conformance</span></a>
@@ -382,7 +305,7 @@ with the additions here into a complete level 2 specification.</p>
       <td><dfn class="css" data-dfn-type="property" data-export="" id="propdef-animation-composition">animation-composition<a class="self-link" href="#propdef-animation-composition"></a></dfn>
      <tr class="value">
       <th>Value:
-      <td class="prod"><a class="production css" data-link-type="type" href="#typedef-single-animation-composition">&lt;single-animation-composition></a><a data-link-type="grammar" href="http://dev.w3.org/csswg/css-values-3/#mult-comma">#</a>
+      <td class="prod"><a class="production css" data-link-type="type" href="#typedef-single-animation-composition">&lt;single-animation-composition></a><a data-link-type="grammar" href="https://drafts.csswg.org/css-values-3/#mult-comma">#</a>
      <tr>
       <th>Initial:
       <td>replace
@@ -418,10 +341,10 @@ with the additions here into a complete level 2 specification.</p>
    <p>TBD</p>
 
 
-   <h2 class="heading settled" data-level="3" id="events"><span class="secno">3. </span><span class="content">Animation Events</span><a class="self-link" href="#events"></a></h2>
+   <h3 class="heading settled" data-level="2.2" id="animation-events"><span class="secno">2.2. </span><span class="content">Animation events</span><a class="self-link" href="#animation-events"></a></h3>
 
 
-   <h3 class="heading settled" data-level="3.1" id="event-animationevent"><span class="secno">3.1. </span><span class="content">Types of <code>AnimationEvent</code></span><a class="self-link" href="#event-animationevent"></a></h3>
+   <h3 class="heading settled" data-level="2.3" id="event-animationevent"><span class="secno">2.3. </span><span class="content">Types of <code>AnimationEvent</code></span><a class="self-link" href="#event-animationevent"></a></h3>
 
   
    <p>The <em>additional</em> types of animation events that can occur are:</p>
@@ -432,7 +355,10 @@ with the additions here into a complete level 2 specification.</p>
     <dt><dfn class="idl-code" data-dfn-for="animationevent" data-dfn-type="event" data-export="" id="dom-animationevent-animationcancel">animationcancel<a class="self-link" href="#dom-animationevent-animationcancel"></a></dfn>
     
     <dd>
-      The <a data-link-type="idl" href="#dom-animationevent-animationcancel">animationcancel</a> event occurs when the animation stops running in a way that does not fire an <a data-link-type="idl" href="http://dev.w3.org/csswg/css-animations-1/#dom-animationevent-animationend">animationend</a> event, such as a change in the <a class="property" data-link-type="propdesc" href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-name">animation-name</a> that removes the animation, or the animating element or one of its ancestors becoming <span class="css">display:none</span>.
+      The <a data-link-type="idl" href="#dom-animationevent-animationcancel">animationcancel</a> event occurs when the animation stops
+      running in a way that does not fire an <a data-link-type="idl" href="https://drafts.csswg.org/css-animations-1/#dom-animationevent-animationend">animationend</a> event, such
+      as a change in the <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a> that removes the animation, or the
+      animating element or one of its ancestors becoming <span class="css">display:none</span>.
       
      <ul>
         
@@ -451,43 +377,108 @@ with the additions here into a complete level 2 specification.</p>
    </dl>
 
 
-   <h3 class="heading settled" data-level="3.2" id="generalized-event-dispatch"><span class="secno">3.2. </span><span class="content">Generalized Event Dispatch</span><a class="self-link" href="#generalized-event-dispatch"></a></h3>
+   <h3 class="heading settled" data-level="2.4" id="event-dispatch"><span class="secno">2.4. </span><span class="content">Event dispatch</span><a class="self-link" href="#event-dispatch"></a></h3>
 
 
-   <p>Every animation which is not idle can be characterized as being in one of the following three states:</p>
+   <p>For the purpose of determining which events to dispatch, an animation can
+be considered to be in one of four mutually-exclusive <dfn data-dfn-type="dfn" data-lt="event state" data-noexport="" id="event-state">event states<a class="self-link" href="#event-state"></a></dfn> determined using the following procedure:</p>
 
 
-   <ul>
+   <ol>
     <li data-md="">
-     <p><dfn data-dfn-type="dfn" data-noexport="" id="left_inactive">left-inactive<a class="self-link" href="#left_inactive"></a></dfn> (currentTime &lt; startTime)</p>
+     <p>If the animation is <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#idle-play-state">idle</a> or has no <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#target-effect">target
+effect</a> it is <dfn data-dfn-type="dfn" data-noexport="" id="idle">idle<a class="self-link" href="#idle"></a></dfn>.</p>
      
 
     <li data-md="">
-     <p><dfn data-dfn-type="dfn" data-noexport="" id="active">active<a class="self-link" href="#active"></a></dfn> (currentTime >= startTime, currentTime &lt; endTime) - either in the active interval, or in the delay phase</p>
+     <p>Otherwise, if the animation has a <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#current-time">current time</a> less than the
+<a data-link-type="dfn" href="http://w3c.github.io/web-animations/#start-delay">start delay</a> of its <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#target-effect">target effect</a>, or, if the animation’s
+<a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation-playback-rate">playback rate</a> is less than zero and
+it has a <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#current-time">current time</a> less than <em>or equal</em> to the
+<a data-link-type="dfn" href="http://w3c.github.io/web-animations/#start-delay">start delay</a> of its <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#target-effect">target effect</a>, it is
+<dfn data-dfn-type="dfn" data-noexport="" id="left_active">left-active<a class="self-link" href="#left_active"></a></dfn>.</p>
      
 
     <li data-md="">
-     <p><dfn data-dfn-type="dfn" data-noexport="" id="right_inactive">right-inactive<a class="self-link" href="#right_inactive"></a></dfn> (currentTime >= endTime)</p>
+     <p>Otherwise, if the animation has a <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#current-time">current time</a> greater than its
+<a data-link-type="dfn" href="http://w3c.github.io/web-animations/#target-effect-end">target effect end</a>, or, if the animation’s
+<a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation-playback-rate">playback rate</a> is greater than or equal
+to zero and it has a <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#current-time">current time</a> greater than <em>or equal</em> to
+its <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#target-effect-end">target effect end</a>, it is <dfn data-dfn-type="dfn" data-noexport="" id="right_active">right-active<a class="self-link" href="#right_active"></a></dfn>.</p>
      
-</ul>
 
-   <p>Note that if playbackRate &lt; 0, then the equality parts of the inequalities switch around.</p>
+    <li data-md="">
+     <p>Otherwise, it is <dfn data-dfn-type="dfn" data-noexport="" id="active">active<a class="self-link" href="#active"></a></dfn>.</p>
+     
+</ol>
+
+   <p>Each time the animation is <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#sampling">sampled</a>, the events to
+dispatch are determined by comparing the <a data-link-type="dfn" href="#event-state">event state</a> before and
+after the sample as follows:</p>
 
 
-   <p>Add stuff for when events get fired here!!!</p>
+   <dl>
+    <dt data-md="">
+     <p>not <a data-link-type="dfn" href="#active">active</a> → <a data-link-type="dfn" href="#active">active</a></p>
+     
+
+    <dd data-md="">
+     <p>animationstart</p>
+     
+
+    <dt data-md="">
+     <p><a data-link-type="dfn" href="#left_active">left-active</a> → <a data-link-type="dfn" href="#right_active">right-active</a></p>
+     
+
+    <dt data-md="">
+     <p><a data-link-type="dfn" href="#right_active">right-active</a> → <a data-link-type="dfn" href="#left_active">left-active</a></p>
+     
+
+    <dd data-md="">
+     <p>animationstart, animationend</p>
+     
+
+    <dt data-md="">
+     <p><a data-link-type="dfn" href="#active">active</a> → <a data-link-type="dfn" href="#left_active">left-active</a></p>
+     
+
+    <dt data-md="">
+     <p><a data-link-type="dfn" href="#active">active</a> → <a data-link-type="dfn" href="#right_active">right-active</a></p>
+     
+
+    <dd data-md="">
+     <p>animationend</p>
+     
+
+    <dt data-md="">
+     <p><a data-link-type="dfn" href="#active">active</a> → <a data-link-type="dfn" href="#active">active</a></p>
+     
+
+    <dd data-md="">
+     <p>animationiteration <em>if</em> there has been a change to the animation’s
+ <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#target-effect">target effect</a>’s <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#current-iteration">current iteration</a>.</p>
+     
+
+    <dt data-md="">
+     <p>not <a data-link-type="dfn" href="#idle">idle</a> → <a data-link-type="dfn" href="#idle">idle</a></p>
+     
+
+    <dd data-md="">
+     <p>animationcancel</p>
+     
+
+</dl>
+
+   <h4 class="heading settled" data-level="2.4.1" id="non-normative-description-of-event-dispatch"><span class="secno">2.4.1. </span><span class="content">Non-normative Description of Event Dispatch</span><a class="self-link" href="#non-normative-description-of-event-dispatch"></a></h4>
 
 
-
-   <h4 class="heading settled" data-level="3.2.1" id="non-normative-description-of-event-dispatch"><span class="secno">3.2.1. </span><span class="content">Non-normative Description of Event Dispatch</span><a class="self-link" href="#non-normative-description-of-event-dispatch"></a></h4>
-
-
-   <h2 class="heading settled" data-level="4" id="web-animations-instantiation-of-CSS-animations"><span class="secno">4. </span><span class="content">Web Animations Instantiation of CSS Animations</span><a class="self-link" href="#web-animations-instantiation-of-CSS-animations"></a></h2>
+   <h2 class="heading settled" data-level="3" id="web-animations-instantiation-of-CSS-animations"><span class="secno">3. </span><span class="content">Web Animations Instantiation of CSS Animations</span><a class="self-link" href="#web-animations-instantiation-of-CSS-animations"></a></h2>
 
 
    <p>TODO: Copy prose from integration spec</p>
 
 
-   <h3 class="heading settled" data-level="4.1" id="animation-priority"><span class="secno">4.1. </span><span class="content">Animation priority</span><a class="self-link" href="#animation-priority"></a></h3>
+   <h3 class="heading settled" data-level="3.1" id="animation-priority"><span class="secno">3.1. </span><span class="content">Animation priority</span><a class="self-link" href="#animation-priority"></a></h3>
 
 
    <p>The <a data-link-type="dfn" href="http://www.w3.org/TR/web-animations/#dfn-animation">animations</a> generated from the markup and
@@ -507,7 +498,7 @@ are sorted in priority order (lowest to highest) as follows:</p>
    <ol>
     <li data-md="">
      <p>Define the <dfn data-dfn-type="dfn" data-noexport="" id="owning-element">owning element<a class="self-link" href="#owning-element"></a></dfn> as the element or pseudo-element to
-which the <a class="property" data-link-type="propdesc" href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-name">animation-name</a> property was applied that generated this CSS
+which the <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a> property was applied that generated this CSS
 Animation.
 If the CSS Animation was generated directly by script (e.g. using
 the <code class="idl"><a data-link-type="idl" href="#cssanimation">CSSAnimation</a></code> constructor) then it has no <a data-link-type="dfn" href="#owning-element">owning element</a>.</p>
@@ -529,7 +520,7 @@ first.</p>
 
     <li data-md="">
      <p>Otherwise, if the <a data-link-type="dfn" href="#owning-element">owning element</a> of <var>A</var> and <var>B</var>
-differs, sort <var>A</var> and <var>B</var> by <a data-link-type="dfn" href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a>
+differs, sort <var>A</var> and <var>B</var> by <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a>
 of their corresponding <a data-link-type="dfn" href="#owning-element">owning elements</a>.
 With regard to pseudo-elements, the sort order is as follows:</p>
      
@@ -556,18 +547,18 @@ With regard to pseudo-elements, the sort order is as follows:</p>
 
     <li data-md="">
      <p>Otherwise, sort <var>A</var> and <var>B</var> based on their position in the
-computed value of the <a class="property" data-link-type="propdesc" href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-name">animation-name</a> property of the (common) <a data-link-type="dfn" href="#owning-element">owning
+computed value of the <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a> property of the (common) <a data-link-type="dfn" href="#owning-element">owning
 element</a>.</p>
      
 </ol>
 
-   <h3 class="heading settled" data-level="4.2" id="interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.2. </span><span class="content">Interaction between <a class="property" data-link-type="propdesc" href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-play-state">animation-play-state</a> and Web Animations API</span><a class="self-link" href="#interaction-between-animation-play-state-and-web-animations-API"></a></h3>
+   <h3 class="heading settled" data-level="3.2" id="interaction-between-animation-play-state-and-web-animations-API"><span class="secno">3.2. </span><span class="content">Interaction between <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-play-state">animation-play-state</a> and Web Animations API</span><a class="self-link" href="#interaction-between-animation-play-state-and-web-animations-API"></a></h3>
 
 
-   <h2 class="heading settled" data-level="5" id="DOM-interfaces"><span class="secno">5. </span><span class="content">DOM Interfaces</span><a class="self-link" href="#DOM-interfaces"></a></h2>
+   <h2 class="heading settled" data-level="4" id="DOM-interfaces"><span class="secno">4. </span><span class="content">DOM Interfaces</span><a class="self-link" href="#DOM-interfaces"></a></h2>
 
 
-   <h3 class="heading settled" data-level="5.1" id="the-CSSAnimation-interface"><span class="secno">5.1. </span><span class="content">The CSSAnimation interface</span><a class="self-link" href="#the-CSSAnimation-interface"></a></h3>
+   <h3 class="heading settled" data-level="4.1" id="the-CSSAnimation-interface"><span class="secno">4.1. </span><span class="content">The CSSAnimation interface</span><a class="self-link" href="#the-CSSAnimation-interface"></a></h3>
 
 
    <pre class="idl">interface <dfn class="idl-code" data-dfn-type="interface" data-export="" id="cssanimation">CSSAnimation<a class="self-link" href="#cssanimation"></a></dfn> : <a data-link-type="idl-name" href="http://w3c.github.io/web-animations/#animation">Animation</a> {
@@ -579,16 +570,16 @@ element</a>.</p>
    <p>TBD: Define a constructor for this that takes a CSSKeyframesRule argument.</p>
 
 
-   <h3 class="heading settled" data-level="5.2" id="the-CSSKeyframeEffectReadOnly-interface"><span class="secno">5.2. </span><span class="content">The CSSKeyframeEffectReadOnly interface</span><a class="self-link" href="#the-CSSKeyframeEffectReadOnly-interface"></a></h3>
+   <h3 class="heading settled" data-level="4.2" id="the-CSSKeyframeEffectReadOnly-interface"><span class="secno">4.2. </span><span class="content">The CSSKeyframeEffectReadOnly interface</span><a class="self-link" href="#the-CSSKeyframeEffectReadOnly-interface"></a></h3>
 
 
    <pre class="idl">interface <dfn class="idl-code" data-dfn-type="interface" data-export="" id="csskeyframeeffectreadonly">CSSKeyframeEffectReadOnly<a class="self-link" href="#csskeyframeeffectreadonly"></a></dfn> : <a data-link-type="idl-name" href="http://w3c.github.io/web-animations/#keyframeeffectreadonly">KeyframeEffectReadOnly</a> {
-  readonly attribute <a data-link-type="idl-name" href="http://dev.w3.org/csswg/css-animations-1/#csskeyframesrule">CSSKeyframesRule</a> <dfn class="idl-code" data-dfn-for="CSSKeyframeEffectReadOnly" data-dfn-type="attribute" data-export="" data-readonly="" data-type="CSSKeyframesRule " id="dom-csskeyframeeffectreadonly-rule">rule<a class="self-link" href="#dom-csskeyframeeffectreadonly-rule"></a></dfn>;
+  readonly attribute <a data-link-type="idl-name" href="https://drafts.csswg.org/css-animations-1/#csskeyframesrule">CSSKeyframesRule</a> <dfn class="idl-code" data-dfn-for="CSSKeyframeEffectReadOnly" data-dfn-type="attribute" data-export="" data-readonly="" data-type="CSSKeyframesRule " id="dom-csskeyframeeffectreadonly-rule">rule<a class="self-link" href="#dom-csskeyframeeffectreadonly-rule"></a></dfn>;
 };
 </pre>
 
 
-   <h3 class="heading settled" data-level="5.3" id="style-updates-and-script-changes"><span class="secno">5.3. </span><span class="content">Style updates and script changes</span><a class="self-link" href="#style-updates-and-script-changes"></a></h3>
+   <h3 class="heading settled" data-level="4.3" id="style-updates-and-script-changes"><span class="secno">4.3. </span><span class="content">Style updates and script changes</span><a class="self-link" href="#style-updates-and-script-changes"></a></h3>
 
 
    <p>TBD. We need to say that all animation interfaces defined in this specification
@@ -596,9 +587,8 @@ assume style has been updated.  i.e. the following works:</p>
 
 
    <div>
-    <pre class="example lang-javascript" id="example-bec75963"><a class="self-link" href="#example-bec75963"></a>elem.style.animation = 'fadeOut 1s';
-elem.getAnimations()[0].pause();
-</pre></div>
+    <pre class="example lang-javascript highlight" id="example-bec75963"><span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">animation</span> <span class="o">=</span> <span class="s1">'fadeOut 1s'</span><span class="p">;</span>
+<span class="nx">elem</span><span class="p">.</span><span class="nx">getAnimations</span><span class="p">()[</span><span class="mi">0</span><span class="p">].</span><span class="nx">pause</span><span class="p">();</span></pre></div>
 
 </main>
 
@@ -769,41 +759,51 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
   <h2 class="no-num heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="indexlist">
-   <li>active, <a href="#active">3.2</a>
-   <li>animationcancel, <a href="#dom-animationevent-animationcancel">3.1</a>
+   <li>active, <a href="#active">2.4</a>
+   <li>animationcancel, <a href="#dom-animationevent-animationcancel">2.3</a>
    <li>animation-composition, <a href="#propdef-animation-composition">2.1</a>
-   <li>animationName, <a href="#dom-cssanimation-animationname">5.1</a>
-   <li>CSSAnimation, <a href="#cssanimation">5.1</a>
-   <li>CSSKeyframeEffectReadOnly, <a href="#csskeyframeeffectreadonly">5.2</a>
-   <li>left-inactive, <a href="#left_inactive">3.2</a>
-   <li>owning element, <a href="#owning-element">4.1</a>
-   <li>right-inactive, <a href="#right_inactive">3.2</a>
-   <li>rule, <a href="#dom-csskeyframeeffectreadonly-rule">5.2</a>
+   <li>animationName, <a href="#dom-cssanimation-animationname">4.1</a>
+   <li>CSSAnimation, <a href="#cssanimation">4.1</a>
+   <li>CSSKeyframeEffectReadOnly, <a href="#csskeyframeeffectreadonly">4.2</a>
+   <li>event state, <a href="#event-state">2.4</a>
+   <li>idle, <a href="#idle">2.4</a>
+   <li>left-active, <a href="#left_active">2.4</a>
+   <li>owning element, <a href="#owning-element">3.1</a>
+   <li>right-active, <a href="#right_active">2.4</a>
+   <li>rule, <a href="#dom-csskeyframeeffectreadonly-rule">4.2</a>
    <li>&lt;single-animation-composition>, <a href="#typedef-single-animation-composition">2.1</a>
   </ul>
   <h3 class="no-num heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="indexlist">
    <li><a data-link-type="biblio" href="#biblio-css-animations-1">[css-animations-1]</a> defines the following terms:
     <ul>
-     <li><a href="http://dev.w3.org/csswg/css-animations-1/#csskeyframesrule">CSSKeyframesRule</a>
-     <li><a href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-name">animation-name</a>
-     <li><a href="http://dev.w3.org/csswg/css-animations-1/#propdef-animation-play-state">animation-play-state</a>
-     <li><a href="http://dev.w3.org/csswg/css-animations-1/#dom-animationevent-animationend">animationend</a>
+     <li><a href="https://drafts.csswg.org/css-animations-1/#csskeyframesrule">CSSKeyframesRule</a>
+     <li><a href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a>
+     <li><a href="https://drafts.csswg.org/css-animations-1/#propdef-animation-play-state">animation-play-state</a>
+     <li><a href="https://drafts.csswg.org/css-animations-1/#dom-animationevent-animationend">animationend</a>
     </ul>
    <li><a data-link-type="biblio" href="#biblio-css-values-3">[css-values-3]</a> defines the following terms:
     <ul>
-     <li><a href="http://dev.w3.org/csswg/css-values-3/#mult-comma">#</a>
+     <li><a href="https://drafts.csswg.org/css-values-3/#mult-comma">#</a>
     </ul>
    <li><a data-link-type="biblio" href="#biblio-dom-ls">[dom-ls]</a> defines the following terms:
     <ul>
-     <li><a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a>
+     <li><a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a>
     </ul>
    <li><a data-link-type="biblio" href="#biblio-web-animations">[web-animations]</a> defines the following terms:
     <ul>
      <li><a href="http://w3c.github.io/web-animations/#animation">Animation</a>
      <li><a href="http://w3c.github.io/web-animations/#keyframeeffectreadonly">KeyframeEffectReadOnly</a>
+     <li><a href="http://w3c.github.io/web-animations/#animation-playback-rate">animation playback rate</a>
      <li><a href="http://w3c.github.io/web-animations/#animation-sequence-number">animation sequence number</a>
      <li><a href="http://w3c.github.io/web-animations/#animation-type">animation type</a>
+     <li><a href="http://w3c.github.io/web-animations/#current-iteration">current iteration</a>
+     <li><a href="http://w3c.github.io/web-animations/#current-time">current time</a>
+     <li><a href="http://w3c.github.io/web-animations/#idle-play-state">idle play state</a>
+     <li><a href="http://w3c.github.io/web-animations/#sampling">sampling</a>
+     <li><a href="http://w3c.github.io/web-animations/#start-delay">start delay</a>
+     <li><a href="http://w3c.github.io/web-animations/#target-effect">target effect</a>
+     <li><a href="http://w3c.github.io/web-animations/#target-effect-end">target effect end</a>
     </ul>
    <li><a data-link-type="biblio" href="#biblio-web-animations-1">[web-animations-1]</a> defines the following terms:
     <ul>
@@ -820,13 +820,13 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
    <dt id="biblio-css3-animations"><a class="self-link" href="#biblio-css3-animations"></a>[CSS3-ANIMATIONS]
    <dd>Dean Jackson; et al. <a href="http://www.w3.org/TR/css3-animations/">CSS Animations</a>. 19 February 2013. WD. URL: <a href="http://www.w3.org/TR/css3-animations/">http://www.w3.org/TR/css3-animations/</a>
    <dt id="biblio-dom-ls"><a class="self-link" href="#biblio-dom-ls"></a>[DOM-LS]
-   <dd>Document Object Model URL: <a href="http://dom.spec.whatwg.org/">http://dom.spec.whatwg.org/</a>
+   <dd>Document Object Model URL: <a href="https://dom.spec.whatwg.org/">https://dom.spec.whatwg.org/</a>
    <dt id="biblio-rfc2119"><a class="self-link" href="#biblio-rfc2119"></a>[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
    <dt id="biblio-web-animations"><a class="self-link" href="#biblio-web-animations"></a>[WEB-ANIMATIONS]
-   <dd>Brian Birtles; et al. <a href="http://www.w3.org/TR/web-animations/">Web Animations 1.0</a>. 5 June 2014. WD. URL: <a href="http://www.w3.org/TR/web-animations/">http://www.w3.org/TR/web-animations/</a>
+   <dd>Brian Birtles; et al. <a href="http://www.w3.org/TR/web-animations-1/">Web Animations</a>. 7 July 2015. WD. URL: <a href="http://www.w3.org/TR/web-animations-1/">http://www.w3.org/TR/web-animations-1/</a>
    <dt id="biblio-web-animations-1"><a class="self-link" href="#biblio-web-animations-1"></a>[WEB-ANIMATIONS-1]
-   <dd>Web Animations Level 1 URL: <a href="http://www.w3.org/TR/web-animations/">http://www.w3.org/TR/web-animations/</a>
+   <dd>Brian Birtles; et al. <a href="http://www.w3.org/TR/web-animations-1/">Web Animations</a>. 7 July 2015. WD. URL: <a href="http://www.w3.org/TR/web-animations-1/">http://www.w3.org/TR/web-animations-1/</a>
   </dl>
   <h2 class="no-num heading settled" id="property-index"><span class="content">Property Index</span><a class="self-link" href="#property-index"></a></h2>
   <table class="proptable data">
@@ -861,481 +861,8 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
 };
 
 interface <a href="#csskeyframeeffectreadonly">CSSKeyframeEffectReadOnly</a> : <a data-link-type="idl-name" href="http://w3c.github.io/web-animations/#keyframeeffectreadonly">KeyframeEffectReadOnly</a> {
-  readonly attribute <a data-link-type="idl-name" href="http://dev.w3.org/csswg/css-animations-1/#csskeyframesrule">CSSKeyframesRule</a> <a data-readonly="" data-type="CSSKeyframesRule " href="#dom-csskeyframeeffectreadonly-rule">rule</a>;
+  readonly attribute <a data-link-type="idl-name" href="https://drafts.csswg.org/css-animations-1/#csskeyframesrule">CSSKeyframesRule</a> <a data-readonly="" data-type="CSSKeyframesRule " href="#dom-csskeyframeeffectreadonly-rule">rule</a>;
 };
 
-</pre>
-  <script>self = (typeof window !== 'undefined')
-	? window   // if in browser
-	: (
-		(typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope)
-		? self // if in worker
-		: {}   // if in node js
-	);
-
-/**
- * Prism: Lightweight, robust, elegant syntax highlighting
- * MIT license http://www.opensource.org/licenses/mit-license.php/
- * @author Lea Verou http://lea.verou.me
- */
-
-var Prism = (function(){
-
-// Private helper vars
-var lang = /\blang(?:uage)?-(?!\*)(\w+)\b/i;
-
-var _ = self.Prism = {
-	util: {
-		encode: function (tokens) {
-			if (tokens instanceof Token) {
-				return new Token(tokens.type, _.util.encode(tokens.content), tokens.alias);
-			} else if (_.util.type(tokens) === 'Array') {
-				return tokens.map(_.util.encode);
-			} else {
-				return tokens.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\u00a0/g, ' ');
-			}
-		},
-
-		type: function (o) {
-			return Object.prototype.toString.call(o).match(/\[object (\w+)\]/)[1];
-		},
-
-		// Deep clone a language definition (e.g. to extend it)
-		clone: function (o) {
-			var type = _.util.type(o);
-
-			switch (type) {
-				case 'Object':
-					var clone = {};
-
-					for (var key in o) {
-						if (o.hasOwnProperty(key)) {
-							clone[key] = _.util.clone(o[key]);
-						}
-					}
-
-					return clone;
-
-				case 'Array':
-					return o.slice();
-			}
-
-			return o;
-		}
-	},
-
-	languages: {
-		extend: function (id, redef) {
-			var lang = _.util.clone(_.languages[id]);
-
-			for (var key in redef) {
-				lang[key] = redef[key];
-			}
-
-			return lang;
-		},
-
-		// Insert a token before another token in a language literal
-		insertBefore: function (inside, before, insert, root) {
-			root = root || _.languages;
-			var grammar = root[inside];
-			var ret = {};
-
-			for (var token in grammar) {
-
-				if (grammar.hasOwnProperty(token)) {
-
-					if (token == before) {
-
-						for (var newToken in insert) {
-
-							if (insert.hasOwnProperty(newToken)) {
-								ret[newToken] = insert[newToken];
-							}
-						}
-					}
-
-					ret[token] = grammar[token];
-				}
-			}
-
-			return root[inside] = ret;
-		},
-
-		// Traverse a language definition with Depth First Search
-		DFS: function(o, callback, type) {
-			for (var i in o) {
-				if (o.hasOwnProperty(i)) {
-					callback.call(o, i, o[i], type || i);
-
-					if (_.util.type(o[i]) === 'Object') {
-						_.languages.DFS(o[i], callback);
-					} else if (_.util.type(o[i]) === 'Array') {
-						_.languages.DFS(o[i], callback, i);
-					}
-				}
-			}
-		}
-	},
-
-	highlightAll: function(async, callback) {
-		var elements = document.querySelectorAll('code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code');
-		for (var i=0, element; element = elements[i++];) {
-			if (element.classList.contains("idl")) {
-				// Bikeshed handles IDL blocks already.
-				continue;
-			}
-			_.highlightElement(element, async === true, callback);
-		}
-
-		var elements = document.querySelectorAll('pre[class*="language-"], [class*="language-"] pre, pre[class*="lang-"], [class*="lang-"] pre');
-		for (var i=0, element; element = elements[i++];) {
-			if (element.firstElementChild && element.firstElementChild.tagName.toLowerCase() == "code") {
-				// Already handled by the previous loop
-				continue;
-			}
-			if (element.classList.contains("idl")) {
-				// Bikeshed handles IDL blocks already.
-				continue;
-			}
-			_.highlightElement(element, async === true, callback);
-		}
-	},
-
-	highlightElement: function(element, async, callback) {
-		// Find language
-		var language, grammar, parent = element;
-
-		while (parent && !lang.test(parent.className)) {
-			parent = parent.parentNode;
-		}
-
-		if (parent) {
-			language = (parent.className.match(lang) || [,''])[1];
-			grammar = _.languages[language];
-		}
-
-		if (!grammar) {
-			return;
-		}
-
-		// Set language on the element, if not present
-		element.className = element.className.replace(lang, '').replace(/\s+/g, ' ') + ' language-' + language;
-
-		// Set language on the parent, for styling
-		parent = element.parentNode;
-
-		if (/pre/i.test(parent.nodeName)) {
-			parent.className = parent.className.replace(lang, '').replace(/\s+/g, ' ') + ' language-' + language;
-		}
-
-		var code = element.textContent;
-
-		if(!code) {
-			return;
-		}
-
-		var env = {
-			element: element,
-			language: language,
-			grammar: grammar,
-			code: code
-		};
-
-		_.hooks.run('before-highlight', env);
-
-		if (async && self.Worker) {
-			var worker = new Worker(_.filename);
-
-			worker.onmessage = function(evt) {
-				env.highlightedCode = Token.stringify(JSON.parse(evt.data), language);
-
-				_.hooks.run('before-insert', env);
-
-				env.element.innerHTML = env.highlightedCode;
-
-				callback && callback.call(env.element);
-				_.hooks.run('after-highlight', env);
-			};
-
-			worker.postMessage(JSON.stringify({
-				language: env.language,
-				code: env.code
-			}));
-		}
-		else {
-			env.highlightedCode = _.highlight(env.code, env.grammar, env.language)
-
-			_.hooks.run('before-insert', env);
-
-			env.element.innerHTML = env.highlightedCode;
-
-			callback && callback.call(element);
-
-			_.hooks.run('after-highlight', env);
-		}
-	},
-
-	highlight: function (text, grammar, language) {
-		var tokens = _.tokenize(text, grammar);
-		return Token.stringify(_.util.encode(tokens), language);
-	},
-
-	tokenize: function(text, grammar, language) {
-		var Token = _.Token;
-
-		var strarr = [text];
-
-		var rest = grammar.rest;
-
-		if (rest) {
-			for (var token in rest) {
-				grammar[token] = rest[token];
-			}
-
-			delete grammar.rest;
-		}
-
-		tokenloop: for (var token in grammar) {
-			if(!grammar.hasOwnProperty(token) || !grammar[token]) {
-				continue;
-			}
-
-			var patterns = grammar[token];
-			patterns = (_.util.type(patterns) === "Array") ? patterns : [patterns];
-
-			for (var j = 0; j < patterns.length; ++j) {
-				var pattern = patterns[j],
-					inside = pattern.inside,
-					lookbehind = !!pattern.lookbehind,
-					lookbehindLength = 0,
-					alias = pattern.alias;
-
-				pattern = pattern.pattern || pattern;
-
-				for (var i=0; i<strarr.length; i++) { // Don’t cache length as it changes during the loop
-
-					var str = strarr[i];
-
-					if (strarr.length > text.length) {
-						// Something went terribly wrong, ABORT, ABORT!
-						break tokenloop;
-					}
-
-					if (str instanceof Token) {
-						continue;
-					}
-
-					pattern.lastIndex = 0;
-
-					var match = pattern.exec(str);
-
-					if (match) {
-						if(lookbehind) {
-							lookbehindLength = match[1].length;
-						}
-
-						var from = match.index - 1 + lookbehindLength,
-							match = match[0].slice(lookbehindLength),
-							len = match.length,
-							to = from + len,
-							before = str.slice(0, from + 1),
-							after = str.slice(to + 1);
-
-						var args = [i, 1];
-
-						if (before) {
-							args.push(before);
-						}
-
-						var wrapped = new Token(token, inside? _.tokenize(match, inside) : match, alias);
-
-						args.push(wrapped);
-
-						if (after) {
-							args.push(after);
-						}
-
-						Array.prototype.splice.apply(strarr, args);
-					}
-				}
-			}
-		}
-
-		return strarr;
-	},
-
-	hooks: {
-		all: {},
-
-		add: function (name, callback) {
-			var hooks = _.hooks.all;
-
-			hooks[name] = hooks[name] || [];
-
-			hooks[name].push(callback);
-		},
-
-		run: function (name, env) {
-			var callbacks = _.hooks.all[name];
-
-			if (!callbacks || !callbacks.length) {
-				return;
-			}
-
-			for (var i=0, callback; callback = callbacks[i++];) {
-				callback(env);
-			}
-		}
-	}
-};
-
-var Token = _.Token = function(type, content, alias) {
-	this.type = type;
-	this.content = content;
-	this.alias = alias;
-};
-
-Token.stringify = function(o, language, parent) {
-	if (typeof o == 'string') {
-		return o;
-	}
-
-	if (Object.prototype.toString.call(o) == '[object Array]') {
-		return o.map(function(element) {
-			return Token.stringify(element, language, o);
-		}).join('');
-	}
-
-	var env = {
-		type: o.type,
-		content: Token.stringify(o.content, language, parent),
-		tag: 'span',
-		classes: ['token', o.type],
-		attributes: {},
-		language: language,
-		parent: parent
-	};
-
-	if (env.type == 'comment') {
-		env.attributes['spellcheck'] = 'true';
-	}
-
-	if (o.alias) {
-		var aliases = _.util.type(o.alias) === 'Array' ? o.alias : [o.alias];
-		Array.prototype.push.apply(env.classes, aliases);
-	}
-
-	_.hooks.run('wrap', env);
-
-	var attributes = '';
-
-	for (var name in env.attributes) {
-		attributes += name + '="' + (env.attributes[name] || '') + '"';
-	}
-
-	return '<' + env.tag + ' class="' + env.classes.join(' ') + '" ' + attributes + '>' + env.content + '</' + env.tag + '>';
-
-};
-
-if (!self.document) {
-	if (!self.addEventListener) {
-		// in Node.js
-		return self.Prism;
-	}
- 	// In worker
-	self.addEventListener('message', function(evt) {
-		var message = JSON.parse(evt.data),
-		    lang = message.language,
-		    code = message.code;
-
-		self.postMessage(JSON.stringify(_.util.encode(_.tokenize(code, _.languages[lang]))));
-		self.close();
-	}, false);
-
-	return self.Prism;
-}
-
-// Get current script and highlight
-var script = document.getElementsByTagName('script');
-
-script = script[script.length - 1];
-
-if (script) {
-	_.filename = script.src;
-
-	if (document.addEventListener && !script.hasAttribute('data-manual')) {
-		document.addEventListener('DOMContentLoaded', _.highlightAll);
-	}
-}
-
-return self.Prism;
-
-})();
-
-if (typeof module !== 'undefined' && module.exports) {
-	module.exports = Prism;
-}
-;
-Prism.languages.clike = {
-	'comment': [
-		{
-			pattern: /(^|[^\\])\/\*[\w\W]*?\*\//g,
-			lookbehind: true
-		},
-		{
-			pattern: /(^|[^\\:])\/\/.*?(\r?\n|$)/g,
-			lookbehind: true
-		}
-	],
-	'string': /("|')(\\?.)*?\1/g,
-	'class-name': {
-		pattern: /((?:(?:class|interface|extends|implements|trait|instanceof|new)\s+)|(?:catch\s+\())[a-z0-9_\.\\]+/ig,
-		lookbehind: true,
-		inside: {
-			punctuation: /(\.|\\)/
-		}
-	},
-	'keyword': /\b(if|else|while|do|for|return|in|instanceof|function|new|try|throw|catch|finally|null|break|continue)\b/g,
-	'boolean': /\b(true|false)\b/g,
-	'function': {
-		pattern: /[a-z0-9_]+\(/ig,
-		inside: {
-			punctuation: /\(/
-		}
-	},
-	'number': /\b-?(0x[\dA-Fa-f]+|\d*\.?\d+([Ee]-?\d+)?)\b/g,
-	'operator': /[-+]{1,2}|!|<=?|>=?|={1,3}|&{1,2}|\|?\||\?|\*|\/|\~|\^|\%/g,
-	'ignore': /&(lt|gt|amp);/gi,
-	'punctuation': /[{}[\];(),.:]/g
-};
-;
-Prism.languages.javascript = Prism.languages.extend('clike', {
-	'keyword': /\b(break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|false|finally|for|function|get|if|implements|import|in|instanceof|interface|let|new|null|package|private|protected|public|return|set|static|super|switch|this|throw|true|try|typeof|var|void|while|with|yield)\b/g,
-	'number': /\b-?(0x[\dA-Fa-f]+|\d*\.?\d+([Ee]-?\d+)?|NaN|-?Infinity)\b/g
-});
-
-Prism.languages.insertBefore('javascript', 'keyword', {
-	'regex': {
-		pattern: /(^|[^/])\/(?!\/)(\[.+?]|\\.|[^/\r\n])+\/[gim]{0,3}(?=\s*($|[\r\n,.;})]))/g,
-		lookbehind: true
-	}
-});
-
-if (Prism.languages.markup) {
-	Prism.languages.insertBefore('markup', 'tag', {
-		'script': {
-			pattern: /<script[\w\W]*?>[\w\W]*?<\/script>/ig,
-			inside: {
-				'tag': {
-					pattern: /<script[\w\W]*?>|<\/script>/ig,
-					inside: Prism.languages.markup.tag.inside
-				},
-				rest: Prism.languages.javascript
-			}
-		}
-	});
-}
-;
-</script></body>
+</pre></body>
 </html>
