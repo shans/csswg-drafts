@@ -1,5 +1,21 @@
 <h1>CSS Animations Level 2</h1>
 
+<style type="text/css">
+  table.play-state-transitions {
+    empty-cells: hide;
+    border-spacing: 0px;
+  }
+  table.play-state-transitions td {
+    padding: 0.2em 1em;
+    border: 1px solid black;
+  }
+  table.play-state-transitions th.rowgroup {
+    transform: rotate(-180deg);
+    writing-mode: vertical-lr;
+    padding-left: 5px;
+  }
+</style>
+
 <pre class='metadata'>
 Status: ED
 Work Status: Exploring
@@ -17,6 +33,9 @@ urlPrefix: http://w3c.github.io/web-animations/; type: interface; spec: web-anim
     text: Animation
     text: KeyframeEffectReadOnly
     text: KeyframeEffect
+urlPrefix: http://w3c.github.io/web-animations/; type: method; for: Animation; spec: web-animations
+    text: play()
+    text: pause()
 urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
     text: animation
     text: animation playback rate
@@ -244,6 +263,93 @@ transition out of idle? (Just for animations created using {{CSSAnimation()}},
 
 ## Interaction between 'animation-play-state' and the Web Animations API ## {#interaction-between-animation-play-state-and-web-animations-API}
 
+Both this specification and the Web Animations specification [[WEB-ANIMATIONS]]
+define mechanisms for pause control, specifically the 'animation-play-state'
+property, and the {{Animation/play()}} and {{Animation/pause()}} methods
+respectively.
+
+<div class="note">
+
+The interaction of these methods can be summarized as follows:
+
+*   Calling {{Animation/pause()}} is sticky. The animation will remain paused
+    until there is a subsequent call to {{Animation/play()}} after which point
+    the animation will begin tracking changes to the computed value of the
+    'animation-play-state' property on the <a>owning element</a> from the next
+    moment it becomes newly ''paused''.
+*   In the computed 'animation-play-state' on the <a>owning element</a> is
+    ''paused'', calling {{Animation/play()}} will temporarily override the
+    'animation-play-state' until it next becomes ''running''.
+
+</div>
+
+With regards to the pausing, an animation can be considered to be in one of
+five mutually-exclusive states:
+
+<ul style="list-style-type: upper-latin">
+<li>Running
+<li>Running and temporarily overriding 'animation-play-state': ''paused''
+<li>Paused and sticky overriding 'animation-play-state': ''running''
+<li>Paused and sticky overriding 'animation-play-state': ''paused''
+<li>Paused by 'animation-play-state'
+</ul>
+
+A state transition chart follows:
+
+<table class="play-state-transitions">
+<tr>
+  <td rowspan="2"></td>
+  <td></td>
+  <th colspan="5">Initial state</th>
+</tr>
+<tr>
+  <th>Event</th>
+  <th>A</th>
+  <th>B</th>
+  <th>C</th>
+  <th>D</th>
+  <th>E</th>
+</tr>
+<tr>
+  <th rowspan="4" class="rowgroup">Resulting state</th>
+  <td>{{Animation/play()}}</td>
+  <td>A</td>
+  <td>B</td>
+  <td>A</td>
+  <td>B</td>
+  <td>B</td>
+</tr>
+<tr>
+  <td>{{Animation/pause()}}</td>
+  <td>C</td>
+  <td>D</td>
+  <td>C</td>
+  <td>D</td>
+  <td>D</td>
+</tr>
+<tr>
+  <td>'animation-play-state' &rarr; ''running''</td>
+  <td>A</td>
+  <td>A</td>
+  <td>C</td>
+  <td>C</td>
+  <td>A</td>
+</tr>
+<tr>
+  <td>'animation-play-state' &rarr; ''paused''</td>
+  <td>E</td>
+  <td>B</td>
+  <td>D</td>
+  <td>D</td>
+  <td>E</td>
+</tr>
+</table>
+
+TBD: How {{Animation/play()}} differs from setting 'animation-play-state' to
+''running''.
+
+</div>
+
 # DOM interfaces # {#DOM-interfaces}
 
 ## The CSSAnimation interface ## {#the-CSSAnimation-interface}
@@ -277,7 +383,7 @@ interface CSSAnimation : Animation {
     effect</a> at the point when the animation was created.
     This is the value of the 'animation-name' property that caused this
     object to be generated or, if this object was generated using the
-    programming interface, the {{CSSAnimation()/animationName}} argument
+    programming interface, the <code>animationName</code> argument
     that was passed to the {{CSSAnimation()}} constructor.
 
 ## Requirements on pending style changes ## {#requirements-on-pending-style-changes}
