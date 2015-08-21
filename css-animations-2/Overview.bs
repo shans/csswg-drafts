@@ -121,8 +121,6 @@ after the sample as follows:
 ::   animationcancel
 
 
-### Non-normative Description of Event Dispatch ### {#non-normative-description-of-event-dispatch}
-
 # Web Animations Instantiation of CSS Animations # {#web-animations-instantiation-of-CSS-animations}
 
 TODO: Copy prose from integration spec
