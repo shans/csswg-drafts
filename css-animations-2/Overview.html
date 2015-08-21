@@ -377,6 +377,12 @@ with the additions here into a complete level 2 specification.</p>
    <h3 class="heading settled" data-level="2.4" id="event-dispatch"><span class="secno">2.4. </span><span class="content">Event dispatch</span><a class="self-link" href="#event-dispatch"></a></h3>
 
 
+   <p class="note" role="note">Note: This is a more general description of event dispatch than that of CSS
+Animations Level 1 <a data-link-type="biblio" href="#biblio-css3-animations">[CSS3-ANIMATIONS]</a> since it must account for the
+possibility of animations being seeked using the Web Animations API
+<a data-link-type="biblio" href="#biblio-web-animations">[WEB-ANIMATIONS]</a>.</p>
+
+
    <p>For the purpose of determining which events to dispatch, an animation can
 be considered to be in one of four mutually-exclusive <dfn data-dfn-type="dfn" data-lt="event state" data-noexport="" id="event-state">event states<a class="self-link" href="#event-state"></a></dfn> determined using the following procedure:</p>
 
@@ -475,7 +481,7 @@ after the sample as follows:</p>
    <h3 class="heading settled" data-level="3.1" id="animation-priority"><span class="secno">3.1. </span><span class="content">Animation priority</span><a class="self-link" href="#animation-priority"></a></h3>
 
 
-   <p>The <a data-link-type="dfn" href="http://www.w3.org/TR/web-animations/#dfn-animation">animations</a> generated from the markup and
+   <p>The <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation">animations</a> generated from the markup and
 interfaces (e.g. the <code class="idl"><a data-link-type="idl" href="#cssanimation">CSSAnimation</a></code> constructor) defined in this specification
 have an <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation-type">animation type</a> of ‘CSS Animation’.</p>
 
@@ -788,6 +794,7 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
     <ul>
      <li><a href="http://w3c.github.io/web-animations/#animation">Animation</a>
      <li><a href="http://w3c.github.io/web-animations/#keyframeeffectreadonly">KeyframeEffectReadOnly</a>
+     <li><a href="http://w3c.github.io/web-animations/#animation">animation</a>
      <li><a href="http://w3c.github.io/web-animations/#animation-playback-rate">animation playback rate</a>
      <li><a href="http://w3c.github.io/web-animations/#animation-sequence-number">animation sequence number</a>
      <li><a href="http://w3c.github.io/web-animations/#animation-type">animation type</a>
@@ -798,10 +805,6 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
      <li><a href="http://w3c.github.io/web-animations/#start-delay">start delay</a>
      <li><a href="http://w3c.github.io/web-animations/#target-effect">target effect</a>
      <li><a href="http://w3c.github.io/web-animations/#target-effect-end">target effect end</a>
-    </ul>
-   <li><a data-link-type="biblio" href="#biblio-web-animations-1">[web-animations-1]</a> defines the following terms:
-    <ul>
-     <li><a href="http://www.w3.org/TR/web-animations/#dfn-animation">animation</a>
     </ul>
   </ul>
   <h2 class="no-num heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
@@ -818,8 +821,6 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
    <dt id="biblio-rfc2119"><a class="self-link" href="#biblio-rfc2119"></a>[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
    <dt id="biblio-web-animations"><a class="self-link" href="#biblio-web-animations"></a>[WEB-ANIMATIONS]
-   <dd>Brian Birtles; et al. <a href="http://www.w3.org/TR/web-animations-1/">Web Animations</a>. 7 July 2015. WD. URL: <a href="http://www.w3.org/TR/web-animations-1/">http://www.w3.org/TR/web-animations-1/</a>
-   <dt id="biblio-web-animations-1"><a class="self-link" href="#biblio-web-animations-1"></a>[WEB-ANIMATIONS-1]
    <dd>Brian Birtles; et al. <a href="http://www.w3.org/TR/web-animations-1/">Web Animations</a>. 7 July 2015. WD. URL: <a href="http://www.w3.org/TR/web-animations-1/">http://www.w3.org/TR/web-animations-1/</a>
   </dl>
   <h2 class="no-num heading settled" id="property-index"><span class="content">Property Index</span><a class="self-link" href="#property-index"></a></h2>

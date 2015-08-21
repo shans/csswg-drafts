@@ -17,6 +17,7 @@ urlPrefix: http://w3c.github.io/web-animations/; type: interface; spec: web-anim
     text: Animation
     text: KeyframeEffectReadOnly
 urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
+    text: animation
     text: animation playback rate
     text: animation sequence number
     text: animation type
@@ -82,6 +83,11 @@ TBD
   </dl>
 
 ## Event dispatch ## {#event-dispatch}
+
+Note: This is a more general description of event dispatch than that of CSS
+Animations Level 1 [[CSS3-ANIMATIONS]] since it must account for the
+possibility of animations being seeked using the Web Animations API
+[[WEB-ANIMATIONS]].
 
 For the purpose of determining which events to dispatch, an animation can
 be considered to be in one of four mutually-exclusive <dfn
