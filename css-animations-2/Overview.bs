@@ -45,6 +45,7 @@ urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
     text: current iteration
     text: global animation list
     text: idle play state
+    text: play an animation
     text: sampling
     text: start delay
     text: target effect
@@ -345,8 +346,13 @@ A state transition chart follows:
 </tr>
 </table>
 
-TBD: How {{Animation/play()}} differs from setting 'animation-play-state' to
-''running''.
+Issue: Need to define the difference between setting 'animation-play-state' to
+''running'' and calling {{Animation/play()}}. Specifically, the former
+follows the same procedure to <a>play an animation</a> but does <em>not</em>
+perform the snapping behavior that results from comparing the <a>current
+time</a> to zero or the <a>target effect end</a>. This probably requires
+rearranging the algorithm in Web Animations to take an extra argument to opt-out
+of this behavior.
 
 </div>
 

@@ -794,8 +794,13 @@ five mutually-exclusive states:</p>
 </table>
 
 
-   <p>TBD: How <code class="idl"><a data-link-type="idl" href="http://w3c.github.io/web-animations/#play">play()</a></code> differs from setting <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-play-state">animation-play-state</a> to
-<a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-animations-1/#valdef-animation-play-state-running">running</a>.</p>
+   <p class="issue" id="issue-f72b040b"><a class="self-link" href="#issue-f72b040b"></a> Need to define the difference between setting <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-play-state">animation-play-state</a> to
+<a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-animations-1/#valdef-animation-play-state-running">running</a> and calling <code class="idl"><a data-link-type="idl" href="http://w3c.github.io/web-animations/#play">play()</a></code>. Specifically, the former
+follows the same procedure to <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#play-an-animation">play an animation</a> but does <em>not</em>
+perform the snapping behavior that results from comparing the <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#current-time">current
+time</a> to zero or the <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#target-effect-end">target effect end</a>. This probably requires
+rearranging the algorithm in Web Animations to take an extra argument to opt-out
+of this behavior.</p>
 
 
 
@@ -1113,6 +1118,7 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
      <li><a href="http://w3c.github.io/web-animations/#global-animation-list">global animation list</a>
      <li><a href="http://w3c.github.io/web-animations/#idle-play-state">idle play state</a>
      <li><a href="http://w3c.github.io/web-animations/#pause">pause()</a>
+     <li><a href="http://w3c.github.io/web-animations/#play-an-animation">play an animation</a>
      <li><a href="http://w3c.github.io/web-animations/#play">play()</a>
      <li><a href="http://w3c.github.io/web-animations/#sampling">sampling</a>
      <li><a href="http://w3c.github.io/web-animations/#start-delay">start delay</a>
@@ -1187,6 +1193,13 @@ interface <a href="#cssanimation">CSSAnimation</a> : <a data-link-type="idl-name
    <div class="issue"> Would it be more consistent to append them at the moment they first
 transition out of idle? (Just for animations created using <code class="idl"><a data-link-type="idl" href="#dom-cssanimation-cssanimation">CSSAnimation()</a></code>,
 <em>not</em> for generic <code class="idl"><a data-link-type="idl" href="http://w3c.github.io/web-animations/#animation">Animation</a></code> objects.)<a href="#issue-cfac1180"> ↵ </a></div>
+   <div class="issue"> Need to define the difference between setting <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-play-state">animation-play-state</a> to
+<a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-animations-1/#valdef-animation-play-state-running">running</a> and calling <code class="idl"><a data-link-type="idl" href="http://w3c.github.io/web-animations/#play">play()</a></code>. Specifically, the former
+follows the same procedure to <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#play-an-animation">play an animation</a> but does <em>not</em>
+perform the snapping behavior that results from comparing the <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#current-time">current
+time</a> to zero or the <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#target-effect-end">target effect end</a>. This probably requires
+rearranging the algorithm in Web Animations to take an extra argument to opt-out
+of this behavior.<a href="#issue-f72b040b"> ↵ </a></div>
    <div class="issue"> It is not clear what the most reasonable behavior is here regarding
 liveness. Could we make the generated object always track changes?
 That would suggest a special sub-type of <code class="idl"><a data-link-type="idl" href="http://w3c.github.io/web-animations/#keyframeeffectreadonly">KeyframeEffectReadOnly</a></code> that
