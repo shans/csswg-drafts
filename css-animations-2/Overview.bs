@@ -41,6 +41,7 @@ urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
     text: animation playback rate
     text: animation sequence number
     text: animation type
+    text: composite operation
     text: current time
     text: current iteration
     text: global animation list
@@ -73,7 +74,8 @@ href="https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html">https://
 
 ## The 'animation-composition' property ## {#animation-composition}
 
-TBD
+The 'animation-composition' property defines the <a>composite operation</a>
+used when multiple animations target the same property.
 
 <pre class='propdef'>
 Name: animation-composition
@@ -90,9 +92,13 @@ Canonical order: per grammar
 
 <dfn>&lt;single-animation-composition></dfn> = replace | add | accumulate
 
-The values of 'animation-composition' have the following meanings:
+The values of 'animation-composition' have the meaning defined for the
+corresponding values values of the <a>composite operation</a> defined in Web
+Animations [[!WEB-ANIMATIONS]].
 
-TBD
+When specified in a keyframe, 'animation-composition' defines the operation
+used for each property specified in that keyframe until the next keyframe
+specifying each property.
 
 ## Animation events ## {#animation-events}
 
