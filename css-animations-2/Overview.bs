@@ -164,6 +164,102 @@ these media.
 Issue: Need to add something like this: <a
 href="https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html">https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html</a>.
 
+## The 'animation-play-state' property ## {#animation-play-state}
+
+### Interaction between 'animation-play-state' and the Web Animations API ### {#interaction-between-animation-play-state-and-web-animations-API}
+
+Both this specification and the Web Animations specification [[WEB-ANIMATIONS]]
+define mechanisms for pause control, specifically the 'animation-play-state'
+property, and the {{Animation/play()}} and {{Animation/pause()}} methods
+respectively.
+
+<div class="note">
+
+The interaction of these methods can be summarized as follows:
+
+*   Calling {{Animation/pause()}} is sticky. The animation will remain paused
+    until there is a subsequent call to {{Animation/play()}} after which point
+    the animation will begin tracking changes to the computed value of the
+    'animation-play-state' property on the <a>owning element</a> from the next
+    moment it becomes newly ''paused''.
+*   In the computed 'animation-play-state' on the <a>owning element</a> is
+    ''paused'', calling {{Animation/play()}} will temporarily override the
+    'animation-play-state' until it next becomes ''running''.
+
+</div>
+
+With regards to the pausing, an animation can be considered to be in one of
+five mutually-exclusive states:
+
+<ul style="list-style-type: upper-latin">
+<li>Running
+<li>Running and temporarily overriding 'animation-play-state': ''paused''
+<li>Paused and sticky overriding 'animation-play-state': ''running''
+<li>Paused and sticky overriding 'animation-play-state': ''paused''
+<li>Paused by 'animation-play-state'
+</ul>
+
+A state transition chart follows:
+
+<table class="play-state-transitions">
+<tr>
+  <td rowspan="2"></td>
+  <td></td>
+  <th colspan="5">Initial state</th>
+</tr>
+<tr>
+  <th>Event</th>
+  <th>A</th>
+  <th>B</th>
+  <th>C</th>
+  <th>D</th>
+  <th>E</th>
+</tr>
+<tr>
+  <th rowspan="4" class="rowgroup">Resulting state</th>
+  <td>{{Animation/play()}}</td>
+  <td>A</td>
+  <td>B</td>
+  <td>A</td>
+  <td>B</td>
+  <td>B</td>
+</tr>
+<tr>
+  <td>{{Animation/pause()}}</td>
+  <td>C</td>
+  <td>D</td>
+  <td>C</td>
+  <td>D</td>
+  <td>D</td>
+</tr>
+<tr>
+  <td>'animation-play-state' &rarr; ''running''</td>
+  <td>A</td>
+  <td>A</td>
+  <td>C</td>
+  <td>C</td>
+  <td>A</td>
+</tr>
+<tr>
+  <td>'animation-play-state' &rarr; ''paused''</td>
+  <td>E</td>
+  <td>B</td>
+  <td>D</td>
+  <td>D</td>
+  <td>E</td>
+</tr>
+</table>
+
+Issue: Need to define the difference between setting 'animation-play-state' to
+''running'' and calling {{Animation/play()}}. Specifically, the former
+follows the same procedure to <a>play an animation</a> but does <em>not</em>
+perform the snapping behavior that results from comparing the <a>current
+time</a> to zero or the <a>target effect end</a>. This probably requires
+rearranging the algorithm in Web Animations to take an extra argument to opt-out
+of this behavior.
+
+</div>
+
 ## The 'animation-composition' property ## {#animation-composition}
 
 The 'animation-composition' property defines the <a>composite operation</a>
@@ -191,75 +287,6 @@ Animations [[!WEB-ANIMATIONS]].
 When specified in a keyframe, 'animation-composition' defines the operation
 used for each property specified in that keyframe until the next keyframe
 specifying each property.
-
-## Animation events ## {#animation-events}
-
-<h3 id="event-animationevent">Types of <code>AnimationEvent</code></h3>
-
-  <p>The <em>additional</em> types of animation events that can occur are:</p>
-
-  <dl dfn-type=event dfn-for=animationevent>
-    <dt><dfn>animationcancel</dfn>
-    <dd>
-      The <a idl>animationcancel</a> event occurs when the animation stops
-      running in a way that does not fire an <a idl>animationend</a> event, such
-      as a change in the 'animation-name' that removes the animation, or the
-      animating element or one of its ancestors becoming ''display:none''.
-      <ul>
-        <li>Bubbles: Yes</li>
-        <li>Cancelable: No</li>
-        <li>Context Info: animationName, elapsedTime, pseudoElement</li>
-      </ul>
-  </dl>
-
-## Event dispatch ## {#event-dispatch}
-
-Note, this is a more general description of event dispatch than that of CSS
-Animations Level 1 [[CSS3-ANIMATIONS]] since it must account for the
-possibility of animations being seeked using the Web Animations API
-[[WEB-ANIMATIONS]].
-
-For the purpose of determining which events to dispatch, an animation can
-be considered to be in one of four mutually-exclusive <dfn
-lt="event state">event states</dfn> determined using the following procedure:
-
-1.  If the animation is <a lt="idle play state">idle</a> or has no <a>target
-    effect</a> it is <dfn>idle</dfn>.
-1.  Otherwise, if the animation has a <a>current time</a> less than the
-    <a>start delay</a> of its <a>target effect</a>, or, if the animation's
-    <a lt="animation playback rate">playback rate</a> is less than zero and
-    it has a <a>current time</a> less than <em>or equal</em> to the
-    <a>start delay</a> of its <a>target effect</a>, it is
-    <dfn>left-active</dfn>.
-1.  Otherwise, if the animation has a <a>current time</a> greater than its
-    <a>target effect end</a>, or, if the animation's
-    <a lt="animation playback rate">playback rate</a> is greater than or equal
-    to zero and it has a <a>current time</a> greater than <em>or equal</em> to
-    its <a>target effect end</a>, it is <dfn>right-active</dfn>.
-1.  Otherwise, it is <dfn>active</dfn>.
-
-Each time the animation is <a lt="sampling">sampled</a>, the events to
-dispatch are determined by comparing the <a>event state</a> before and
-after the sample as follows:
-
-:    not <a>active</a> &rarr; <a>active</a>
-::   animationstart
-:    <a>left-active</a> &rarr; <a>right-active</a>
-:    <a>right-active</a> &rarr; <a>left-active</a>
-::   animationstart, animationend
-:    <a>active</a> &rarr; <a>left-active</a>
-:    <a>active</a> &rarr; <a>right-active</a>
-::   animationend
-:    <a>active</a> &rarr; <a>active</a>
-::   animationiteration <em>if</em> there has been a change to the animation's
-     <a>target effect</a>'s <a>current iteration</a>
-:    not <a>idle</a> &rarr; <a>idle</a>
-::   animationcancel
-
-
-# Web Animations Instantiation of CSS Animations # {#web-animations-instantiation-of-CSS-animations}
-
-TODO: Copy prose from integration spec
 
 ## Owning element ## {#owning-element-section}
 
@@ -360,101 +387,71 @@ Issue: Would it be more consistent to append them at the moment they first
 transition out of idle? (Just for animations created using {{CSSAnimation()}},
 <em>not</em> for generic {{Animation}} objects.)
 
-## Interaction between 'animation-play-state' and the Web Animations API ## {#interaction-between-animation-play-state-and-web-animations-API}
+# Animation events # {#events}
 
-Both this specification and the Web Animations specification [[WEB-ANIMATIONS]]
-define mechanisms for pause control, specifically the 'animation-play-state'
-property, and the {{Animation/play()}} and {{Animation/pause()}} methods
-respectively.
+<h3 id="event-animationevent">Types of <code>AnimationEvent</code></h3>
 
-<div class="note">
+  <p>The <em>additional</em> types of animation events that can occur are:</p>
 
-The interaction of these methods can be summarized as follows:
+  <dl dfn-type=event dfn-for=animationevent>
+    <dt><dfn>animationcancel</dfn>
+    <dd>
+      The <a idl>animationcancel</a> event occurs when the animation stops
+      running in a way that does not fire an <a idl>animationend</a> event, such
+      as a change in the 'animation-name' that removes the animation, or the
+      animating element or one of its ancestors becoming ''display:none''.
+      <ul>
+        <li>Bubbles: Yes</li>
+        <li>Cancelable: No</li>
+        <li>Context Info: animationName, elapsedTime, pseudoElement</li>
+      </ul>
+  </dl>
 
-*   Calling {{Animation/pause()}} is sticky. The animation will remain paused
-    until there is a subsequent call to {{Animation/play()}} after which point
-    the animation will begin tracking changes to the computed value of the
-    'animation-play-state' property on the <a>owning element</a> from the next
-    moment it becomes newly ''paused''.
-*   In the computed 'animation-play-state' on the <a>owning element</a> is
-    ''paused'', calling {{Animation/play()}} will temporarily override the
-    'animation-play-state' until it next becomes ''running''.
+## Event dispatch ## {#event-dispatch}
 
-</div>
+Note, this is a more general description of event dispatch than that of CSS
+Animations Level 1 [[CSS3-ANIMATIONS]] since it must account for the
+possibility of animations being seeked using the Web Animations API
+[[WEB-ANIMATIONS]].
 
-With regards to the pausing, an animation can be considered to be in one of
-five mutually-exclusive states:
+For the purpose of determining which events to dispatch, an animation can
+be considered to be in one of four mutually-exclusive <dfn
+lt="event state">event states</dfn> determined using the following procedure:
 
-<ul style="list-style-type: upper-latin">
-<li>Running
-<li>Running and temporarily overriding 'animation-play-state': ''paused''
-<li>Paused and sticky overriding 'animation-play-state': ''running''
-<li>Paused and sticky overriding 'animation-play-state': ''paused''
-<li>Paused by 'animation-play-state'
-</ul>
+1.  If the animation is <a lt="idle play state">idle</a> or has no <a>target
+    effect</a> it is <dfn>idle</dfn>.
+1.  Otherwise, if the animation has a <a>current time</a> less than the
+    <a>start delay</a> of its <a>target effect</a>, or, if the animation's
+    <a lt="animation playback rate">playback rate</a> is less than zero and
+    it has a <a>current time</a> less than <em>or equal</em> to the
+    <a>start delay</a> of its <a>target effect</a>, it is
+    <dfn>left-active</dfn>.
+1.  Otherwise, if the animation has a <a>current time</a> greater than its
+    <a>target effect end</a>, or, if the animation's
+    <a lt="animation playback rate">playback rate</a> is greater than or equal
+    to zero and it has a <a>current time</a> greater than <em>or equal</em> to
+    its <a>target effect end</a>, it is <dfn>right-active</dfn>.
+1.  Otherwise, it is <dfn>active</dfn>.
 
-A state transition chart follows:
+Each time the animation is <a lt="sampling">sampled</a>, the events to
+dispatch are determined by comparing the <a>event state</a> before and
+after the sample as follows:
 
-<table class="play-state-transitions">
-<tr>
-  <td rowspan="2"></td>
-  <td></td>
-  <th colspan="5">Initial state</th>
-</tr>
-<tr>
-  <th>Event</th>
-  <th>A</th>
-  <th>B</th>
-  <th>C</th>
-  <th>D</th>
-  <th>E</th>
-</tr>
-<tr>
-  <th rowspan="4" class="rowgroup">Resulting state</th>
-  <td>{{Animation/play()}}</td>
-  <td>A</td>
-  <td>B</td>
-  <td>A</td>
-  <td>B</td>
-  <td>B</td>
-</tr>
-<tr>
-  <td>{{Animation/pause()}}</td>
-  <td>C</td>
-  <td>D</td>
-  <td>C</td>
-  <td>D</td>
-  <td>D</td>
-</tr>
-<tr>
-  <td>'animation-play-state' &rarr; ''running''</td>
-  <td>A</td>
-  <td>A</td>
-  <td>C</td>
-  <td>C</td>
-  <td>A</td>
-</tr>
-<tr>
-  <td>'animation-play-state' &rarr; ''paused''</td>
-  <td>E</td>
-  <td>B</td>
-  <td>D</td>
-  <td>D</td>
-  <td>E</td>
-</tr>
-</table>
+:    not <a>active</a> &rarr; <a>active</a>
+::   animationstart
+:    <a>left-active</a> &rarr; <a>right-active</a>
+:    <a>right-active</a> &rarr; <a>left-active</a>
+::   animationstart, animationend
+:    <a>active</a> &rarr; <a>left-active</a>
+:    <a>active</a> &rarr; <a>right-active</a>
+::   animationend
+:    <a>active</a> &rarr; <a>active</a>
+::   animationiteration <em>if</em> there has been a change to the animation's
+     <a>target effect</a>'s <a>current iteration</a>
+:    not <a>idle</a> &rarr; <a>idle</a>
+::   animationcancel
 
-Issue: Need to define the difference between setting 'animation-play-state' to
-''running'' and calling {{Animation/play()}}. Specifically, the former
-follows the same procedure to <a>play an animation</a> but does <em>not</em>
-perform the snapping behavior that results from comparing the <a>current
-time</a> to zero or the <a>target effect end</a>. This probably requires
-rearranging the algorithm in Web Animations to take an extra argument to opt-out
-of this behavior.
-
-</div>
-
-# DOM interfaces # {#DOM-interfaces}
+# DOM interfaces # {#interface-dom}
 
 ## The CSSAnimation interface ## {#the-CSSAnimation-interface}
 
