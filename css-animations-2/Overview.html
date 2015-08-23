@@ -247,27 +247,26 @@ on screen, on paper, in speech, etc.</div>
   <div data-fill-with="table-of-contents" role="navigation">
    <ul class="toc" role="directory">
     <li><a href="#delta"><span class="secno">1</span> <span class="content">Delta specification</span></a>
-    <li><a href="#animations"><span class="secno">2</span> <span class="content">Animations</span></a>
+    <li><a href="#introduction"><span class="secno">2</span> <span class="content">Introduction</span></a>
+    <li><a href="#animations"><span class="secno">3</span> <span class="content">Animations</span></a>
+    <li><a href="#keyframes"><span class="secno">4</span> <span class="content">Keyframes</span></a>
      <ul class="toc">
-      <li><a href="#resolving-an-animation-name"><span class="secno">2.1</span> <span class="content">Resolving an <span class="property">animation-name</span></span></a>
+      <li><a href="#animation-name"><span class="secno">4.1</span> <span class="content">The <span class="property">animation-name</span> property</span></a>
+      <li><a href="#animation-composition"><span class="secno">4.2</span> <span class="content">The <span class="property">animation-composition</span> property</span></a>
+      <li><a href="#animation-events"><span class="secno">4.3</span> <span class="content">Animation events</span></a>
+      <li><a href="#event-animationevent"><span class="secno">4.4</span> <span class="content">Types of <code>AnimationEvent</code></span></a>
+      <li><a href="#event-dispatch"><span class="secno">4.5</span> <span class="content">Event dispatch</span></a>
      </ul>
-    <li><a href="#keyframes"><span class="secno">3</span> <span class="content">Keyframes</span></a>
+    <li><a href="#web-animations-instantiation-of-CSS-animations"><span class="secno">5</span> <span class="content">Web Animations Instantiation of CSS Animations</span></a>
      <ul class="toc">
-      <li><a href="#animation-composition"><span class="secno">3.1</span> <span class="content">The <span class="property">animation-composition</span> property</span></a>
-      <li><a href="#animation-events"><span class="secno">3.2</span> <span class="content">Animation events</span></a>
-      <li><a href="#event-animationevent"><span class="secno">3.3</span> <span class="content">Types of <code>AnimationEvent</code></span></a>
-      <li><a href="#event-dispatch"><span class="secno">3.4</span> <span class="content">Event dispatch</span></a>
+      <li><a href="#owning-element-section"><span class="secno">5.1</span> <span class="content">Owning element</span></a>
+      <li><a href="#animation-composite-order"><span class="secno">5.2</span> <span class="content">Animation composite order</span></a>
+      <li><a href="#interaction-between-animation-play-state-and-web-animations-API"><span class="secno">5.3</span> <span class="content">Interaction between <span class="property">animation-play-state</span> and the Web Animations API</span></a>
      </ul>
-    <li><a href="#web-animations-instantiation-of-CSS-animations"><span class="secno">4</span> <span class="content">Web Animations Instantiation of CSS Animations</span></a>
+    <li><a href="#DOM-interfaces"><span class="secno">6</span> <span class="content">DOM interfaces</span></a>
      <ul class="toc">
-      <li><a href="#owning-element-section"><span class="secno">4.1</span> <span class="content">Owning element</span></a>
-      <li><a href="#animation-composite-order"><span class="secno">4.2</span> <span class="content">Animation composite order</span></a>
-      <li><a href="#interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.3</span> <span class="content">Interaction between <span class="property">animation-play-state</span> and the Web Animations API</span></a>
-     </ul>
-    <li><a href="#DOM-interfaces"><span class="secno">5</span> <span class="content">DOM interfaces</span></a>
-     <ul class="toc">
-      <li><a href="#the-CSSAnimation-interface"><span class="secno">5.1</span> <span class="content">The CSSAnimation interface</span></a>
-      <li><a href="#requirements-on-pending-style-changes"><span class="secno">5.2</span> <span class="content">Requirements on pending style changes</span></a>
+      <li><a href="#the-CSSAnimation-interface"><span class="secno">6.1</span> <span class="content">The CSSAnimation interface</span></a>
+      <li><a href="#requirements-on-pending-style-changes"><span class="secno">6.2</span> <span class="content">Requirements on pending style changes</span></a>
      </ul>
     <li><a href="#conformance"><span class="secno"></span> <span class="content">
 Conformance</span></a>
@@ -311,19 +310,121 @@ Once the Level 1 specification is closer to complete, it will be merged
 with the additions here into a complete level 2 specification.</p>
 
 
-   <h2 class="heading settled" data-level="2" id="animations"><span class="secno">2. </span><span class="content">Animations</span><a class="self-link" href="#animations"></a></h2>
+   <h2 class="heading settled" data-level="2" id="introduction"><span class="secno">2. </span><span class="content">Introduction</span><a class="self-link" href="#introduction"></a></h2>
 
 
-   <h3 class="heading settled" data-level="2.1" id="resolving-an-animation-name"><span class="secno">2.1. </span><span class="content">Resolving an <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a></span><a class="self-link" href="#resolving-an-animation-name"></a></h3>
+   <p>Append: This specification builds on the animation model defined in Web
+Animations <a data-link-type="biblio" href="#biblio-web-animations">[WEB-ANIMATIONS]</a>.</p>
 
 
-   <p class="issue" id="issue-d5205d6c"><a class="self-link" href="#issue-d5205d6c"></a> Something like this: <a href="https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html">https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html</a>.</p>
+   <h2 class="heading settled" data-level="3" id="animations"><span class="secno">3. </span><span class="content">Animations</span><a class="self-link" href="#animations"></a></h2>
 
 
-   <h2 class="heading settled" data-level="3" id="keyframes"><span class="secno">3. </span><span class="content">Keyframes</span><a class="self-link" href="#keyframes"></a></h2>
+   <p class="note" role="note">Note, large parts of this section have been removed since this behavior is
+defined in Web Animations.</p>
 
 
-   <h3 class="heading settled" data-level="3.1" id="animation-composition"><span class="secno">3.1. </span><span class="content">The <a class="property" data-link-type="propdesc" href="#propdef-animation-composition">animation-composition</a> property</span><a class="self-link" href="#animation-composition"></a></h3>
+   <p>CSS Animations generates <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation">animation</a> objects. The <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation-start-time">animation start
+time</a> is the time at which the style applying the animation and the
+corresponding @keyframes rule are both resolved.
+f an animation is specified for an element but the corresponding
+keyframes rule does not yet exist, the <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation">animation</a> cannot start; the
+animation will start from the beginning as soon as a matching @keyframes
+rule can be resolved. An animation specified by dynamically modifying the
+element’s style will start when this style is resolved; that may be
+immediately in the case of a pseudo style rule such as hover, or may be
+when the scripting engine returns control to the browser (in the case of
+style applied by script). Note that dynamically updating keyframe style
+rules does not start or restart an animation.</p>
+
+
+   <p class="note" role="note">Note, that so long as there is no matching @keyframes rule it is unobservable
+whether a user agent generates an <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation">animation</a> and assigns it an
+<a data-link-type="dfn" href="http://w3c.github.io/web-animations/#unresolved">unresolved</a> <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#start-time">start time</a> or simply defers creating an
+<a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation">animation</a> altogether since there is no API that returns
+<a data-link-type="dfn" href="http://w3c.github.io/web-animations/#idle-play-state">idle</a> animations. Either implementation is
+acceptable.</p>
+
+
+   <p>An animation applies to an element if its name appears as one of the
+identifiers in the computed value of the <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a> property and the
+animation uses a valid @keyframes rule. Once an
+animation has started it continues until it ends or the <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a> is
+removed. Changing the values of animation properties updates the properties
+of any running <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation">animations</a>.</p>
+
+
+   <p>Note also that changing the value
+of <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a> does not necessarily restart an animation (e.g., if a list
+of animations are applied and one is removed from the list, only that animation
+will stop; The other animations will continue). In order to restart an
+animation using only CSS markup, it must be removed then reapplied.</p>
+
+  
+   <div class="example" id="example-f093c050"><a class="self-link" href="#example-f093c050"></a>
+    
+    <pre>div {
+  animation-name: diagonal-slide;
+  animation-duration: 5s;
+  animation-iteration-count: 10;
+}
+
+@keyframes diagonal-slide {
+
+  from {
+    left: 0;
+    top: 0;
+  }
+
+  to {
+    left: 100px;
+    top: 100px;
+  }
+
+}
+</pre>
+    
+
+
+    <p>This will produce an animation that moves an element from (0, 0) to
+    (100px, 100px) over five seconds and repeats itself nine times
+    (for a total of ten iterations).</p>
+    
+
+  
+   </div>
+
+
+   <p>Setting the <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css2/visuren.html#propdef-display">display</a> property to <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-none">none</a> will <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#cancel-an-animation">cancel</a> any running animation applied to the element and its
+descendants. If an element has a <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css2/visuren.html#propdef-display">display</a> of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-none">none</a>, updating
+<a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css2/visuren.html#propdef-display">display</a> to a value other than <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-none">none</a> will cause all animations
+applied to the element by the <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a> property to be recreated, as well
+as all animations applied to descendants with <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css2/visuren.html#propdef-display">display</a> other than
+<a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-none">none</a>.</p>
+
+
+   <p>While authors can use animations to create dynamically changing content,
+dynamically changing content can lead to seizures in some users. For information
+on how to avoid content that can lead to seizures, see Guideline 2.3: Seizures:
+Do not design content in a way that is known to cause seizures (<a data-link-type="biblio" href="#biblio-wcag20">[WCAG20]</a>).</p>
+
+
+   <p>Implementations may ignore animations when the rendering medium is not
+interactive e.g. when printed.
+A future version of this specification may define how to render animations for
+these media.</p>
+
+
+   <h2 class="heading settled" data-level="4" id="keyframes"><span class="secno">4. </span><span class="content">Keyframes</span><a class="self-link" href="#keyframes"></a></h2>
+
+
+   <h3 class="heading settled" data-level="4.1" id="animation-name"><span class="secno">4.1. </span><span class="content">The <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-name">animation-name</a> property</span><a class="self-link" href="#animation-name"></a></h3>
+
+
+   <p class="issue" id="issue-23e350a2"><a class="self-link" href="#issue-23e350a2"></a> Need to add something like this: <a href="https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html">https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html</a>.</p>
+
+
+   <h3 class="heading settled" data-level="4.2" id="animation-composition"><span class="secno">4.2. </span><span class="content">The <a class="property" data-link-type="propdesc" href="#propdef-animation-composition">animation-composition</a> property</span><a class="self-link" href="#animation-composition"></a></h3>
 
 
    <p>The <a class="property" data-link-type="propdesc" href="#propdef-animation-composition">animation-composition</a> property defines the <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#composite-operation">composite operation</a>
@@ -377,10 +478,10 @@ used for each property specified in that keyframe until the next keyframe
 specifying each property.</p>
 
 
-   <h3 class="heading settled" data-level="3.2" id="animation-events"><span class="secno">3.2. </span><span class="content">Animation events</span><a class="self-link" href="#animation-events"></a></h3>
+   <h3 class="heading settled" data-level="4.3" id="animation-events"><span class="secno">4.3. </span><span class="content">Animation events</span><a class="self-link" href="#animation-events"></a></h3>
 
 
-   <h3 class="heading settled" data-level="3.3" id="event-animationevent"><span class="secno">3.3. </span><span class="content">Types of <code>AnimationEvent</code></span><a class="self-link" href="#event-animationevent"></a></h3>
+   <h3 class="heading settled" data-level="4.4" id="event-animationevent"><span class="secno">4.4. </span><span class="content">Types of <code>AnimationEvent</code></span><a class="self-link" href="#event-animationevent"></a></h3>
 
   
    <p>The <em>additional</em> types of animation events that can occur are:</p>
@@ -413,10 +514,10 @@ specifying each property.</p>
    </dl>
 
 
-   <h3 class="heading settled" data-level="3.4" id="event-dispatch"><span class="secno">3.4. </span><span class="content">Event dispatch</span><a class="self-link" href="#event-dispatch"></a></h3>
+   <h3 class="heading settled" data-level="4.5" id="event-dispatch"><span class="secno">4.5. </span><span class="content">Event dispatch</span><a class="self-link" href="#event-dispatch"></a></h3>
 
 
-   <p class="note" role="note">Note: This is a more general description of event dispatch than that of CSS
+   <p class="note" role="note">Note, this is a more general description of event dispatch than that of CSS
 Animations Level 1 <a data-link-type="biblio" href="#biblio-css3-animations">[CSS3-ANIMATIONS]</a> since it must account for the
 possibility of animations being seeked using the Web Animations API
 <a data-link-type="biblio" href="#biblio-web-animations">[WEB-ANIMATIONS]</a>.</p>
@@ -511,13 +612,13 @@ after the sample as follows:</p>
 
 </dl>
 
-   <h2 class="heading settled" data-level="4" id="web-animations-instantiation-of-CSS-animations"><span class="secno">4. </span><span class="content">Web Animations Instantiation of CSS Animations</span><a class="self-link" href="#web-animations-instantiation-of-CSS-animations"></a></h2>
+   <h2 class="heading settled" data-level="5" id="web-animations-instantiation-of-CSS-animations"><span class="secno">5. </span><span class="content">Web Animations Instantiation of CSS Animations</span><a class="self-link" href="#web-animations-instantiation-of-CSS-animations"></a></h2>
 
 
    <p>TODO: Copy prose from integration spec</p>
 
 
-   <h3 class="heading settled" data-level="4.1" id="owning-element-section"><span class="secno">4.1. </span><span class="content">Owning element</span><a class="self-link" href="#owning-element-section"></a></h3>
+   <h3 class="heading settled" data-level="5.1" id="owning-element-section"><span class="secno">5.1. </span><span class="content">Owning element</span><a class="self-link" href="#owning-element-section"></a></h3>
 
 
    <p>The <dfn data-dfn-type="dfn" data-noexport="" id="owning-element">owning element<a class="self-link" href="#owning-element"></a></dfn> of a CSS Animation refers to the element or
@@ -570,7 +671,7 @@ elements may differ.</p>
 </div>
 
 
-   <h3 class="heading settled" data-level="4.2" id="animation-composite-order"><span class="secno">4.2. </span><span class="content">Animation composite order</span><a class="self-link" href="#animation-composite-order"></a></h3>
+   <h3 class="heading settled" data-level="5.2" id="animation-composite-order"><span class="secno">5.2. </span><span class="content">Animation composite order</span><a class="self-link" href="#animation-composite-order"></a></h3>
 
 
    <p><a data-link-type="dfn" href="http://w3c.github.io/web-animations/#animation">Animations</a> generated from the markup and
@@ -637,7 +738,7 @@ but are still <a data-link-type="dfn" href="http://w3c.github.io/web-animations/
 composite order.</p>
 
 
-   <p class="note" role="note">Note: This behavior relies on the fact that disassociating an animation
+   <p class="note" role="note">Note, this behavior relies on the fact that disassociating an animation
 from its <a data-link-type="dfn" href="#owning-element">owning element</a> always causes it to enter (or remain) in the
 <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#idle-play-state">idle play state</a>.</p>
 
@@ -651,7 +752,7 @@ transition out of idle? (Just for animations created using <code class="idl"><a 
 <em>not</em> for generic <code class="idl"><a data-link-type="idl" href="http://w3c.github.io/web-animations/#animation">Animation</a></code> objects.)</p>
 
 
-   <h3 class="heading settled" data-level="4.3" id="interaction-between-animation-play-state-and-web-animations-API"><span class="secno">4.3. </span><span class="content">Interaction between <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-play-state">animation-play-state</a> and the Web Animations API</span><a class="self-link" href="#interaction-between-animation-play-state-and-web-animations-API"></a></h3>
+   <h3 class="heading settled" data-level="5.3" id="interaction-between-animation-play-state-and-web-animations-API"><span class="secno">5.3. </span><span class="content">Interaction between <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-animations-1/#propdef-animation-play-state">animation-play-state</a> and the Web Animations API</span><a class="self-link" href="#interaction-between-animation-play-state-and-web-animations-API"></a></h3>
 
 
    <p>Both this specification and the Web Animations specification <a data-link-type="biblio" href="#biblio-web-animations">[WEB-ANIMATIONS]</a>
@@ -810,10 +911,10 @@ of this behavior.</p>
 
 
 
-   <h2 class="heading settled" data-level="5" id="DOM-interfaces"><span class="secno">5. </span><span class="content">DOM interfaces</span><a class="self-link" href="#DOM-interfaces"></a></h2>
+   <h2 class="heading settled" data-level="6" id="DOM-interfaces"><span class="secno">6. </span><span class="content">DOM interfaces</span><a class="self-link" href="#DOM-interfaces"></a></h2>
 
 
-   <h3 class="heading settled" data-level="5.1" id="the-CSSAnimation-interface"><span class="secno">5.1. </span><span class="content">The CSSAnimation interface</span><a class="self-link" href="#the-CSSAnimation-interface"></a></h3>
+   <h3 class="heading settled" data-level="6.1" id="the-CSSAnimation-interface"><span class="secno">6.1. </span><span class="content">The CSSAnimation interface</span><a class="self-link" href="#the-CSSAnimation-interface"></a></h3>
 
 
    <pre class="idl">[<a class="idl-code" data-link-type="constructor" href="#dom-cssanimation-cssanimation">Constructor</a>(DOMString <dfn class="idl-code" data-dfn-for="CSSAnimation/CSSAnimation(animationName)" data-dfn-type="argument" data-export="" id="dom-cssanimation-cssanimation-animationname-animationname">animationName<a class="self-link" href="#dom-cssanimation-cssanimation-animationname-animationname"></a></dfn>)]
@@ -835,7 +936,7 @@ interface <dfn class="idl-code" data-dfn-type="interface" data-export="" id="css
 
      <p>The <a data-link-type="dfn" href="http://w3c.github.io/web-animations/#target-effect">target effect</a> of the newly-created object is a
 <code class="idl"><a data-link-type="idl" href="http://w3c.github.io/web-animations/#keyframeeffectreadonly">KeyframeEffectReadOnly</a></code> object created using the procedure defined
-in <a href="#resolving-an-animation-name">§2.1 Resolving an animation-name</a> and using
+in <a href="#animation-name">§4.1 The animation-name property</a> and using
 the <a data-link-type="dfn" href="https://html.spec.whatwg.org/#active-document">active document</a> as the context document.
 The created <code class="idl"><a data-link-type="idl" href="http://w3c.github.io/web-animations/#keyframeeffectreadonly">KeyframeEffectReadOnly</a></code> object continues to track changes
 to keyframes rules so long as it is attached to this object.</p>
@@ -864,7 +965,7 @@ that was passed to the <code class="idl"><a data-link-type="idl" href="#dom-cssa
      
 </dl>
 
-   <h3 class="heading settled" data-level="5.2" id="requirements-on-pending-style-changes"><span class="secno">5.2. </span><span class="content">Requirements on pending style changes</span><a class="self-link" href="#requirements-on-pending-style-changes"></a></h3>
+   <h3 class="heading settled" data-level="6.2" id="requirements-on-pending-style-changes"><span class="secno">6.2. </span><span class="content">Requirements on pending style changes</span><a class="self-link" href="#requirements-on-pending-style-changes"></a></h3>
 
 
    <p>Various operations may affect the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value">computed values</a> of
@@ -1065,22 +1166,22 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
   <h2 class="no-num heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="indexlist">
-   <li>active, <a href="#active">3.4</a>
-   <li>animationcancel, <a href="#dom-animationevent-animationcancel">3.3</a>
-   <li>animation-composition, <a href="#propdef-animation-composition">3.1</a>
+   <li>active, <a href="#active">4.5</a>
+   <li>animationcancel, <a href="#dom-animationevent-animationcancel">4.4</a>
+   <li>animation-composition, <a href="#propdef-animation-composition">4.2</a>
    <li>animationName
     <ul>
-     <li>argument for CSSAnimation/CSSAnimation(animationName), <a href="#dom-cssanimation-cssanimation-animationname-animationname">5.1</a>
-     <li>attribute for CSSAnimation, <a href="#dom-cssanimation-animationname">5.1</a>
+     <li>argument for CSSAnimation/CSSAnimation(animationName), <a href="#dom-cssanimation-cssanimation-animationname-animationname">6.1</a>
+     <li>attribute for CSSAnimation, <a href="#dom-cssanimation-animationname">6.1</a>
     </ul>
-   <li>CSSAnimation, <a href="#cssanimation">5.1</a>
-   <li>CSSAnimation(animationName), <a href="#dom-cssanimation-cssanimation">5.1</a>
-   <li>event state, <a href="#event-state">3.4</a>
-   <li>idle, <a href="#idle">3.4</a>
-   <li>left-active, <a href="#left_active">3.4</a>
-   <li>owning element, <a href="#owning-element">4.1</a>
-   <li>right-active, <a href="#right_active">3.4</a>
-   <li>&lt;single-animation-composition>, <a href="#typedef-single-animation-composition">3.1</a>
+   <li>CSSAnimation, <a href="#cssanimation">6.1</a>
+   <li>CSSAnimation(animationName), <a href="#dom-cssanimation-cssanimation">6.1</a>
+   <li>event state, <a href="#event-state">4.5</a>
+   <li>idle, <a href="#idle">4.5</a>
+   <li>left-active, <a href="#left_active">4.5</a>
+   <li>owning element, <a href="#owning-element">5.1</a>
+   <li>right-active, <a href="#right_active">4.5</a>
+   <li>&lt;single-animation-composition>, <a href="#typedef-single-animation-composition">4.2</a>
   </ul>
   <h3 class="no-num heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="indexlist">
@@ -1101,9 +1202,17 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
     <ul>
      <li><a href="https://drafts.csswg.org/css-cascade-4/#computed-value">computed value</a>
     </ul>
+   <li><a data-link-type="biblio" href="#biblio-css-display-3">[css-display-3]</a> defines the following terms:
+    <ul>
+     <li><a href="https://drafts.csswg.org/css-display-3/#valdef-display-none">none</a>
+    </ul>
    <li><a data-link-type="biblio" href="#biblio-css-values-3">[css-values-3]</a> defines the following terms:
     <ul>
      <li><a href="https://drafts.csswg.org/css-values-3/#mult-comma">#</a>
+    </ul>
+   <li><a data-link-type="biblio" href="#biblio-css21">[CSS21]</a> defines the following terms:
+    <ul>
+     <li><a href="https://drafts.csswg.org/css2/visuren.html#propdef-display">display</a>
     </ul>
    <li><a data-link-type="biblio" href="#biblio-dom-ls">[dom-ls]</a> defines the following terms:
     <ul>
@@ -1117,7 +1226,9 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
      <li><a href="http://w3c.github.io/web-animations/#keyframeeffectreadonly">KeyframeEffectReadOnly</a>
      <li><a href="http://w3c.github.io/web-animations/#animation">animation</a>
      <li><a href="http://w3c.github.io/web-animations/#animation-playback-rate">animation playback rate</a>
+     <li><a href="http://w3c.github.io/web-animations/#animation-start-time">animation start time</a>
      <li><a href="http://w3c.github.io/web-animations/#animation-type">animation type</a>
+     <li><a href="http://w3c.github.io/web-animations/#cancel-an-animation">cancel an animation</a>
      <li><a href="http://w3c.github.io/web-animations/#composite-operation">composite operation</a>
      <li><a href="http://w3c.github.io/web-animations/#current-iteration">current iteration</a>
      <li><a href="http://w3c.github.io/web-animations/#current-time">current time</a>
@@ -1128,9 +1239,11 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
      <li><a href="http://w3c.github.io/web-animations/#play">play()</a>
      <li><a href="http://w3c.github.io/web-animations/#sampling">sampling</a>
      <li><a href="http://w3c.github.io/web-animations/#start-delay">start delay</a>
+     <li><a href="http://w3c.github.io/web-animations/#start-time">start time</a>
      <li><a href="http://w3c.github.io/web-animations/#target-effect">target effect</a>
      <li><a href="http://w3c.github.io/web-animations/#target-effect-end">target effect end</a>
      <li><a href="http://w3c.github.io/web-animations/#target-element">target element</a>
+     <li><a href="http://w3c.github.io/web-animations/#unresolved">unresolved</a>
     </ul>
    <li><a data-link-type="biblio" href="#biblio-webidl">[WebIDL]</a> defines the following terms:
     <ul>
@@ -1140,14 +1253,20 @@ Non-experimental implementations</span><a class="self-link" href="#testing"></a>
   <h2 class="no-num heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
+   <dt id="biblio-css21"><a class="self-link" href="#biblio-css21"></a>[CSS21]
+   <dd>Bert Bos; et al. <a href="http://www.w3.org/TR/CSS2">Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification</a>. 7 June 2011. REC. URL: <a href="http://www.w3.org/TR/CSS2">http://www.w3.org/TR/CSS2</a>
    <dt id="biblio-html"><a class="self-link" href="#biblio-html"></a>[HTML]
    <dd>Ian Hickson. <a href="https://html.spec.whatwg.org/multipage/">HTML Standard</a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
+   <dt id="biblio-wcag20"><a class="self-link" href="#biblio-wcag20"></a>[WCAG20]
+   <dd>Ben Caldwell; et al. <a href="http://www.w3.org/TR/WCAG20/">Web Content Accessibility Guidelines (WCAG) 2.0</a>. 11 December 2008. REC. URL: <a href="http://www.w3.org/TR/WCAG20/">http://www.w3.org/TR/WCAG20/</a>
    <dt id="biblio-webidl"><a class="self-link" href="#biblio-webidl"></a>[WebIDL]
    <dd>Cameron McCormack; Boris Zbarsky. <a href="http://www.w3.org/TR/WebIDL-1/">WebIDL Level 1</a>. 4 August 2015. WD. URL: <a href="http://www.w3.org/TR/WebIDL-1/">http://www.w3.org/TR/WebIDL-1/</a>
    <dt id="biblio-css-animations-1"><a class="self-link" href="#biblio-css-animations-1"></a>[CSS-ANIMATIONS-1]
    <dd>CSS Animations Module Level 1 URL: <a href="http://www.w3.org/TR/css3-animations/">http://www.w3.org/TR/css3-animations/</a>
    <dt id="biblio-css-cascade-4"><a class="self-link" href="#biblio-css-cascade-4"></a>[CSS-CASCADE-4]
    <dd>Elika Etemad; Tab Atkins Jr.. <a href="http://www.w3.org/TR/css-cascade-4/">CSS Cascading and Inheritance Level 4</a>. 21 April 2015. WD. URL: <a href="http://www.w3.org/TR/css-cascade-4/">http://www.w3.org/TR/css-cascade-4/</a>
+   <dt id="biblio-css-display-3"><a class="self-link" href="#biblio-css-display-3"></a>[CSS-DISPLAY-3]
+   <dd>Tab Atkins Jr.; Elika Etemad. <a href="http://www.w3.org/TR/css-display-3/">CSS Display Module Level 3</a>. 21 July 2015. WD. URL: <a href="http://www.w3.org/TR/css-display-3/">http://www.w3.org/TR/css-display-3/</a>
    <dt id="biblio-css-values-3"><a class="self-link" href="#biblio-css-values-3"></a>[CSS-VALUES-3]
    <dd>CSS Values and Units Module Level 3 URL: <a href="http://www.w3.org/TR/css3-values/">http://www.w3.org/TR/css3-values/</a>
    <dt id="biblio-css3-animations"><a class="self-link" href="#biblio-css3-animations"></a>[CSS3-ANIMATIONS]
@@ -1195,7 +1314,7 @@ interface <a href="#cssanimation">CSSAnimation</a> : <a data-link-type="idl-name
 </pre>
   <h2 class="no-num heading settled" id="issues-index"><span class="content">Issues Index</span><a class="self-link" href="#issues-index"></a></h2>
   <div style="counter-reset:issue">
-   <div class="issue"> Something like this: <a href="https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html">https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html</a>.<a href="#issue-d5205d6c"> ↵ </a></div>
+   <div class="issue"> Need to add something like this: <a href="https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html">https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html</a>.<a href="#issue-23e350a2"> ↵ </a></div>
    <div class="issue"> Would it be more consistent to append them at the moment they first
 transition out of idle? (Just for animations created using <code class="idl"><a data-link-type="idl" href="#dom-cssanimation-cssanimation">CSSAnimation()</a></code>,
 <em>not</em> for generic <code class="idl"><a data-link-type="idl" href="http://w3c.github.io/web-animations/#animation">Animation</a></code> objects.)<a href="#issue-cfac1180"> ↵ </a></div>

@@ -40,7 +40,9 @@ urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
     text: animation
     text: animation playback rate
     text: animation sequence number
+    text: animation start time
     text: animation type
+    text: cancel an animation
     text: composite operation
     text: current time
     text: current iteration
@@ -49,9 +51,11 @@ urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
     text: play an animation
     text: sampling
     text: start delay
+    text: start time
     text: target effect
     text: target effect end
     text: target element
+    text: unresolved
 urlPrefix: https://html.spec.whatwg.org/; type: dfn; spec: HTML
     text: active document
 </pre>
@@ -63,14 +67,102 @@ only the differences from CSS Animations Level 1 [[!CSS3-ANIMATIONS]].
 Once the Level 1 specification is closer to complete, it will be merged
 with the additions here into a complete level 2 specification.</p>
 
+# Introduction # {#introduction}
+
+Append: This specification builds on the animation model defined in Web
+Animations [[!WEB-ANIMATIONS]].
+
 # Animations # {#animations}
 
-## Resolving an 'animation-name' ## {#resolving-an-animation-name}
+Note, large parts of this section have been removed since this behavior is
+defined in Web Animations.
 
-Issue: Something like this: <a
-href="https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html">https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html</a>.
+CSS Animations generates <a>animation</a> objects. The <a>animation start
+time</a> is the time at which the style applying the animation and the
+corresponding @keyframes rule are both resolved.
+f an animation is specified for an element but the corresponding
+keyframes rule does not yet exist, the <a>animation</a> cannot start; the
+animation will start from the beginning as soon as a matching @keyframes
+rule can be resolved. An animation specified by dynamically modifying the
+element's style will start when this style is resolved; that may be
+immediately in the case of a pseudo style rule such as hover, or may be
+when the scripting engine returns control to the browser (in the case of
+style applied by script). Note that dynamically updating keyframe style
+rules does not start or restart an animation.
+
+Note, that so long as there is no matching @keyframes rule it is unobservable
+whether a user agent generates an <a>animation</a> and assigns it an
+<a>unresolved</a> <a>start time</a> or simply defers creating an
+<a>animation</a> altogether since there is no API that returns
+<a lt="idle play state">idle</a> animations. Either implementation is
+acceptable.
+
+An animation applies to an element if its name appears as one of the
+identifiers in the computed value of the 'animation-name' property and the
+animation uses a valid @keyframes rule. Once an
+animation has started it continues until it ends or the 'animation-name' is
+removed. Changing the values of animation properties updates the properties
+of any running <a>animations</a>.
+
+Note also that changing the value
+of 'animation-name' does not necessarily restart an animation (e.g., if a list
+of animations are applied and one is removed from the list, only that animation
+will stop; The other animations will continue). In order to restart an
+animation using only CSS markup, it must be removed then reapplied.
+
+  <div class='example'>
+    <pre>
+    div {
+      animation-name: diagonal-slide;
+      animation-duration: 5s;
+      animation-iteration-count: 10;
+    }
+
+    @keyframes diagonal-slide {
+
+      from {
+        left: 0;
+        top: 0;
+      }
+
+      to {
+        left: 100px;
+        top: 100px;
+      }
+
+    }
+    </pre>
+
+    This will produce an animation that moves an element from (0, 0) to
+    (100px, 100px) over five seconds and repeats itself nine times
+    (for a total of ten iterations).
+
+  </div>
+
+Setting the 'display' property to ''display/none'' will <a lt="cancel an
+animation">cancel</a> any running animation applied to the element and its
+descendants. If an element has a 'display' of ''display/none'', updating
+'display' to a value other than ''display/none'' will cause all animations
+applied to the element by the 'animation-name' property to be recreated, as well
+as all animations applied to descendants with 'display' other than
+''display/none''.
+
+While authors can use animations to create dynamically changing content,
+dynamically changing content can lead to seizures in some users. For information
+on how to avoid content that can lead to seizures, see Guideline 2.3: Seizures:
+Do not design content in a way that is known to cause seizures ([[!WCAG20]]).
+
+Implementations may ignore animations when the rendering medium is not
+interactive e.g. when printed.
+A future version of this specification may define how to render animations for
+these media.
 
 # Keyframes # {#keyframes}
+
+## The 'animation-name' property ## {#animation-name}
+
+Issue: Need to add something like this: <a
+href="https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html">https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html</a>.
 
 ## The 'animation-composition' property ## {#animation-composition}
 
@@ -122,7 +214,7 @@ specifying each property.
 
 ## Event dispatch ## {#event-dispatch}
 
-Note: This is a more general description of event dispatch than that of CSS
+Note, this is a more general description of event dispatch than that of CSS
 Animations Level 1 [[CSS3-ANIMATIONS]] since it must account for the
 possibility of animations being seeked using the Web Animations API
 [[WEB-ANIMATIONS]].
@@ -257,7 +349,7 @@ CSS Animations that have been disassociated from their <a>owning element</a>
 but are still <a lt="idle play state">idle</a> do not have a defined
 composite order.
 
-Note: This behavior relies on the fact that disassociating an animation
+Note, this behavior relies on the fact that disassociating an animation
 from its <a>owning element</a> always causes it to enter (or remain) in the
 <a>idle play state</a>.
 
@@ -379,7 +471,7 @@ interface CSSAnimation : Animation {
 
     The <a>target effect</a> of the newly-created object is a
     {{KeyframeEffectReadOnly}} object created using the procedure defined
-    in [[#resolving-an-animation-name]] and using
+    in [[#animation-name]] and using
     the <a>active document</a> as the context document.
     The created {{KeyframeEffectReadOnly}} object continues to track changes
     to keyframes rules so long as it is attached to this object.
