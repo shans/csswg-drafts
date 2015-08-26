@@ -29,14 +29,14 @@ Editor: L. David Baron, Mozilla, dbaron@dbaron.org
 Abstract: This CSS module describes a way for authors to animate the values of CSS properties over time, using keyframes. The behavior of these keyframe animations can be controlled by specifying their duration, number of repeats, and repeating behavior.
 </pre>
 <pre class="anchors">
-urlPrefix: http://w3c.github.io/web-animations/; type: interface; spec: web-animations
+urlPrefix: https://w3c.github.io/web-animations/; type: interface; spec: web-animations
     text: Animation
     text: KeyframeEffectReadOnly
     text: KeyframeEffect
-urlPrefix: http://w3c.github.io/web-animations/; type: method; for: Animation; spec: web-animations
+urlPrefix: https://w3c.github.io/web-animations/; type: method; for: Animation; spec: web-animations
     text: play()
     text: pause()
-urlPrefix: http://w3c.github.io/web-animations/; type: dfn; spec: web-animations
+urlPrefix: https://w3c.github.io/web-animations/; type: dfn; spec: web-animations
     text: animation
     text: animation playback rate
     text: animation sequence number
@@ -263,7 +263,7 @@ of this behavior.
 ## The 'animation-composition' property ## {#animation-composition}
 
 The 'animation-composition' property defines the <a>composite operation</a>
-used when multiple animations target the same property.
+used when multiple animations affect the same property simultaneously.
 
 <pre class='propdef'>
 Name: animation-composition
@@ -287,6 +287,68 @@ Animations [[!WEB-ANIMATIONS]].
 When specified in a keyframe, 'animation-composition' defines the operation
 used for each property specified in that keyframe until the next keyframe
 specifying each property.
+
+<div class='example'>
+  For example, the following stylesheet defines two different animations
+  targetting the 'scale' property.
+
+  <pre>
+    @keyframes heartbeat {
+      from {
+        scale: 1;
+        animation-timing-function: ease-out;
+      }
+      30% {
+        scale: 1.3;
+      }
+    }
+    .heartbeat {
+      animation: heartbeat 0.3s 2s infinite;
+    }
+
+    @keyframes throb {
+      50% {
+        scale: 1.8;
+      }
+    }
+    .icon:mouseover {
+      animation: throb 0.4s add;
+    }
+  </pre>
+
+  If these two animations are applied to the same element, normally only
+  one animation would apply, but by specifying ''add'' as the
+  'animation-composition' on the second animation, the result of the two
+  animations will be combined.
+
+  Since CSS Transitions [[CSS3-TRANSITIONS]] have a lower composite
+  order, it is possible to use 'animation-composition' to combine CSS
+  Animations with underlying transitions as in the following example.
+
+  <pre>
+    .icon {
+      filter: blur(20px);
+      transition: filter 0.5s;
+    }
+    .icon:hover {
+      filter: blur(0px);
+      animation: brightness-pulse 3s infinite add;
+    }
+
+    @keyframes pulse {
+      0% {
+        scale: 1.1;
+        filter: brightness(130%);
+      }
+      10% {
+        scale: 1;
+        filter: brightness(100%);
+      }
+    }
+  </pre>
+
+  Issue: Create pictures of these examples and verify they make sense.
+</div>
 
 ## Owning element ## {#owning-element-section}
 
