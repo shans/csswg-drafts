@@ -74,8 +74,9 @@ Animations [[!WEB-ANIMATIONS]].
 
 # Animations # {#animations}
 
-Note, large parts of this section have been removed since this behavior is
-defined in Web Animations.
+Issue: This section is <em>not</em> written as a delta spec. It imports
+the corresponding text from CSS Animations Level 1 [[CSS3-ANIMATIONS]] but
+removes text where the behavior is defined by Web Animations.
 
 CSS Animations generates <a>animation</a> objects. The <a>animation start
 time</a> is the time at which the style applying the animation and the
